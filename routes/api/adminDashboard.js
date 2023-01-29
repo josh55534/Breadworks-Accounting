@@ -3,90 +3,118 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken')
 const config = require('config');
-const {check, validationResult} = require('express-validator');
 const Joi = require('joi');
 const { ROLE } = require('../../roles')
 const admin = require('firebase-admin');
 const db = admin.firestore();
 const { authUser, authRole } = require('../../middleware/basicAuth')
+const { validateAdminSignup } = require("../../validator");
+const { use } = require('./login');
 
 router.get('/', authUser, authRole(ROLE.ADMIN), (req, res) =>{
 	res.send('admin dashboard');
 });
 
 
-router.post('/register',[
-	check('Fname', 'Name is required.').not().isEmpty(),
-	check('Lname', 'Name is required.').not().isEmpty(),
-	check('email', 'Email is not in the correct format.').isEmail(),
-	check('password', 'Password must be more than 5 characters.').isLength({min: 5})
-],authUser, authRole(ROLE.ADMIN), async(req, res) =>{
-	const errors = validationResult(req)
-
-	if(!errors.isEmpty()) return res.satus(400).json({errors: errors.array()});
-
-	const {Fname, Lname, email, password, role} = req.body;
-
-	try {
-		const userRef = db.collection('users');
-
-		let user = await userRef.where('email', '==', email).get();
-
-		//console.log(user);
-
-		if(!user.empty) return res.status(400).json({errors: 'This email has already been used.'});
-
-
-		const salt = await bcrypt.genSalt(10);
-
-
-		const dateCreated = new Date()
-
-		function addZero(){
-			if(dateCreated.getMonth() < 10){
-			return 0;
- 			 }else return }
-
-		function sliceYear(){
-			let x = dateCreated.getFullYear()
-			return x - 2000;
-		}
-		  const id = `${Fname.charAt(0)}${Lname}${addZero()}${dateCreated.getMonth()+1}${sliceYear()}`
-
-		const hashedPassword = await bcrypt.hash(password, salt);
-
-		await db.collection('users').doc(id).set({
-			id,
-			Fname,
-			Lname,
-			email,
-			password: hashedPassword,
-			role,
-			dateCreated
-		})
-
-		const payload = {
-			user: {
-				id,
-				Fname,
-				Lname,
-				role: ROLE.ADMIN
-			}
-		}
-		jwt.sign(
-			payload,
-			config.get('jwtpass'),
-			{expiresIn: 40000},
-			(err, token) =>{
-				if(err) throw err;
-				res.json({token})
-			}
-
-		)
-
-	} catch (error) {
-		res.status(500).send('Server error');
+router.post("/register", authUser, authRole(ROLE.ADMIN), async (req, res) => {
+	const {
+	  Fname,
+	  Lname,
+	  email,
+	  password,
+	  address: { street_address, city, state, zip_code },
+	  DOB,
+	  role
+	} = req.body;
+	const { error, value } = validateAdminSignup(req.body); //Uses Joi to validate the input
+  
+	if (error) {
+	  //If input is invalid list all errors
+	  const errorFull = [];
+	  for (x = 0; x < error.details.length; x++) {
+		errorFull.push(error.details[x].message);
+	  }
+	  return res.send(errorFull);
 	}
-});
+  
+	const userRef = db.collection("users");
+  
+	let user = await userRef.where("email", "==", email).get(); //Check if email is in database already
+	console.log(user);
+	if (!user.empty)
+	  return res
+		.status(400)
+		.json({ errors: "This email has already been used." });
+  
+	const salt = await bcrypt.genSalt(10);
+  
+	const dateCreated = new Date();
+  
+	function setRole(role){ //sets the role to the inputted role
+		if(user.role == "admin"){
+			role = ROLE.ADMIN
+		} else if(user.role == "manager"){
+			role = ROLE.MANAGER
+		} else if(user.role == "basic"){
+			role = ROLE.BASIC
+		}
+		return role
+	}
+
+	function addZero() {
+	  //adds a zero in front of months < 10
+	  if (dateCreated.getMonth() < 10) {
+		return 0;
+	  } else return;
+	}
+  
+	function sliceYear() {
+	  //Cuts off the 20 of a year((20)18) and returns the end(18)
+	  let x = dateCreated.getFullYear();
+	  return x - 2000;
+	}
+	const id = `${Fname.charAt(0)}${Lname}${addZero()}${
+	  //Creates id with first initial of first name, full last name, month and year created
+	  dateCreated.getMonth() + 1
+	}${sliceYear()}`;
+  
+	const hashedPassword = await bcrypt.hash(password, salt);
+  
+	await db.collection("users").doc(id).set({
+	  id,
+	  Fname,
+	  Lname,
+	  email,
+	  password: hashedPassword,
+	  dateCreated,
+	  address: {
+		street_address,
+		city,
+		state,
+		zip_code,
+	  },
+	  DOB,
+	  role: setRole(role)
+	});
+  
+	const payload = {
+	  user: {
+		id,
+		Fname,
+		Lname,
+		email,
+		role: setRole(role)
+	  },
+	};
+	jwt.sign(
+	  payload,
+	  config.get("jwtpass"),
+	  { expiresIn: 40000 },
+	  (err, token) => {
+		if (err) throw err;
+		res.json({ token });
+	  }
+	);
+  });
 
 module.exports = router;

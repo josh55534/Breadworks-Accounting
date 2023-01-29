@@ -1,63 +1,62 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken')
-const config = require('config');
-const {check, validationResult} = require('express-validator');
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const config = require("config");
+const Joi = require("joi");
+const { validateLogin } = require("../../validator");
 
-const admin = require('firebase-admin');
+const admin = require("firebase-admin");
 const db = admin.firestore();
 
-router.post('/', [
-	check('email', 'Email is not in the correct format.').isEmail(),
-	check('password', 'Password is required.').exists()
-], async(req, res) =>{
-	const errors = validationResult(req)
-	if(!errors.isEmpty()){
-		return res.status(400).json({errors: errors.array()})
-	}
-	const {email, password} = req.body
+router.post("/", async (req, res) => {
+  const { email, password } = req.body;
 
-	try {
-		const userRef = db.collection('users');
+  const { error, value } = validateLogin(req.body); //Uses Joi to validate the input
+  if (error) {
+    //If input is invalid list all errors
+    const errorFull = [];
+    for (x = 0; x < error.details.length; x++) {
+      errorFull.push(error.details[x].message);
+    }
+    return res.send(errorFull);
+  }
 
-		let user = await userRef.where('email', '==', email).get()
+  const userRef = db.collection("users");
 
-		if(user.empty){
-			return res.status(400).json({errors: 'Email not found'})
-		}
+  let user = await userRef.where("email", "==", email).get();
 
-		var found;
-		user.forEach((doc) =>{
-			found = doc.data()
-		})
+  if (user.empty) {
+    return res.status(400).json({ errors: "Email not found" });
+  }
 
-		const matched = await bcrypt.compare(password, found.password)
+  var found;
+  user.forEach((doc) => {
+    found = doc.data();
+  });
 
-		if(!matched){
-			return res.status(400).json({errors: 'Invalid password'})
-		}
+  const matched = await bcrypt.compare(password, found.password);
 
-		const payload = {
-			user: {
-				id: found.id,
-				role: found.role,
-			}
-		}
+  if (!matched) {
+    return res.status(400).json({ errors: "Invalid password" });
+  }
 
-		jwt.sign(
-			payload,
-			config.get('jwtpass'),
-			{expiresIn: 40000},
-			(err, token) => {
-				if (err) throw err;
-				res.json({ token })
-			}
-		)
-	} catch (error) {
-		res.status(500).send('Server error')
-		
-	}
+  const payload = {
+    user: {
+      id: found.id,
+      role: found.role,
+    },
+  };
+
+  jwt.sign(
+    payload,
+    config.get("jwtpass"),
+    { expiresIn: 40000 },
+    (err, token) => {
+      if (err) throw err;
+      res.json({ token });
+    }
+  );
 });
 
 module.exports = router;
