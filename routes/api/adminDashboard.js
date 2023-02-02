@@ -4,17 +4,60 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken')
 const config = require('config');
 const Joi = require('joi');
-const { ROLE } = require('../../roles')
+const { ROLE, VERIFY } = require('../../roles')
 const admin = require('firebase-admin');
 const db = admin.firestore();
 const { authUser, authRole } = require('../../middleware/basicAuth')
 const { validateAdminSignup } = require("../../validator");
-const { use } = require('./login');
+const { sendLoginApproved, sendEmail } = require('../../email')
 
 router.get('/', authUser, authRole(ROLE.ADMIN), (req, res) =>{
 	res.send('admin dashboard');
 });
 
+router.post("/email", authUser, authRole(ROLE.ADMIN), async (req, res) => {
+	const {
+	  email,
+	  subject,
+	  message
+	} = req.body;
+
+	const userRef = db.collection("users");
+	let user = await userRef.where("email", "==", email).get(); //Check if email is in database already
+	if (user.empty) {
+		return res.status(400).json({ errors: "Email not found" });
+	  }
+
+	var found;
+  user.forEach((doc) => {
+    found = doc.data();
+  });
+	sendEmail(email, subject, message, found.Fname, found.Lname);
+	res.json({msg: `email was sent to ${email}`});
+});
+
+router.put("/verify/:email", authUser, authRole(ROLE.ADMIN), async (req, res) => {
+const email = req.params.email;
+const userRef = db.collection("users");
+
+  let user = await userRef.where("email", "==", email).get();
+
+  if (user.empty) {
+    return res.status(400).json({ errors: "Email not found" });
+  }
+
+  var found;
+  user.forEach((doc) => {
+    found = doc.data();
+  });
+  await db.collection("users").doc(found.id).update({
+  verify: VERIFY.VERIFIED
+  });
+
+  res.send(`${found.id} is now verified`);
+
+  sendLoginApproved(found.Fname, found.Lname, email);
+});
 
 router.post("/register", authUser, authRole(ROLE.ADMIN), async (req, res) => {
 	const {
@@ -38,9 +81,8 @@ router.post("/register", authUser, authRole(ROLE.ADMIN), async (req, res) => {
 	}
   
 	const userRef = db.collection("users");
-  
 	let user = await userRef.where("email", "==", email).get(); //Check if email is in database already
-	console.log(user);
+
 	if (!user.empty)
 	  return res
 		.status(400)

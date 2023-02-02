@@ -1,7 +1,12 @@
 const ROLE = {
-	ADMIN: 'admin',
-	MANAGER: 'manager',
-	BASIC: 'basic',
-  };
+  ADMIN: "admin",
+  MANAGER: "manager",
+  BASIC: "basic",
+};
 
-  module.exports = {ROLE: ROLE}
+const VERIFY = {
+  VERIFIED: "verified",
+  UNVERIFIED: "unverified",
+};
+
+module.exports = { ROLE: ROLE, VERIFY: VERIFY };

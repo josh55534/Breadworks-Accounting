@@ -35,6 +35,10 @@ router.post("/", async (req, res) => {
     found = doc.data();
   });
 
+  if (found.verify == "unverified") {
+    return res.status(401).json({ errors: "Need admin approval before logging in" });
+  }
+
   const matched = await bcrypt.compare(password, found.password);
 
   if (!matched) {
