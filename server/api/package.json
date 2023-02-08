@@ -1,15 +1,15 @@
 {
-  "name": "firebase-demo",
+  "name": "server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+	"start": "node index",
+	"dev": "nodemon index"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
+    "autoprefixer": "^10.4.13",
     "axios": "^1.2.3",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.1",
@@ -23,8 +23,17 @@
     "joi": "^17.7.0",
     "jsonwebtoken": "^9.0.0",
     "password-generator": "^2.3.2",
+    "postcss": "^8.4.21",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "request": "^2.88.2",
     "sib-api-v3-sdk": "^8.5.0",
     "uuidv4": "^6.2.13"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.20"
   }
 }

@@ -4,12 +4,12 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken')
 const config = require('config');
 const Joi = require('joi');
-const { ROLE, VERIFY } = require('../../roles')
+const { ROLE, VERIFY } = require('./roles-validator/roles')
 const admin = require('firebase-admin');
 const db = admin.firestore();
-const { authUser, authRole } = require('../../middleware/basicAuth')
-const { validateAdminSignup } = require("../../validator");
-const { sendLoginApproved, sendEmail } = require('../../email')
+const { authUser, authRole } = require('./middleware/basicAuth')
+const { validateAdminSignup } = require("./roles-validator/validator");
+const { sendLoginApproved, sendEmail } = require('./email')
 
 router.get('/', authUser, authRole(ROLE.ADMIN), (req, res) =>{
 	res.send('admin dashboard');

@@ -4,11 +4,11 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("config");
 const Joi = require("joi");
-const { validateSignup } = require("../../validator");
-const { ROLE, VERIFY } = require("../../roles");
+const { validateSignup } = require("./roles-validator/validator");
+const { ROLE, VERIFY } = require("./roles-validator/roles");
 const admin = require("firebase-admin");
 const db = admin.firestore();
-const { sendRegistertoAdmin } = require("../../email");
+const { sendRegistertoAdmin } = require("./email");
 
 router.get("/", (req, res) => {
   res.send("register page");

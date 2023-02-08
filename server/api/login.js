@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("config");
 const Joi = require("joi");
-const { validateLogin } = require("../../validator");
+const { validateLogin } = require("./roles-validator/validator");
 
 const admin = require("firebase-admin");
 const db = admin.firestore();
