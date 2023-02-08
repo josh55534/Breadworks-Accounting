@@ -10,8 +10,8 @@ function App() {
 	}, []);
 
   return (
-   <div className="w-screen h-screen bg-red-300">
-	  {data ? <div>{data}</div> : <div>Loading...</div>}
+   <div className="bg-red-800">
+	  {data ? <div >{data}</div> : <div >Loading...</div>}
    </div>
   )
 }

@@ -1,9 +1,8 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
+import MyComponent from './component'
+import '../index.css'
 
-ReactDOM.render(
-	<React.StrictMode>
-  <h1>Login Page</h1>
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+const domNode = document.getElementById('root');
+const root = createRoot(domNode);
+root.render(<MyComponent />);

@@ -2,6 +2,7 @@
   "name": "client",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "proxy": "http://localhost:5000",
   "scripts": {
     "dev": "vite",
@@ -9,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "autoprefixer": "^10.4.13",
     "axios": "^1.2.3",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.1",
@@ -23,7 +23,6 @@
     "joi": "^17.7.0",
     "jsonwebtoken": "^9.0.0",
     "password-generator": "^2.3.2",
-    "postcss": "^8.4.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "request": "^2.88.2",
@@ -35,7 +34,9 @@
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@vitejs/plugin-react": "^3.1.0",
-    "tailwindcss": "^3.2.4",
+    "autoprefixer": "^10.4.13",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.2.6",
     "vite": "^4.1.1",
     "vite-plugin-node": "^3.0.2"
   }

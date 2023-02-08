@@ -4,6 +4,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 require('dotenv').config();
+process.env.SUPPRESS_NO_CONFIG_WARNING = 'y';
 
 const admin = require('firebase-admin');
 const serviceAccount = require('../config/serviceAccount.json');
