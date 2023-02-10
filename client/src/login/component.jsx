@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Form, FormGroup, Input, Label, Button } from 'reactstrap';
 
 const LoginPage = () => {
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -10,14 +12,14 @@ const LoginPage = () => {
     event.preventDefault();
 
     axios
-      .post("http://localhost:5000/api/login", {
+      .post("http://localhost:5000/login", {
         email: username,
         password: password,
       })
       .then((res) => {
         console.log(res.data);
         localStorage.setItem("token", res.data.token);
-        window.location.replace("/");
+        window.location.href = "/adminDashboard/";
       })
       .catch((err) => {
         setError(err.response.data.errors);
@@ -25,7 +27,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-200 justify-center items-center">
+    <div className="flex h-screen justify-center items-center">
       <form className="bg-white p-6 rounded-lg shadow-md" onSubmit={handleSubmit}>
         <h2 className="text-lg font-medium mb-4">Login</h2>
         <div className="mb-4">
