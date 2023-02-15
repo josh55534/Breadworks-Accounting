@@ -10,7 +10,7 @@ const signupSchema = Joi.object({
 	email: Joi.string().email().required(),
 	password: Joi.string().min(3).max(10).required(),
 	address: {
-		street_address: Joi.string().min(3).max(20).required(),
+		street_address: Joi.string().min(3).max(40).required(),
 		city: Joi.string().min(3).max(10).alphanum().required(),
 		state: Joi.string().length(2).alphanum().required(),
 		zip_code: Joi.string().length(5).pattern(/^[0-9]+$/).required(),
@@ -24,7 +24,7 @@ const signupAdminSchema = Joi.object({
 	email: Joi.string().email().required(),
 	password: Joi.string().min(3).max(10).required(),
 	address: {
-		street_address: Joi.string().min(3).max(20).required(),
+		street_address: Joi.string().min(3).max(40).required(),
 		city: Joi.string().min(3).max(10).alphanum().required(),
 		state: Joi.string().length(2).alphanum().required(),
 		zip_code: Joi.string().length(5).pattern(/^[0-9]+$/).required(),

@@ -31,7 +31,7 @@ router.post("/", async (req, res) => {
     for (x = 0; x < error.details.length; x++) {
       errorFull.push(error.details[x].message);
     }
-    return res.send(errorFull);
+    return res.status(400).json({ errors: errorFull});
   }
 
   const userRef = db.collection("users");
