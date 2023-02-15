@@ -10,6 +10,7 @@ function AdminPage() {
     return <Redirect to="/login/" />;
   }
 
+  //Looks for the Bearer
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -27,6 +28,8 @@ function AdminPage() {
   const [users, setUsers] = useState([]);
   const [emails, setEmails] = useState([]);
   const [roles, setRoles] = useState([]);
+  const [verifies, setVerifies] = useState([]);
+  const [status, setStatus] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     axios
@@ -35,6 +38,8 @@ function AdminPage() {
         setUsers(res.data.users);
 		setEmails(res.data.emails);
 		setRoles(res.data.roles);
+		setVerifies(res.data.verifies);
+		setStatus(res.data.status);
         setLoading(false);
       })
       .catch((err) => {
@@ -61,6 +66,8 @@ function AdminPage() {
 			  <th className="text-sm font-medium text-gray-700 p-2">Username</th>
 			  <th className="text-sm font-medium text-gray-700 p-2 ">Email</th>
 			  <th className="text-sm font-medium text-gray-700 p-2 ">Role</th>
+			  <th className="text-sm font-medium text-gray-700 p-2 ">Verification</th>
+			  <th className="text-sm font-medium text-gray-700 p-2 ">Status</th>
 			</tr>
 		  </thead>
 		  <tbody>
@@ -69,6 +76,8 @@ function AdminPage() {
                   <td className="p-2 border-t border-gray-200">{user}</td>
                   <td className="p-2 border-t border-gray-200">{emails[index]}</td>
                   <td className="p-2 border-t border-gray-200">{roles[index]}</td>
+				  <td className="p-2 border-t border-gray-200">{verifies[index]}</td>
+				  <td className="p-2 border-t border-gray-200">{status[index]}</td>
                 </tr>
 			))}
 		  </tbody>

@@ -39,6 +39,10 @@ router.post("/", async (req, res) => {
     return res.status(401).json({ errors: "Need admin approval before logging in" });
   }
 
+  if (found.status == "deactivated") {
+    return res.status(401).json({ errors: "Account needs to be activated before logging in" });
+  }
+
   const matched = await bcrypt.compare(password, found.password);
 
   if (!matched) {
