@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("config");
 const Joi = require("joi");
-const { ROLE, VERIFY } = require("./roles-validator/roles");
+const { ROLE, VERIFY, STATUS } = require("./roles-validator/roles");
 const admin = require("firebase-admin");
 const db = admin.firestore();
 const { authUser, authRole } = require("./middleware/basicAuth");
@@ -39,11 +39,15 @@ router.get(
 	  const usersSnapshot = await usersRef.get();
 	  const emailsSnapshot = await usersRef.get();
 	  const rolesSnapshot = await usersRef.get();
+	  const verifySnapshot = await usersRef.get();
+	  const statusSnapshot = await usersRef.get();
   
 	  const users = usersSnapshot.docs.map((doc) => doc.data().id);
 	  const emails = emailsSnapshot.docs.map((doc) => doc.data().email);
 	  const roles = rolesSnapshot.docs.map((doc) => doc.data().role);
-	  res.json({ users, emails, roles });
+	  const verifies = verifySnapshot.docs.map((doc) => doc.data().verify);
+	  const status = statusSnapshot.docs.map((doc) => doc.data().status);
+	  res.json({ users, emails, roles, verifies, status });
 	}
   );
 
@@ -64,6 +68,7 @@ router.post("/email", authUser, authRole(ROLE.ADMIN), async (req, res) => {
   res.json({ msg: `email was sent to ${email}` });
 });
 
+//Verify the user
 router.put(
   "/verify/:email",
   authUser,
@@ -100,7 +105,7 @@ router.post("/register", authUser, authRole(ROLE.ADMIN), async (req, res) => {
     password,
     address: { street_address, city, state, zip_code },
     DOB,
-    role,
+    role
   } = req.body;
   const { error, value } = validateAdminSignup(req.body); //Uses Joi to validate the input
 
@@ -174,6 +179,8 @@ router.post("/register", authUser, authRole(ROLE.ADMIN), async (req, res) => {
       },
       DOB,
       role: setRole(role),
+	  verify: VERIFY.UNVERIFIED,
+	  status: STATUS.ACTIVATED
     });
 
   const payload = {

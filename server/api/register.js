@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const config = require("config");
 const Joi = require("joi");
 const { validateSignup } = require("./roles-validator/validator");
-const { ROLE, VERIFY } = require("./roles-validator/roles");
+const { ROLE, VERIFY, STATUS } = require("./roles-validator/roles");
 const admin = require("firebase-admin");
 const db = admin.firestore();
 const { sendRegistertoAdmin } = require("./email");
@@ -31,7 +31,7 @@ router.post("/", async (req, res) => {
     for (x = 0; x < error.details.length; x++) {
       errorFull.push(error.details[x].message);
     }
-    return res.send(errorFull);
+    return res.status(400).json({ errors: errorFull});
   }
 
   const userRef = db.collection("users");
@@ -81,7 +81,8 @@ router.post("/", async (req, res) => {
       zip_code,
     },
     DOB,
-	verify: VERIFY.UNVERIFIED
+	verify: VERIFY.UNVERIFIED,
+	status: STATUS.ACTIVATED
   });
 
   const payload = {
