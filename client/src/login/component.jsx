@@ -1,32 +1,39 @@
-import React, { useState } from "react";
-import axios from "axios";
+import { useState } from 'react';
+import { BrowserRouter, Route, Link, Redirect, useHistory, useLocation } from "react-router-dom";
+import axios from 'axios';
+import RegisterPage from '../register/component'
+import Header from '../header'
 
-const LoginPage = () => {
-
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+const Login = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const history = useHistory();
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
     axios
-      .post("http://localhost:5000/login", {
+      .post('http://localhost:5000/login', {
         email: username,
         password: password,
       })
       .then((res) => {
         console.log(res.data);
-        localStorage.setItem("token", res.data.token);
-        window.location.href = "/adminDashboard/";
+        localStorage.setItem('token', res.data.token);
+        history.push('/');
+		window.location.reload();
       })
       .catch((err) => {
         setError(err.response.data.errors);
       });
   };
 
+
   return (
-    <div className="flex h-screen justify-center items-center">
+	<div>
+		<Header />
+    <div className="flex justify-center items-center mb-10 mt-10">
       <form className="bg-white p-6 rounded-lg shadow-md" onSubmit={handleSubmit}>
         <h2 className="text-lg font-medium mb-4">Login</h2>
         <div className="mb-4">
@@ -61,7 +68,36 @@ const LoginPage = () => {
         </button>
       </form>
     </div>
+	</div>
   );
 };
 
+function notSignedUp(){
+	const history = useHistory();
+	function handleRegisterButtonClick() {
+		history.push('/register/');
+		window.location.reload();
+	  }
+
+	  return (
+		<div className='flex justify-center pb-10'>
+		<button
+          onClick={handleRegisterButtonClick}
+          className="bg-red-600 text-white py-2 px-4 rounded-full hover:bg-red-800" 
+        >
+          Not signed up?
+        </button>
+		</div>
+	  )
+}
+
+function LoginPage(){
+	return (
+		<BrowserRouter>
+		  <Route path="/login/" component={Login} />
+		  <Route path="/login/" component={notSignedUp} />
+		  <Route exact path="/register/" component={RegisterPage} />
+		</BrowserRouter>
+	  );
+}
 export default LoginPage;

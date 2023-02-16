@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Link, Redirect } from "react-router-dom";
 import LoginPage from "../login/component";
 import axios from "axios";
+import Header from '../header'
 
 function AdminPage() {
   //If token isn't active redirects you to the login page
@@ -16,14 +17,16 @@ function AdminPage() {
       Authorization: `Bearer ${token}`,
     },
   };
+
   //Gets the main page of adminDashboard which returns "admin dashboard" if authorized as an administrator
   const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetch("http://localhost:5000/adminDashboard", config)
       .then((response) => response.text())
-      .then((text) => setData(text));
-  }, []);
+      .then((text) => setData(text))
+  }, [config]);
 
   const [users, setUsers] = useState([]);
   const [emails, setEmails] = useState([]);
@@ -43,12 +46,15 @@ function AdminPage() {
         setLoading(false);
       })
       .catch((err) => {
+		window.location.href = "/login/";
         console.error(err);
         setLoading(false);
-      });
   }, []);
+})
 
   return (
+	<div>
+		<Header />
 	<form>
     <div className="bg-red-500 w-fit rounded-lg font-bold mx-auto">
       {data ? <div>{data}</div> : <div>Loading...</div>}
@@ -86,6 +92,7 @@ function AdminPage() {
 	)}
   </div>
   </form>
+  </div>
   );
 }
 

@@ -88,8 +88,7 @@ router.post("/", async (req, res) => {
   const payload = {
     user: {
       id,
-      Fname,
-      Lname,
+      verify: VERIFY.UNVERIFIED,
       email,
       role: ROLE.BASIC,
     },
@@ -105,6 +104,7 @@ router.post("/", async (req, res) => {
   );
 
 sendRegistertoAdmin(id, email)
+
 
 });
 
