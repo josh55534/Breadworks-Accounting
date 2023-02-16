@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { BrowserRouter, Route, Link, Redirect, useHistory, useLocation } from "react-router-dom";
+import LoginPage from '../login/component';
+import Header from '../header'
 
 const Register = () => {
   const [error, setError] = useState(null);
@@ -14,6 +17,7 @@ const Register = () => {
     zip_code: "",
   });
   const [DOB, setDOB] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -35,7 +39,7 @@ const Register = () => {
       .then((res) => {
         console.log(res.data);
         localStorage.setItem("token", res.data.token);
-        window.location.href = "/";
+		setMessage("Account registration successful");
       })
       .catch((err) => {
         setError(err.response.data.errors);
@@ -50,8 +54,19 @@ const Register = () => {
     }));
   };
 
+  useEffect(() => {
+    if (message) {
+      setTimeout(() => {
+        setMessage("");
+        window.location.href = "/";
+      }, 3000);
+    }
+  }, [message]);
+
   return (
-    <div className="bg-white p-6 rounded-lg shadow-xl w-5/12 mx-auto mt-10 mb-10">
+	<div>
+		<Header />
+    <div className="bg-white p-6 rounded-lg shadow-xl w-4/12 mx-auto mt-10 mb-10">
       <form onSubmit={handleSubmit}>
         <h2 className="text-lg font-medium mb-4">Register</h2>
         <div className="mb-4">
@@ -172,10 +187,41 @@ const Register = () => {
         ) : null}
 
         <button className="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600">
-          Login
+          Register
         </button>
+		<p>{message}</p>
       </form>
     </div>
+	</div>
   );
 };
-export default Register;
+
+function haveAccount(){
+	const history = useHistory();
+	function handleRegisterButtonClick() {
+		history.push('/login/');
+		window.location.reload();
+	  }
+
+	  return (
+		<div className="flex justify-center pb-10">
+		<button
+          onClick={handleRegisterButtonClick}
+          className="bg-red-600 text-white py-2 px-4 rounded-full hover:bg-red-800" 
+        >
+          Already have an account?
+        </button>
+		</div>
+	  )
+}
+
+function RegisterPage(){
+	return (
+		<BrowserRouter>
+		  <Route path="/register/" component={Register} />
+		  <Route path="/register/" component={haveAccount} />
+		  <Route exact path="/login/" component={LoginPage} />
+		</BrowserRouter>
+	  );
+	}
+export default RegisterPage;

@@ -21,7 +21,7 @@ app.use('/adminDashboard', require('./adminDashboard'))
 
 
 app.get('/', (req, res) =>{
-	res.send('Hello');
+	res.send('Welcome to the Breadworks Accounting Home Page');
 });
 
 

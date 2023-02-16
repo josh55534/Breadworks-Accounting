@@ -31,7 +31,7 @@ function authRole(role) {
   return (req, res, next) => {
     if (req.user.role !== role) {
       res.status(401);
-      return res.send("Not allowed need admin role");
+      return res.status(401).json({ errors: "Not allowed need admin role" });
     }
     next();
   };
