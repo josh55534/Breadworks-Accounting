@@ -9,6 +9,7 @@ const { ROLE, VERIFY, STATUS } = require("./roles-validator/roles");
 const admin = require("firebase-admin");
 const db = admin.firestore();
 const { sendRegistertoAdmin } = require("./email");
+const usersRef = db.collection("users");
 
 router.get("/", (req, res) => {
   res.send("register page");
@@ -34,9 +35,8 @@ router.post("/", async (req, res) => {
     return res.status(400).json({ errors: errorFull});
   }
 
-  const userRef = db.collection("users");
 
-  let user = await userRef.where("email", "==", email).get(); //Check if email is in database already
+  let user = await usersRef.where("email", "==", email).get(); //Check if email is in database already
   
   if (!user.empty)
     return res

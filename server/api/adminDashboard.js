@@ -11,6 +11,8 @@ const { authUser, authRole } = require("./middleware/basicAuth");
 const { validateAdminSignup } = require("./roles-validator/validator");
 const { sendLoginApproved, sendEmail } = require("./email");
 
+const usersRef = db.collection("users");
+
 router.get("/", authUser, authRole(ROLE.ADMIN), (req, res) => {
   res.send("Admin Dashboard");
 });
@@ -20,7 +22,6 @@ router.get(
   authUser,
   authRole(ROLE.ADMIN),
   async (req, res) => {
-    const usersRef = db.collection("users");
 
     const usersSnapshot = await usersRef.get();
 
@@ -34,28 +35,21 @@ router.get(
 	authUser,
 	authRole(ROLE.ADMIN),
 	async (req, res) => {
-	  const usersRef = db.collection("users");
+	  const snapshot = await usersRef.get();
   
-	  const usersSnapshot = await usersRef.get();
-	  const emailsSnapshot = await usersRef.get();
-	  const rolesSnapshot = await usersRef.get();
-	  const verifySnapshot = await usersRef.get();
-	  const statusSnapshot = await usersRef.get();
+	  const data = snapshot.docs.map((doc) => {
+		const { id, email, role, verify, status } = doc.data();
+		return { id, email, role, verify, status };
+	  });
   
-	  const users = usersSnapshot.docs.map((doc) => doc.data().id);
-	  const emails = emailsSnapshot.docs.map((doc) => doc.data().email);
-	  const roles = rolesSnapshot.docs.map((doc) => doc.data().role);
-	  const verifies = verifySnapshot.docs.map((doc) => doc.data().verify);
-	  const status = statusSnapshot.docs.map((doc) => doc.data().status);
-	  res.json({ users, emails, roles, verifies, status });
+	  res.json(data);
 	}
   );
 
 router.post("/email", authUser, authRole(ROLE.ADMIN), async (req, res) => {
   const { email, subject, message } = req.body;
 
-  const userRef = db.collection("users");
-  let user = await userRef.where("email", "==", email).get(); //Check if email is in database already
+  let user = await usersRef.where("email", "==", email).get(); //Check if email is in database already
   if (user.empty) {
     return res.status(400).json({ errors: "Email not found" });
   }
@@ -75,9 +69,8 @@ router.put(
   authRole(ROLE.ADMIN),
   async (req, res) => {
     const email = req.params.email;
-    const userRef = db.collection("users");
 
-    let user = await userRef.where("email", "==", email).get();
+    let user = await usersRef.where("email", "==", email).get();
 
     if (user.empty) {
       return res.status(400).json({ errors: "Email not found" });
@@ -96,6 +89,97 @@ router.put(
     sendLoginApproved(found.Fname, found.Lname, email);
   }
 );
+
+//Activates the user's account
+router.put(
+	"/activate/:email",
+	authUser,
+	authRole(ROLE.ADMIN),
+	async (req, res) => {
+	  const email = req.params.email;
+  
+	  let user = await usersRef.where("email", "==", email).get();
+  
+	  if (user.empty) {
+		return res.status(400).json({ errors: "Email not found" });
+	  }
+  
+	  var found;
+	  user.forEach((doc) => {
+		found = doc.data();
+	  });
+	  await db.collection("users").doc(found.id).update({
+		status: STATUS.ACTIVATED,
+	  });
+  
+	  res.send(`${found.id} is now activated`);
+	}
+  );
+
+  //Deactivates the user's account
+router.put(
+	"/deactivate/:email",
+	authUser,
+	authRole(ROLE.ADMIN),
+	async (req, res) => {
+	  const email = req.params.email;
+  
+	  let user = await usersRef.where("email", "==", email).get();
+  
+	  if (user.empty) {
+		return res.status(400).json({ errors: "Email not found" });
+	  }
+  
+	  var found;
+	  user.forEach((doc) => {
+		found = doc.data();
+	  });
+	  await db.collection("users").doc(found.id).update({
+		status: STATUS.DEACTIVATED,
+	  });
+  
+	  res.send(`${found.id} is now deactivated`);
+	}
+  );
+
+  router.put(
+	"/update/:email",
+	authUser,
+	authRole(ROLE.ADMIN),
+	async (req, res) => {
+	  const email = req.params.email;
+  
+	  let user = await usersRef.where("email", "==", email).get();
+  
+	  if (user.empty) {
+		return res.status(400).json({ errors: "Email not found" });
+	  }
+  
+	  var found;
+	  user.forEach((doc) => {
+		found = doc.data();
+	  });
+  
+	  const updatedUser = {
+		Fname: req.body.Fname || found.Fname,
+		Lname: req.body.Lname || found.Lname,
+		email: req.body.email || found.email,
+		address: {
+		  street_address: req.body.address?.street_address || found.address?.street_address,
+		  city: req.body.address?.city || found.address?.city,
+		  state: req.body.address?.state || found.address?.state,
+		  zip_code: req.body.address?.zip_code || found.address?.zip_code,
+		},
+		DOB: req.body.DOB || found.DOB,
+		role: req.body.role || found.role,
+	  };
+  
+	  await db.collection("users").doc(found.id).update(updatedUser);
+  
+	  res.send(`${found.id} is now updated`);
+	}
+  );
+  
 
 router.post("/register", authUser, authRole(ROLE.ADMIN), async (req, res) => {
   const {
@@ -118,8 +202,7 @@ router.post("/register", authUser, authRole(ROLE.ADMIN), async (req, res) => {
     return res.send(errorFull);
   }
 
-  const userRef = db.collection("users");
-  let user = await userRef.where("email", "==", email).get(); //Check if email is in database already
+  let user = await usersRef.where("email", "==", email).get(); //Check if email is in database already
 
   if (!user.empty)
     return res

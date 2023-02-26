@@ -1,14 +1,15 @@
-import { useState } from 'react';
-import { BrowserRouter, Route, Link, Redirect, useHistory, useLocation } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from 'axios';
-import RegisterPage from '../register/component'
-import Header from '../header'
+const token = localStorage.getItem("token");
+
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-  const history = useHistory();
+  const [message, setMessage] = useState("");
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -21,18 +22,30 @@ const Login = () => {
       .then((res) => {
         console.log(res.data);
         localStorage.setItem('token', res.data.token);
-        history.push('/');
-		window.location.reload();
+        setMessage("Login successful");
       })
       .catch((err) => {
         setError(err.response.data.errors);
       });
   };
 
+  //on login display seccessful login and navigate to home page
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (message) {
+      setTimeout(() => {
+        setMessage("");
+        navigate('/');
+      }, 3000);
+    }
+  }, [message]);
+
+if(token){
+  return <Navigate replace to="/" />;
+} else {
 
   return (
-	<div>
-		<Header />
+	<div className="flex flex-col items-center">
     <div className="flex justify-center items-center mb-10 mt-10">
       <form className="bg-white p-6 rounded-lg shadow-md" onSubmit={handleSubmit}>
         <h2 className="text-lg font-medium mb-4">Login</h2>
@@ -66,38 +79,21 @@ const Login = () => {
         <button className="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600">
           Login
         </button>
+        <p>{message}</p>
       </form>
-    </div>
-	</div>
-  );
-};
-
-function notSignedUp(){
-	const history = useHistory();
-	function handleRegisterButtonClick() {
-		history.push('/register/');
-		window.location.reload();
-	  }
-
-	  return (
-		<div className='flex justify-center pb-10'>
+	  </div>
+	  <div className='pb-10'>
+		<Link to= '/register'>
 		<button
-          onClick={handleRegisterButtonClick}
           className="bg-red-600 text-white py-2 px-4 rounded-full hover:bg-red-800" 
         >
           Not signed up?
         </button>
+		</Link>
 		</div>
-	  )
-}
+    </div>
+  );
+        }
+};
 
-function LoginPage(){
-	return (
-		<BrowserRouter>
-		  <Route path="/login/" component={Login} />
-		  <Route path="/login/" component={notSignedUp} />
-		  <Route exact path="/register/" component={RegisterPage} />
-		</BrowserRouter>
-	  );
-}
-export default LoginPage;
+export default Login;

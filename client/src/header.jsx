@@ -1,30 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {
-  BrowserRouter,
-  Route,
-  Link,
-  Redirect,
-  useHistory,
-  useLocation,
-} from "react-router-dom";
+import { Link } from "react-router-dom";
 import accountIcon from "./assets/accountIcon.png";
 import LogoPic from "./assets/Breadworks.fw.png";
 
 const Header = () => {
   const token = localStorage.getItem("token");
-  const history = useHistory();
-  const location = useLocation();
   const [showDropdown, setShowDropdown] = useState(false);
-
-  function handleLoginButtonClick() {
-    history.push("/login/");
-    window.location.reload();
-  }
-
-  function handleRegisterButtonClick() {
-    history.push("/register/");
-    window.location.reload();
-  }
 
   function handleLogout() {
     localStorage.removeItem("token");
@@ -36,9 +17,9 @@ const Header = () => {
     <header>
       <div>
 		<div className="grid place-items-center mt-5">
-    <a href="http://localhost:3000">
+    <Link to="/">
       <img src={LogoPic} alt="Logo" />
-    </a>
+    </Link>
 	</div>
     {token && (
     <div className="pt-5 flex justify-end mr-2">
@@ -60,20 +41,22 @@ const Header = () => {
     </div>
     )}
 
-      {!token && location.pathname !== "/login/" && location.pathname !== "/register/" && (
+      {!token && location.pathname !== "/login" && location.pathname !== "/register" && (
         <div className="pt-5 flex justify-end mr-2">
+			<Link to= '/login'>
           <button
-            onClick={handleLoginButtonClick}
             className="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600 mr-2"
           >
             Login
           </button>
+		  </Link>
+		  <Link to= '/register'>
           <button
-            onClick={handleRegisterButtonClick}
             className="bg-red-600 text-white py-2 px-4 rounded-full hover:bg-red-800"
           >
             Register
           </button>
+		  </Link>
         </div>
       )}
 	  </div>

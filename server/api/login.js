@@ -8,6 +8,7 @@ const { validateLogin } = require("./roles-validator/validator");
 
 const admin = require("firebase-admin");
 const db = admin.firestore();
+const usersRef = db.collection("users");
 
 router.post("/", async (req, res) => {
   const { email, password } = req.body;
@@ -23,9 +24,8 @@ router.post("/", async (req, res) => {
     return res.status(400).json({ errors: errorFull});
   }
 
-  const userRef = db.collection("users");
 
-  let user = await userRef.where("email", "==", email).get();
+  let user = await usersRef.where("email", "==", email).get();
 
   if (user.empty) {
     return res.status(400).json({ errors: "Email not found" });

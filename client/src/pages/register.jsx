@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { BrowserRouter, Route, Link, Redirect, useHistory, useLocation } from "react-router-dom";
-import LoginPage from '../login/component';
-import Header from '../header'
+import { Link, Navigate, useNavigate } from "react-router-dom";
+
 
 const Register = () => {
   const [error, setError] = useState(null);
@@ -54,18 +53,18 @@ const Register = () => {
     }));
   };
 
+  const navigate = useNavigate();
   useEffect(() => {
     if (message) {
       setTimeout(() => {
         setMessage("");
-        window.location.href = "/";
+        navigate('/');
       }, 3000);
     }
   }, [message]);
 
   return (
-	<div>
-		<Header />
+	<div className="flex flex-col items-center">
     <div className="bg-white p-6 rounded-lg shadow-xl w-4/12 mx-auto mt-10 mb-10">
       <form onSubmit={handleSubmit}>
         <h2 className="text-lg font-medium mb-4">Register</h2>
@@ -191,37 +190,19 @@ const Register = () => {
         </button>
 		<p>{message}</p>
       </form>
-    </div>
-	</div>
-  );
-};
-
-function haveAccount(){
-	const history = useHistory();
-	function handleRegisterButtonClick() {
-		history.push('/login/');
-		window.location.reload();
-	  }
-
-	  return (
-		<div className="flex justify-center pb-10">
+	  </div>
+	  <div className="pb-10">
+		<Link to='/login'>
 		<button
-          onClick={handleRegisterButtonClick}
           className="bg-red-600 text-white py-2 px-4 rounded-full hover:bg-red-800" 
         >
           Already have an account?
         </button>
+		</Link>
 		</div>
-	  )
-}
+    </div>
+  );
+};
 
-function RegisterPage(){
-	return (
-		<BrowserRouter>
-		  <Route path="/register/" component={Register} />
-		  <Route path="/register/" component={haveAccount} />
-		  <Route exact path="/login/" component={LoginPage} />
-		</BrowserRouter>
-	  );
-	}
-export default RegisterPage;
+
+export default Register;
