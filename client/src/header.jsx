@@ -6,7 +6,7 @@ import LogoPic from "./assets/Breadworks.fw.png";
 function Logo(props) {
   return (
     <div className="grid place-items-center mt-5">
-      <Link to="/" onClick={() => window.location.href="/"}>
+      <Link to="/" onClick={() => window.location.href = "/"}>
         <img src={LogoPic} alt="Logo" />
       </Link>
     </div>);
@@ -48,14 +48,14 @@ function Header() {
 
         {!token && location.pathname !== "/login" && location.pathname !== "/register" && (
           <div className="pt-5 flex justify-end mr-2 gap-2">
-            <Link to='/login' onClick={() => window.location.href="/login"}>
+            <Link to='/login' onClick={() => window.location.href = "/login"}>
               <button
                 className="btn-primary"
               >
                 Login
               </button>
             </Link>
-            <Link to='/register' onClick={() => window.location.href="/register"}>
+            <Link to='/register' onClick={() => window.location.href = "/register"}>
               <button
                 className="btn-primary btn-primary-red"
               >

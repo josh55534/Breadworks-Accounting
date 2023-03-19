@@ -36,7 +36,7 @@ const AdminHeader = () => {
           <Link to="/admindashboard/email">
             <button
               className="mt-4 bg-orange-600 rounded-sm hover:bg-orange-700 ml-2"
-              onClick={() => {}}
+              onClick={() => { }}
             >
               Email
             </button>
@@ -44,7 +44,7 @@ const AdminHeader = () => {
           <Link to="/admindashboard/view">
             <button
               className="mt-4 bg-orange-600 rounded-sm hover:bg-orange-700 ml-2"
-              onClick={() => {}}
+              onClick={() => { }}
             >
               View Users
             </button>
@@ -52,7 +52,7 @@ const AdminHeader = () => {
           <Link to="/admindashboard/register">
             <button
               className="mt-4 bg-orange-600 rounded-sm hover:bg-orange-700 ml-2"
-              onClick={() => {}}
+              onClick={() => { }}
             >
               Register
             </button>
@@ -439,23 +439,23 @@ export function UpdateUserForm() {
     event.preventDefault();
 
     await axios.put(`http://localhost:5000/adminDashboard/update/${email}`, {
-        Fname,
-        Lname,
-        email: newEmail,
-        address: {
-          street_address: streetAddress,
-          city,
-          state,
-          zip_code: zipCode,
-        },
-        DOB,
-        role,
-      }, {
-        headers: { "Content-Type": "application/json", ...config.headers },
-      })
+      Fname,
+      Lname,
+      email: newEmail,
+      address: {
+        street_address: streetAddress,
+        city,
+        state,
+        zip_code: zipCode,
+      },
+      DOB,
+      role,
+    }, {
+      headers: { "Content-Type": "application/json", ...config.headers },
+    })
       .then((res) => {
-      console.log(res.data);
-      setMessage("Successfully Updated User");
+        console.log(res.data);
+        setMessage("Successfully Updated User");
       })
       .catch((err) => {
         setError(err.response.data.errors);
@@ -597,8 +597,8 @@ export function UpdateUserForm() {
             </select>
           </div>
           {error ? (
-          <div className="text-red-500 font-medium mb-4">{error}</div>
-        ) : null}
+            <div className="text-red-500 font-medium mb-4">{error}</div>
+          ) : null}
           <button className="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600">
             Update User
           </button>
@@ -609,7 +609,7 @@ export function UpdateUserForm() {
   );
 }
 
-export function RegisterAdmin(){
+export function RegisterAdmin() {
   const [error, setError] = useState(null);
   const [Fname, setFname] = useState("");
   const [Lname, setLname] = useState("");
@@ -635,27 +635,27 @@ export function RegisterAdmin(){
     event.preventDefault();
 
     axios
-  .post("http://localhost:5000/adminDashboard/register", {
-    Fname: Fname,
-    Lname: Lname,
-    email: email,
-    password: password,
-    address: {
-      street_address: address.street_address,
-      city: address.city,
-      state: address.state,
-      zip_code: address.zip_code,
-    },
-    DOB: DOB,
-    role: role
-  }, config)
-  .then((res) => {
-    console.log(res.data);
-    setMessage("Account registration successful");
-  })
-  .catch((err) => {
-    setError(err.response.data.errors);
-  });
+      .post("http://localhost:5000/adminDashboard/register", {
+        Fname: Fname,
+        Lname: Lname,
+        email: email,
+        password: password,
+        address: {
+          street_address: address.street_address,
+          city: address.city,
+          state: address.state,
+          zip_code: address.zip_code,
+        },
+        DOB: DOB,
+        role: role
+      }, config)
+      .then((res) => {
+        console.log(res.data);
+        setMessage("Account registration successful");
+      })
+      .catch((err) => {
+        setError(err.response.data.errors);
+      });
   };
 
   const handleAddressChange = (event) => {
@@ -669,154 +669,154 @@ export function RegisterAdmin(){
 
   return (
     <>
-    <AdminHeader />
-	<div className="flex flex-col items-center">
-    <div className="bg-white p-6 rounded-lg shadow-xl w-4/12 mx-auto mt-10 mb-10">
-      <form onSubmit={handleSubmit}>
-        <h2 className="text-lg font-medium mb-4">Register</h2>
-        <div className="mb-4">
-          <label className="block font-medium mb-2" htmlFor="Fname">
-            First Name
-          </label>
-          <input
-            className="border border-gray-400 p-2 w-full"
-            type="text"
-            id="Fname"
-            value={Fname}
-            onChange={(e) => setFname(e.target.value)}
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block font-medium mb-2" htmlFor="Lname">
-            Last Name
-          </label>
-          <input
-            className="border border-gray-400 p-2 w-full"
-            type="text"
-            id="Lname"
-            value={Lname}
-            onChange={(e) => setLname(e.target.value)}
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block font-medium mb-2" htmlFor="email">
-            Email
-          </label>
-          <input
-            className="border border-gray-400 p-2 w-full"
-            type="text"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block font-medium mb-2" htmlFor="password">
-            Password
-          </label>
-          <input
-            className="border border-gray-400 p-2 w-full"
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block font-medium mb-2" htmlFor="street_address">
-            Street Address
-          </label>
-          <input
-            className="border border-gray-400 p-2 w-full"
-            type="text"
-            id="street_address"
-            name="street_address"
-            value={address.street_address}
-            onChange={handleAddressChange}
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block font-medium mb-2" htmlFor="city">
-            City
-          </label>
-          <input
-            className="border border-gray-400 p-2 w-full"
-            type="text"
-            id="city"
-            name="city"
-            value={address.city}
-            onChange={handleAddressChange}
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block font-medium mb-2" htmlFor="state">
-            State
-          </label>
-          <input
-            className="border border-gray-400 p-2 w-full"
-            type="text"
-            id="state"
-            name="state"
-            value={address.state}
-            onChange={handleAddressChange}
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block font-medium mb-2" htmlFor="zip_code">
-            Zip Code
-          </label>
-          <input
-            className="border border-gray-400 p-2 w-full"
-            type="text"
-            id="zip_code"
-            name="zip_code"
-            value={address.zip_code}
-            onChange={handleAddressChange}
-          />
-        </div>
+      <AdminHeader />
+      <div className="flex flex-col items-center">
+        <div className="bg-white p-6 rounded-lg shadow-xl w-4/12 mx-auto mt-10 mb-10">
+          <form onSubmit={handleSubmit}>
+            <h2 className="text-lg font-medium mb-4">Register</h2>
+            <div className="mb-4">
+              <label className="block font-medium mb-2" htmlFor="Fname">
+                First Name
+              </label>
+              <input
+                className="border border-gray-400 p-2 w-full"
+                type="text"
+                id="Fname"
+                value={Fname}
+                onChange={(e) => setFname(e.target.value)}
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block font-medium mb-2" htmlFor="Lname">
+                Last Name
+              </label>
+              <input
+                className="border border-gray-400 p-2 w-full"
+                type="text"
+                id="Lname"
+                value={Lname}
+                onChange={(e) => setLname(e.target.value)}
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block font-medium mb-2" htmlFor="email">
+                Email
+              </label>
+              <input
+                className="border border-gray-400 p-2 w-full"
+                type="text"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block font-medium mb-2" htmlFor="password">
+                Password
+              </label>
+              <input
+                className="border border-gray-400 p-2 w-full"
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block font-medium mb-2" htmlFor="street_address">
+                Street Address
+              </label>
+              <input
+                className="border border-gray-400 p-2 w-full"
+                type="text"
+                id="street_address"
+                name="street_address"
+                value={address.street_address}
+                onChange={handleAddressChange}
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block font-medium mb-2" htmlFor="city">
+                City
+              </label>
+              <input
+                className="border border-gray-400 p-2 w-full"
+                type="text"
+                id="city"
+                name="city"
+                value={address.city}
+                onChange={handleAddressChange}
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block font-medium mb-2" htmlFor="state">
+                State
+              </label>
+              <input
+                className="border border-gray-400 p-2 w-full"
+                type="text"
+                id="state"
+                name="state"
+                value={address.state}
+                onChange={handleAddressChange}
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block font-medium mb-2" htmlFor="zip_code">
+                Zip Code
+              </label>
+              <input
+                className="border border-gray-400 p-2 w-full"
+                type="text"
+                id="zip_code"
+                name="zip_code"
+                value={address.zip_code}
+                onChange={handleAddressChange}
+              />
+            </div>
 
-        <div className="mb-4">
-          <label className="block font-medium mb-2" htmlFor="DOB">
-            Date of Birth
-          </label>
-          <input
-            className="border border-gray-400 p-2 w-full"
-            type="date"
-            id="DOB"
-            value={DOB}
-            onChange={(e) => setDOB(e.target.value)}
-          />
-        </div>
-        <div className="mb-4">
-            <label
-              className="block text-gray-700 font-bold mb-2"
-              htmlFor="role"
-            >
-              Role:
-            </label>
-            <select
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-            >
-              <option value="admin">Admin</option>
-              <option value="manager">Manager</option>
-              <option value="basic">Basic</option>
-            </select>
-          </div>
-        {error ? (
-          <div className="text-red-500 font-medium mb-4">{error}</div>
-        ) : null}
+            <div className="mb-4">
+              <label className="block font-medium mb-2" htmlFor="DOB">
+                Date of Birth
+              </label>
+              <input
+                className="border border-gray-400 p-2 w-full"
+                type="date"
+                id="DOB"
+                value={DOB}
+                onChange={(e) => setDOB(e.target.value)}
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 font-bold mb-2"
+                htmlFor="role"
+              >
+                Role:
+              </label>
+              <select
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+              >
+                <option value="admin">Admin</option>
+                <option value="manager">Manager</option>
+                <option value="basic">Basic</option>
+              </select>
+            </div>
+            {error ? (
+              <div className="text-red-500 font-medium mb-4">{error}</div>
+            ) : null}
 
-        <button className="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600">
-          Register
-        </button>
-		<p>{message}</p>
-      </form>
-	  </div>
-    </div>
+            <button className="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600">
+              Register
+            </button>
+            <p>{message}</p>
+          </form>
+        </div>
+      </div>
     </>
-);
+  );
 }
 
 const AdminDash = () => {
