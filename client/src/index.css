@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    h2 {
+        @apply text-3xl font-medium mb-4;
+    }
+
+    label {
+        @apply text-lg
+    }
+}
+
 @layer components {
     .btn-primary {
         @apply bg-indigo-500 text-white py-2 px-4 rounded hover:bg-indigo-600 active:bg-indigo-700;
@@ -12,6 +22,6 @@
     }
 
     .txt-primary {
-        @apply border border-gray-400 p-2 w-full rounded focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500;
+        @apply border border-gray-400 py-2 w-full rounded ml-2 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500;
     }
 }

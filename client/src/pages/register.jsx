@@ -67,9 +67,9 @@ const Register = () => {
     <div className="flex flex-col items-center">
       <div className="bg-white p-6 rounded-lg shadow-xl w-4/12 mx-auto my-10">
         <form onSubmit={handleSubmit}>
-          <h2 className="text-2xl font-medium mb-4">Register</h2>
+          <h2>Register</h2>
 
-          <div className="px-4">
+          <div className="px-2">
             <div className="mb-4">
               <label className="block font-medium mb-2" htmlFor="Fname">
                 First Name
@@ -80,7 +80,6 @@ const Register = () => {
                 id="Fname"
                 value={Fname}
                 onChange={(e) => setFname(e.target.value)}
-                
               />
             </div>
 
@@ -192,6 +191,7 @@ const Register = () => {
               />
             </div>
           </div>
+          
           {error ? (
             <div className="text-red-500 font-medium mb-4">{error}</div>
           ) : null}

@@ -45,58 +45,61 @@ export const Login = () => {
   } else {
     return (
       <div className="flex flex-col items-center">
-        <div className="flex justify-center items-center mb-10 mt-10">
-          <form
-            className="bg-white p-6 rounded-lg shadow-md"
-            onSubmit={handleSubmit}
-          >
-            <h2 className="text-lg font-medium mb-4">Login</h2>
-            <div className="mb-4">
-              <label className="block font-medium mb-2" htmlFor="username">
-                Email
-              </label>
-              <input
-                className="border border-gray-400 p-2 w-full"
-                type="text"
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
+        <div className="bg-white p-5 rounded-lg shadow-xl w-4/12 mx-auto my-10">
+          <form onSubmit={handleSubmit} >
+            <h2>Login</h2>
+
+            <div className="px-2">
+              <div className="mb-4">
+                <label className="block font-medium mb-2" htmlFor="username">
+                  Email
+                </label>
+                <input
+                  className="txt-primary"
+                  type="text"
+                  id="username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </div>
+
+              <div className="mb-2">
+                <label className="block font-medium mb-2" htmlFor="password">
+                  Password
+                </label>
+                <input
+                  className="txt-primary mb-1"
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <Link to="/login/forgotpassword" className="mx-1">
+                  <a className="text-indigo-500 font-medium text-sm">
+                    Forgot Password?
+                  </a>
+                </Link>
+              </div>
             </div>
-            <div className="mb-4">
-              <label className="block font-medium mb-2" htmlFor="password">
-                Password
-              </label>
-              <input
-                className="border border-gray-400 p-2 w-full"
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
+
             {error ? (
               <div className="text-red-500 font-medium mb-4">{error}</div>
             ) : null}
-            <button className="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600">
-              Login
-            </button>
+
+            <div className="flex flex-row pb-2">
+              <div className="flex w-full m-auto">
+                <Link to="/register">
+                  <a className="btn-secondary">
+                    Create Account
+                  </a>
+                </Link>
+              </div>
+              <button className="btn-primary">
+                Login
+              </button>
+            </div>
             <p>{message}</p>
           </form>
-        </div>
-        <div className="pb-10">
-          <Link to="/register">
-            <button className="bg-red-600 text-white py-2 px-4 rounded-full hover:bg-red-800">
-              Not signed up?
-            </button>
-          </Link>
-        </div>
-        <div className="pb-10">
-          <Link to="/login/forgotpassword">
-            <button className="bg-red-400 text-white py-2 px-4 rounded-full hover:bg-red-500">
-              Forgot Password?
-            </button>
-          </Link>
         </div>
       </div>
     );
@@ -129,28 +132,30 @@ export function ForgotPass() {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="justify-center items-center my-10 w-full max-w-xl">
+      <div className="bg-white p-6 rounded-lg shadow-xl w-4/12 mx-auto my-10">
         <form
-          className="bg-white p-6 rounded-lg shadow-md"
           onSubmit={handleSubmit}
         >
-          <h2 className="text-lg font-medium mb-4">Enter your email</h2>
-          <div className="mb-4">
-            <label className="block font-medium mb-2" htmlFor="email">
-              Email
-            </label>
-            <input
-              className="border border-gray-400 p-2 w-full"
-              type="text"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+          <h2>Password Reset</h2>
+
+          <div className="px-2">
+            <div className="mb-4">
+              <label className="block font-medium mb-2" htmlFor="email">
+                Email
+              </label>
+              <input
+                className="txt-primary"
+                type="text"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
           </div>
           {error ? (
             <div className="text-red-500 font-medium mb-4">{error}</div>
           ) : null}
-          <button className="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600">
+          <button className="btn-primary float-right">
             Reset Password
           </button>
           <p class="mt-2">{message}</p>
@@ -172,10 +177,10 @@ export function ResetPass() {
       var decoded = jwt_decode(token);
       setEmail(decoded.user.email);
     }
-      else if (!token || decoded.user.forgotpassword === false) {
-        navigate('/');
-      }
-    
+    else if (!token || decoded.user.forgotpassword === false) {
+      navigate('/');
+    }
+
   }, []);
 
   const handleSubmit = async (event) => {
