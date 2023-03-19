@@ -15,7 +15,7 @@ function Login() {
 
     axios
       .post("http://localhost:5000/login", {
-        email: username,
+        username: username,
         password: password,
       })
       .then((res) => {
@@ -52,7 +52,7 @@ function Login() {
             <div className="px-2">
               <div className="mb-4">
                 <label className="block font-medium" htmlFor="username">
-                  Email
+                  Username
                 </label>
                 <input
                   className="txt-primary"

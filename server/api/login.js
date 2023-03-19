@@ -12,9 +12,9 @@ const db = admin.firestore();
 const usersRef = db.collection("users");
 
 router.post("/", async (req, res) => {
-  const { email, password } = req.body;
-
+  const { username, password } = req.body;
   const { error, value } = validateLogin(req.body); //Uses Joi to validate the input
+  
   if (error) {
     //If input is invalid list all errors
     const errorFull = [];
@@ -26,26 +26,23 @@ router.post("/", async (req, res) => {
   }
 
 
-  let user = await usersRef.where("email", "==", email).get();
+  let usernameDb = await usersRef.doc(username).get();
+  let user = await usernameDb.data();
 
-  if (user.empty) {
-    return res.status(400).json({ errors: "Email not found" });
+  console.log();
+  if (typeof user === 'undefined') {
+    return res.status(400).json({ errors: "Invalid Username" });
   }
 
-  var found;
-  user.forEach((doc) => {
-    found = doc.data();
-  });
-
-  if (found.verify == "unverified") {
+  if (user.verify == "unverified") {
     return res.status(401).json({ errors: "Need admin approval before logging in" });
   }
 
-  if (found.status == "deactivated") {
+  if (user.status == "deactivated") {
     return res.status(401).json({ errors: "Account needs to be activated before logging in" });
   }
 
-  const matched = await bcrypt.compare(password, found.password);
+  const matched = await bcrypt.compare(password, user.password);
 
   if (!matched) {
     return res.status(400).json({ errors: "Invalid password" });
@@ -53,8 +50,8 @@ router.post("/", async (req, res) => {
 
   const payload = {
     user: {
-      id: found.id,
-      role: found.role,
+      id: user.id,
+      role: user.role,
     },
   };
 
