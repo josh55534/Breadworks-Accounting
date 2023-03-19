@@ -9,4 +9,8 @@ const VERIFY = {
   UNVERIFIED: "unverified",
 };
 
-module.exports = { ROLE: ROLE, VERIFY: VERIFY };
+const STATUS = {
+	ACTIVATED: "activated",
+	DEACTIVATED: "deactivated",
+  };
+module.exports = { ROLE: ROLE, VERIFY: VERIFY, STATUS: STATUS };

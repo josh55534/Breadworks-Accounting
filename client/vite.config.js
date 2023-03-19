@@ -23,6 +23,7 @@ export default defineConfig({
         main: resolve(root, "index.html"),
         login: resolve(root, "login", "index.html"),
 		adminDashboard: resolve(root, "adminDashboard", "index.html"),
+		register: resolve(root, "register", "index.html"),
       },
     },
   },

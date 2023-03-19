@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const config = require("config");
 
+//Checks if there is a token and verifys if the token is valid
 function authUser(req, res, next) {
   const token = req.header("Authorization");
 
@@ -25,17 +26,19 @@ function authUser(req, res, next) {
   }
 }
 
+//Checks if the role of the user == the role passed into the authRole function
 function authRole(role) {
   return (req, res, next) => {
     if (req.user.role !== role) {
       res.status(401);
-      return res.send("Not allowed need admin role");
+      return res.status(401).json({ errors: "Not allowed need admin role" });
     }
     next();
   };
 }
 
+
 module.exports = {
   authUser,
-  authRole,
+  authRole
 };

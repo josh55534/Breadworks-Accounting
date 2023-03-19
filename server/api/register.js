@@ -5,10 +5,11 @@ const jwt = require("jsonwebtoken");
 const config = require("config");
 const Joi = require("joi");
 const { validateSignup } = require("./roles-validator/validator");
-const { ROLE, VERIFY } = require("./roles-validator/roles");
+const { ROLE, VERIFY, STATUS } = require("./roles-validator/roles");
 const admin = require("firebase-admin");
 const db = admin.firestore();
 const { sendRegistertoAdmin } = require("./email");
+const usersRef = db.collection("users");
 
 router.get("/", (req, res) => {
   res.send("register page");
@@ -31,12 +32,11 @@ router.post("/", async (req, res) => {
     for (x = 0; x < error.details.length; x++) {
       errorFull.push(error.details[x].message);
     }
-    return res.send(errorFull);
+    return res.status(400).json({ errors: errorFull});
   }
 
-  const userRef = db.collection("users");
 
-  let user = await userRef.where("email", "==", email).get(); //Check if email is in database already
+  let user = await usersRef.where("email", "==", email).get(); //Check if email is in database already
   
   if (!user.empty)
     return res
@@ -81,14 +81,14 @@ router.post("/", async (req, res) => {
       zip_code,
     },
     DOB,
-	verify: VERIFY.UNVERIFIED
+	verify: VERIFY.UNVERIFIED,
+	status: STATUS.ACTIVATED
   });
 
   const payload = {
     user: {
       id,
-      Fname,
-      Lname,
+      verify: VERIFY.UNVERIFIED,
       email,
       role: ROLE.BASIC,
     },
@@ -104,6 +104,7 @@ router.post("/", async (req, res) => {
   );
 
 sendRegistertoAdmin(id, email)
+
 
 });
 

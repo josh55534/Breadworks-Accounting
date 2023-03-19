@@ -13,7 +13,6 @@ admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount),
 });
 
-//GET
 app.use('/register', require('./register'));
 app.use('/login', require('./login'));
 app.use('/private', require('./private'))
@@ -21,7 +20,7 @@ app.use('/adminDashboard', require('./adminDashboard'))
 
 
 app.get('/', (req, res) =>{
-	res.send('Hello');
+	res.send('Welcome to the Breadworks Accounting Home Page');
 });
 
 
