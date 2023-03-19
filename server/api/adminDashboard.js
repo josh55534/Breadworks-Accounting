@@ -8,7 +8,7 @@ const { ROLE, VERIFY, STATUS } = require("./roles-validator/roles");
 const admin = require("firebase-admin");
 const db = admin.firestore();
 const { authUser, authRole } = require("./middleware/basicAuth");
-const { validateAdminSignup } = require("./roles-validator/validator");
+const { validateAdminSignup, validateUpdateAdmin } = require("./roles-validator/validator");
 const { sendLoginApproved, sendEmail } = require("./email");
 
 const usersRef = db.collection("users");
@@ -22,7 +22,6 @@ router.get(
   authUser,
   authRole(ROLE.ADMIN),
   async (req, res) => {
-
     const usersSnapshot = await usersRef.get();
 
     const emails = usersSnapshot.docs.map((doc) => doc.data().email);
@@ -31,20 +30,43 @@ router.get(
 );
 
 router.get(
-	"/users",
-	authUser,
-	authRole(ROLE.ADMIN),
-	async (req, res) => {
-	  const snapshot = await usersRef.get();
-  
-	  const data = snapshot.docs.map((doc) => {
-		const { id, email, role, verify, status } = doc.data();
-		return { id, email, role, verify, status };
-	  });
-  
-	  res.json(data);
-	}
-  );
+  "/userByEmail/:email",
+  authUser,
+  authRole(ROLE.ADMIN),
+  async (req, res) => {
+    const email = req.params.email;
+    let user = await usersRef.where("email", "==", email).get(); //Check if email is in database already
+    if (user.empty) {
+      return res.status(400).json({ errors: "Email not found" });
+    } else {
+
+      var found;
+  user.forEach((doc) => {
+    found = doc.data();
+  });
+      res.json({
+        Fname: found.Fname,
+        Lname: found.Lname,
+        email: found.email,
+        password: found.password,
+        address: found.address,
+        DOB: found.DOB,
+        role: found.role,
+      });
+    }
+  }
+);
+
+router.get("/users", authUser, authRole(ROLE.ADMIN), async (req, res) => {
+  const snapshot = await usersRef.get();
+
+  const data = snapshot.docs.map((doc) => {
+    const { id, email, role, verify, status } = doc.data();
+    return { id, email, role, verify, status };
+  });
+
+  res.json(data);
+});
 
 router.post("/email", authUser, authRole(ROLE.ADMIN), async (req, res) => {
   const { email, subject, message } = req.body;
@@ -92,94 +114,105 @@ router.put(
 
 //Activates the user's account
 router.put(
-	"/activate/:email",
-	authUser,
-	authRole(ROLE.ADMIN),
-	async (req, res) => {
-	  const email = req.params.email;
-  
-	  let user = await usersRef.where("email", "==", email).get();
-  
-	  if (user.empty) {
-		return res.status(400).json({ errors: "Email not found" });
-	  }
-  
-	  var found;
-	  user.forEach((doc) => {
-		found = doc.data();
-	  });
-	  await db.collection("users").doc(found.id).update({
-		status: STATUS.ACTIVATED,
-	  });
-  
-	  res.send(`${found.id} is now activated`);
-	}
-  );
+  "/activate/:email",
+  authUser,
+  authRole(ROLE.ADMIN),
+  async (req, res) => {
+    const email = req.params.email;
 
-  //Deactivates the user's account
+    let user = await usersRef.where("email", "==", email).get();
+
+    if (user.empty) {
+      return res.status(400).json({ errors: "Email not found" });
+    }
+
+    var found;
+    user.forEach((doc) => {
+      found = doc.data();
+    });
+    await db.collection("users").doc(found.id).update({
+      status: STATUS.ACTIVATED,
+    });
+
+    res.send(`${found.id} is now activated`);
+  }
+);
+
+//Deactivates the user's account
 router.put(
-	"/deactivate/:email",
-	authUser,
-	authRole(ROLE.ADMIN),
-	async (req, res) => {
-	  const email = req.params.email;
-  
-	  let user = await usersRef.where("email", "==", email).get();
-  
-	  if (user.empty) {
-		return res.status(400).json({ errors: "Email not found" });
-	  }
-  
-	  var found;
-	  user.forEach((doc) => {
-		found = doc.data();
-	  });
-	  await db.collection("users").doc(found.id).update({
-		status: STATUS.DEACTIVATED,
-	  });
-  
-	  res.send(`${found.id} is now deactivated`);
-	}
-  );
+  "/deactivate/:email",
+  authUser,
+  authRole(ROLE.ADMIN),
+  async (req, res) => {
+    const email = req.params.email;
 
-  router.put(
-	"/update/:email",
-	authUser,
-	authRole(ROLE.ADMIN),
-	async (req, res) => {
-	  const email = req.params.email;
-  
-	  let user = await usersRef.where("email", "==", email).get();
-  
-	  if (user.empty) {
-		return res.status(400).json({ errors: "Email not found" });
-	  }
-  
-	  var found;
-	  user.forEach((doc) => {
-		found = doc.data();
-	  });
-  
-	  const updatedUser = {
-		Fname: req.body.Fname || found.Fname,
-		Lname: req.body.Lname || found.Lname,
-		email: req.body.email || found.email,
-		address: {
-		  street_address: req.body.address?.street_address || found.address?.street_address,
-		  city: req.body.address?.city || found.address?.city,
-		  state: req.body.address?.state || found.address?.state,
-		  zip_code: req.body.address?.zip_code || found.address?.zip_code,
-		},
-		DOB: req.body.DOB || found.DOB,
-		role: req.body.role || found.role,
-	  };
-  
-	  await db.collection("users").doc(found.id).update(updatedUser);
-  
-	  res.send(`${found.id} is now updated`);
-	}
-  );
-  
+    let user = await usersRef.where("email", "==", email).get();
+
+    if (user.empty) {
+      return res.status(400).json({ errors: "Email not found" });
+    }
+
+    var found;
+    user.forEach((doc) => {
+      found = doc.data();
+    });
+    await db.collection("users").doc(found.id).update({
+      status: STATUS.DEACTIVATED,
+    });
+
+    res.send(`${found.id} is now deactivated`);
+  }
+);
+
+router.put(
+  "/update/:email",
+  authUser,
+  authRole(ROLE.ADMIN),
+  async (req, res) => {
+    const email = req.params.email;
+
+    let user = await usersRef.where("email", "==", email).get();
+
+    if (user.empty) {
+      return res.status(400).json({ errors: "Email not found" });
+    }
+
+    var found;
+    user.forEach((doc) => {
+      found = doc.data();
+    });
+
+    const { error, value } = validateUpdateAdmin(req.body); //Uses Joi to validate the input
+
+    if (error) {
+      //If input is invalid list all errors
+      const errorFull = [];
+      for (x = 0; x < error.details.length; x++) {
+        errorFull.push(error.details[x].message);
+      }
+      return res.status(400).json({ errors: errorFull });
+    }
+
+    const updatedUser = {
+      Fname: req.body.Fname || found.Fname,
+      Lname: req.body.Lname || found.Lname,
+      email: req.body.email || found.email,
+      address: {
+        street_address:
+          req.body.address?.street_address || found.address?.street_address,
+        city: req.body.address?.city || found.address?.city,
+        state: req.body.address?.state || found.address?.state,
+        zip_code: req.body.address?.zip_code || found.address?.zip_code,
+      },
+      DOB: req.body.DOB || found.DOB,
+      role: req.body.role || found.role,
+    };
+
+    await db.collection("users").doc(found.id).update(updatedUser);
+
+    res.send(`${found.id} is now updated`);
+  }
+);
 
 router.post("/register", authUser, authRole(ROLE.ADMIN), async (req, res) => {
   const {
@@ -189,7 +222,7 @@ router.post("/register", authUser, authRole(ROLE.ADMIN), async (req, res) => {
     password,
     address: { street_address, city, state, zip_code },
     DOB,
-    role
+    role,
   } = req.body;
   const { error, value } = validateAdminSignup(req.body); //Uses Joi to validate the input
 
@@ -199,7 +232,7 @@ router.post("/register", authUser, authRole(ROLE.ADMIN), async (req, res) => {
     for (x = 0; x < error.details.length; x++) {
       errorFull.push(error.details[x].message);
     }
-    return res.send(errorFull);
+    return res.status(400).json({ errors: errorFull });
   }
 
   let user = await usersRef.where("email", "==", email).get(); //Check if email is in database already
@@ -262,28 +295,12 @@ router.post("/register", authUser, authRole(ROLE.ADMIN), async (req, res) => {
       },
       DOB,
       role: setRole(role),
-	  verify: VERIFY.UNVERIFIED,
-	  status: STATUS.ACTIVATED
+      verify: VERIFY.UNVERIFIED,
+      status: STATUS.ACTIVATED,
     });
+res.send('Successfully Registered User')
 
-  const payload = {
-    user: {
-      id,
-      Fname,
-      Lname,
-      email,
-      role: setRole(role),
-    },
-  };
-  jwt.sign(
-    payload,
-    config.get("jwtpass"),
-    { expiresIn: 40000 },
-    (err, token) => {
-      if (err) throw err;
-      res.json({ token });
-    }
-  );
+
 });
 
 module.exports = router;

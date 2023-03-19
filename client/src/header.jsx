@@ -27,7 +27,7 @@ const Header = () => {
         className="relative"
         onClick={() => setShowDropdown(!showDropdown)}
       >
-        <img src={accountIcon} alt="AccountPicture" className="cursor-pointer"/>
+        <img src={accountIcon} alt="AccountPicture" className="cursor-pointer pr-3"/>
         {showDropdown && (
           <div className="absolute right-0 bg-white shadow-lg rounded-lg py-2 mt-2">
             <button className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"

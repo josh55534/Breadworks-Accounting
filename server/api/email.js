@@ -57,8 +57,26 @@ console.log(error);
 
 }
 
+function sendForgotPass(email){
+	const msg ={
+		'to' : [{'email':email}],
+		'templateId': 3
+	}
+	
+	let client = new SibApiV3Sdk.TransactionalEmailsApi();
+	
+	client.sendTransacEmail(msg)
+	.then(function(data) {
+		console.log(`Email was sent to ${email}`);
+	  }, function(error) {
+	console.log(error);
+	  });
+	
+	}
+
 module.exports = {
 	sendLoginApproved,
 	sendRegistertoAdmin,
-	sendEmail
+	sendEmail,
+	sendForgotPass
 }

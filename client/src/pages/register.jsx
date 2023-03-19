@@ -175,7 +175,7 @@ const Register = () => {
           </label>
           <input
             className="border border-gray-400 p-2 w-full"
-            type="text"
+            type="date"
             id="DOB"
             value={DOB}
             onChange={(e) => setDOB(e.target.value)}
