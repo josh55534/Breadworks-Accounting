@@ -7,7 +7,7 @@ function Home() {
 	const [data, setData] = useState(null);
 	const token = localStorage.getItem("token");
 	if(token){
-	var decoded = jwt_decode(token);
+		var decoded = jwt_decode(token);
 	}
 	useEffect(() => {
 	  fetch("http://localhost:5000/")

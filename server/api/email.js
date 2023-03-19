@@ -72,7 +72,7 @@ function sendForgotPass(email){
 	console.log(error);
 	  });
 	
-	}
+}
 
 module.exports = {
 	sendLoginApproved,

@@ -119,15 +119,17 @@ export function ForgotPass() {
         console.log(res.data);
         localStorage.setItem("token", res.data.token);
         setMessage(`An email was sent to ${email} with a password reset link`);
+        setError(null);
       })
       .catch((err) => {
         setError(err.response.data.errors);
+        setMessage("");
       });
   };
 
   return (
     <div className="flex flex-col items-center">
-      <div className="flex justify-center items-center mb-10 mt-10">
+      <div className="justify-center items-center my-10 w-full max-w-xl">
         <form
           className="bg-white p-6 rounded-lg shadow-md"
           onSubmit={handleSubmit}
@@ -151,7 +153,7 @@ export function ForgotPass() {
           <button className="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600">
             Reset Password
           </button>
-          <p>{message}</p>
+          <p class="mt-2">{message}</p>
         </form>
       </div>
     </div>
