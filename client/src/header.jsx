@@ -3,7 +3,16 @@ import { Link } from "react-router-dom";
 import accountIcon from "./assets/accountIcon.png";
 import LogoPic from "./assets/Breadworks.fw.png";
 
-const Header = () => {
+function Logo(props) {
+  return (
+    <div className="grid place-items-center mt-5">
+      <Link to="/" onClick={() => window.location.href="/"}>
+        <img src={LogoPic} alt="Logo" />
+      </Link>
+    </div>);
+}
+
+function Header() {
   const token = localStorage.getItem("token");
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -16,11 +25,7 @@ const Header = () => {
   return (
     <header>
       <div>
-        <div className="grid place-items-center mt-5">
-          <Link to="/">
-            <img src={LogoPic} alt="Logo" />
-          </Link>
-        </div>
+        <Logo />
         {token && (
           <div className="pt-5 flex justify-end mr-2">
             <div
@@ -42,17 +47,17 @@ const Header = () => {
         )}
 
         {!token && location.pathname !== "/login" && location.pathname !== "/register" && (
-          <div className="pt-5 flex justify-end mr-2">
-            <Link to='/login'>
+          <div className="pt-5 flex justify-end mr-2 gap-2">
+            <Link to='/login' onClick={() => window.location.href="/login"}>
               <button
-                className="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600 mr-2"
+                className="btn-primary"
               >
                 Login
               </button>
             </Link>
-            <Link to='/register'>
+            <Link to='/register' onClick={() => window.location.href="/register"}>
               <button
-                className="bg-red-600 text-white py-2 px-4 rounded-full hover:bg-red-800"
+                className="btn-primary btn-primary-red"
               >
                 Register
               </button>

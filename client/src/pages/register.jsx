@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 
-const Register = () => {
+function Register() {
   const [error, setError] = useState(null);
   const [Fname, setFname] = useState("");
   const [Lname, setLname] = useState("");
@@ -71,7 +71,7 @@ const Register = () => {
 
           <div className="px-2">
             <div className="mb-4">
-              <label className="block font-medium mb-2" htmlFor="Fname">
+              <label className="block font-medium" htmlFor="Fname">
                 First Name
               </label>
               <input
@@ -84,7 +84,7 @@ const Register = () => {
             </div>
 
             <div className="mb-4">
-              <label className="block font-medium mb-2" htmlFor="Lname">
+              <label className="block font-medium" htmlFor="Lname">
                 Last Name
               </label>
               <input
@@ -97,7 +97,7 @@ const Register = () => {
             </div>
 
             <div className="mb-4">
-              <label className="block font-medium mb-2" htmlFor="email">
+              <label className="block font-medium" htmlFor="email">
                 Email
               </label>
               <input
@@ -110,7 +110,7 @@ const Register = () => {
             </div>
 
             <div className="mb-4">
-              <label className="block font-medium mb-2" htmlFor="password">
+              <label className="block font-medium" htmlFor="password">
                 Password
               </label>
               <input
@@ -123,7 +123,7 @@ const Register = () => {
             </div>
 
             <div className="mb-4">
-              <label className="block font-medium mb-2" htmlFor="street_address">
+              <label className="block font-medium" htmlFor="street_address">
                 Street Address
               </label>
               <input
@@ -137,7 +137,7 @@ const Register = () => {
             </div>
 
             <div className="mb-4">
-              <label className="block font-medium mb-2" htmlFor="city">
+              <label className="block font-medium" htmlFor="city">
                 City
               </label>
               <input
@@ -151,7 +151,7 @@ const Register = () => {
             </div>
 
             <div className="mb-4">
-              <label className="block font-medium mb-2" htmlFor="state">
+              <label className="block font-medium" htmlFor="state">
                 State
               </label>
               <input
@@ -165,7 +165,7 @@ const Register = () => {
             </div>
 
             <div className="mb-4">
-              <label className="block font-medium mb-2" htmlFor="zip_code">
+              <label className="block font-medium" htmlFor="zip_code">
                 Zip Code
               </label>
               <input
@@ -179,7 +179,7 @@ const Register = () => {
             </div>
 
             <div className="mb-4">
-              <label className="block font-medium mb-2" htmlFor="DOB">
+              <label className="block font-medium" htmlFor="DOB">
                 Date of Birth
               </label>
               <input
@@ -191,7 +191,7 @@ const Register = () => {
               />
             </div>
           </div>
-          
+
           {error ? (
             <div className="text-red-500 font-medium mb-4">{error}</div>
           ) : null}

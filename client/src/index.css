@@ -17,11 +17,15 @@
         @apply bg-indigo-500 text-white py-2 px-4 rounded hover:bg-indigo-600 active:bg-indigo-700;
     }
 
+    .btn-primary-red {
+        @apply bg-red-500 hover:bg-red-600 active:bg-red-700
+    }
+
     .btn-secondary {
         @apply text-indigo-500 p-2 font-medium rounded hover:bg-indigo-100 hover:text-indigo-700 active:bg-indigo-200;
     }
 
     .txt-primary {
-        @apply border border-gray-400 py-2 w-full rounded ml-2 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500;
+        @apply border border-gray-400 p-2 w-full rounded ml-2 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500;
     }
 }

@@ -4,7 +4,7 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 const token = localStorage.getItem("token");
 
-export const Login = () => {
+function Login () {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -51,7 +51,7 @@ export const Login = () => {
 
             <div className="px-2">
               <div className="mb-4">
-                <label className="block font-medium mb-2" htmlFor="username">
+                <label className="block font-medium" htmlFor="username">
                   Email
                 </label>
                 <input
@@ -64,7 +64,7 @@ export const Login = () => {
               </div>
 
               <div className="mb-2">
-                <label className="block font-medium mb-2" htmlFor="password">
+                <label className="block font-medium" htmlFor="password">
                   Password
                 </label>
                 <input
@@ -106,7 +106,7 @@ export const Login = () => {
   }
 };
 
-export function ForgotPass() {
+function ForgotPass() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState(null);
   const [message, setMessage] = useState("");
@@ -140,7 +140,7 @@ export function ForgotPass() {
 
           <div className="px-2">
             <div className="mb-4">
-              <label className="block font-medium mb-2" htmlFor="email">
+              <label className="block font-medium" htmlFor="email">
                 Email
               </label>
               <input
@@ -165,7 +165,7 @@ export function ForgotPass() {
   );
 }
 
-export function ResetPass() {
+function ResetPass() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -232,3 +232,5 @@ export function ResetPass() {
     </div>
   );
 }
+
+export { ResetPass, Login, ForgotPass };
