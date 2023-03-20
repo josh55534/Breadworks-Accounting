@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import Header from "./header";
 import Register from "./pages/register";
-import {Login, ForgotPass, ResetPass} from "./pages/login";
+import { Login, ForgotPass, ResetPass } from "./pages/login";
 import Home from "./pages/home";
 import AdminDash from "./pages/adminDashboard";
-import {EmailForm, AdminMain, UpdateUserForm, RegisterAdmin }  from "./pages/adminDashboard";
+import { EmailForm, AdminMain, UpdateUserForm, RegisterAdmin } from "./pages/adminDashboard";
 
 function App() {
   return (

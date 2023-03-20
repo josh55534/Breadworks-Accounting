@@ -82,7 +82,8 @@ router.post("/", async (req, res) => {
     },
     DOB,
 	verify: VERIFY.UNVERIFIED,
-	status: STATUS.ACTIVATED
+	status: STATUS.ACTIVATED,
+  passAttempts: 0
   });
 
   const payload = {
