@@ -45,7 +45,7 @@ router.post("/", async (req, res) => {
 
   if (!matched) {
     if (typeof user.passAttempts === 'undefined') {
-      user = [...user] + {passAttempts: 1};
+      user = {...user, passAttempts: 1};
     }
     else if (user.passAttempts >= 0) {
       user.passAttempts++;
