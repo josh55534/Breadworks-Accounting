@@ -25,7 +25,6 @@ router.post("/", async (req, res) => {
     return res.status(400).json({ errors: errorFull});
   }
 
-
   let usernameDb = await usersRef.doc(username).get();
   let user = await usernameDb.data();
 
@@ -45,7 +44,19 @@ router.post("/", async (req, res) => {
   const matched = await bcrypt.compare(password, user.password);
 
   if (!matched) {
-    return res.status(400).json({ errors: "Invalid password" });
+    if (typeof user.passAttempts === 'undefined') {
+      user = [...user] + {passAttempts: 1};
+    }
+    else if (user.passAttempts >= 0) {
+      user.passAttempts++;
+    }
+
+    if (user.passAttempts === 3) {
+      user.status = "deactivated";
+    }
+
+    await usersRef.doc(username).set(user);
+    return res.status(400).json({ errors: "Invalid password. " + (3 - user.passAttempts) + " attempts remaining."});
   }
 
   const payload = {
