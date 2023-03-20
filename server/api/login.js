@@ -41,13 +41,14 @@ router.post("/", async (req, res) => {
     return res.status(401).json({ errors: "Account needs to be activated before logging in" });
   }
 
+  if (typeof user.passAttempts === 'undefined') {
+    user = {...user, passAttempts: 0};
+  }
+
   const matched = await bcrypt.compare(password, user.password);
 
   if (!matched) {
-    if (typeof user.passAttempts === 'undefined') {
-      user = {...user, passAttempts: 1};
-    }
-    else if (user.passAttempts >= 0) {
+    if (user.passAttempts >= 0) {
       user.passAttempts++;
     }
 
@@ -59,6 +60,9 @@ router.post("/", async (req, res) => {
     return res.status(400).json({ errors: "Invalid password. " + (3 - user.passAttempts) + " attempts remaining."});
   }
 
+  user.passAttempts = 0;
+  await usersRef.doc(username).set(user);
+  
   const payload = {
     user: {
       id: user.id,
