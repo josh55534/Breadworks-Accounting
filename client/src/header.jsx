@@ -57,7 +57,7 @@ function Header() {
             </Link>
             <Link to='/register' onClick={() => window.location.href = "/register"}>
               <button
-                className="btn-primary btn-primary-red"
+                className="btn-primary btn-color-red"
               >
                 Register
               </button>

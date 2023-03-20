@@ -12,7 +12,7 @@ function Login() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
+    setError(null);
     axios
       .post("http://localhost:5000/login", {
         username: username,
@@ -44,63 +44,61 @@ function Login() {
     return <Navigate replace to="/" />;
   } else {
     return (
-      <div className="flex flex-col items-center">
-        <div className="bg-white p-5 rounded-lg shadow-xl w-4/12 mx-auto my-10">
-          <form onSubmit={handleSubmit} >
-            <h2>Login</h2>
+      <div className="window-primary">
+        <form onSubmit={handleSubmit} >
+          <h2>Login</h2>
 
-            <div className="px-2">
-              <div className="mb-4">
-                <label className="block font-medium" htmlFor="username">
-                  Username
-                </label>
-                <input
-                  className="txt-primary"
-                  type="text"
-                  id="username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-              </div>
-
-              <div className="mb-2">
-                <label className="block font-medium" htmlFor="password">
-                  Password
-                </label>
-                <input
-                  className="txt-primary mb-1"
-                  type="password"
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <Link to="/login/forgotpassword" className="mx-1">
-                  <a className="text-indigo-500 font-medium text-sm">
-                    Forgot Password?
-                  </a>
-                </Link>
-              </div>
+          <div className="form-primary">
+            <div>
+              <label htmlFor="username">
+                Username
+              </label>
+              <input
+                className="txt-primary"
+                type="text"
+                id="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
             </div>
 
-            {error ? (
-              <div className="text-red-500 font-medium mb-4">{error}</div>
-            ) : null}
-
-            <div className="flex flex-row pb-2">
-              <div className="flex w-full m-auto">
-                <Link to="/register">
-                  <a className="btn-secondary">
-                    Create Account
-                  </a>
-                </Link>
-              </div>
-              <button className="btn-primary">
-                Login
-              </button>
+            <div>
+              <label htmlFor="password">
+                Password
+              </label>
+              <input
+                className="txt-primary mb-1"
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <Link to="/login/forgotpassword" className="mx-1">
+                <a className="text-indigo-500 font-medium text-sm">
+                  Forgot Password?
+                </a>
+              </Link>
             </div>
-            <p>{message}</p>
-          </form>
-        </div>
+          </div>
+
+          {error ? (
+            <div className="text-red-500 font-medium mb-4">{error}</div>
+          ) : null}
+
+          <div className="flex flex-row pb-2">
+            <div className="flex w-full m-auto">
+              <Link to="/register">
+                <a className="btn-secondary">
+                  Create Account
+                </a>
+              </Link>
+            </div>
+            <button className="btn-primary">
+              Login
+            </button>
+          </div>
+          <p>{message}</p>
+        </form>
       </div>
     );
   }
@@ -131,36 +129,34 @@ function ForgotPass() {
   };
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="bg-white p-6 rounded-lg shadow-xl w-4/12 mx-auto my-10">
-        <form
-          onSubmit={handleSubmit}
-        >
-          <h2>Password Reset</h2>
+    <div className="window-primary">
+      <form onSubmit={handleSubmit}>
+        <h2>Password Reset</h2>
 
-          <div className="px-2">
-            <div className="mb-4">
-              <label className="block font-medium" htmlFor="email">
-                Email
-              </label>
-              <input
-                className="txt-primary"
-                type="text"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
+        <div className="form-primary">
+          <div>
+            <label htmlFor="email">
+              Email
+            </label>
+            <input
+              className="txt-primary"
+              type="text"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
-          {error ? (
-            <div className="text-red-500 font-medium mb-4">{error}</div>
-          ) : null}
-          <button className="btn-primary float-right">
+        </div>
+        {error ? (
+          <div className="text-red-500 font-medium mb-4">{error}</div>
+        ) : null}
+        <div className="flex justify-end">
+          <button className="btn-primary">
             Reset Password
           </button>
-          <p class="mt-2">{message}</p>
-        </form>
-      </div>
+        </div>
+        <p class="mt-2">{message}</p>
+      </form>
     </div>
   );
 }
@@ -201,15 +197,12 @@ function ResetPass() {
   };
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="flex justify-center items-center mb-10 mt-10">
-        <form
-          className="bg-white p-6 rounded-lg shadow-md"
-          onSubmit={handleSubmit}
-        >
-          <h2 className="text-lg font-medium mb-4">Enter your new password</h2>
-          <div className="mb-4">
-            <label className="block font-medium mb-2" htmlFor="password">
+    <div className="window-primary">
+      <form onSubmit={handleSubmit} >
+        <h2>Enter your new password</h2>
+        <div className="form-primary">
+          <div>
+            <label htmlFor="password">
               Password
             </label>
             <input
@@ -220,17 +213,19 @@ function ResetPass() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          {error ? (
-            <div className="text-red-500 font-medium mb-4">{error}</div>
-          ) : null}
-          <button className="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600">
+        </div>
+        {error ? (
+          <div className="text-red-500 font-medium mb-4">{error}</div>
+        ) : null}
+        <div className="flex justify-end">
+          <button className="btn-primary">
             Set Password
           </button>
-          <p>{message}</p>
-        </form>
-      </div>
+        </div>
+        <p>{message}</p>
+      </form>
     </div>
   );
 }
 
-export { ResetPass, Login, ForgotPass };
+export { Login, ResetPass, ForgotPass };
