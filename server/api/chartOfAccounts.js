@@ -25,13 +25,12 @@ router.get("/", authUser, async (req, res) => {
 // GET ACCOUNT INFO
 router.get("/account/:account", authUser, async (req, res) => {
   const accountId = req.params.account;
-  let fetchId = await accountsRef.where("id", "==", accountId).get();
 
   if (fetchId.empty) {
     return res.status(400).json({ errors: "Account not found" });
   }
 
-  let accountData = await accountsRef.doc(accountId).get().then(accountDb => accountDb.data());
+  let accountData = await accountDb.data();
 
   res.json(accountData);
 })
@@ -56,11 +55,11 @@ router.put('/activate/:account', authUser, authRole(ROLE.ADMIN), async (req, res
 // DEACTIVATE ACCOUNT
 router.put('/deactivate/:account', authUser, authRole(ROLE.ADMIN), async (req, res) => {
   const accountId = req.params.account;
-
   let fetchId = await accountsRef.where("id", "==", accountId).get();
 
-  if (fetchId.empty) {
-    return res.status(400).json({ errors: "Account not found" });
+  let accountDb = await accountsRef.doc(acocuntId).get();
+  if (accountDb.empty) {
+    res.status(404).json({ errors: "Account not found" })
   }
 
   let accountData = await accountsRef.doc(accountId).get().then(accountDb => accountDb.data());
@@ -113,11 +112,33 @@ router.put('/update/:account', authUser, authRole(ROLE.ADMIN), async (req, res) 
     comment: req.body.comment || accountData.comment,
     statement: req.body.statement || accountData.statement
   };
-  
 
-  await accountsRef.doc(accountId).update(updateAccount);
+  const id = number + "" + order;
 
-  res.send('Successfully updated account');
+  if (id != accountId) {
+    let accountSnap = await accountsRef.doc(id).get();
+    if (!accountSnap.empty) {
+      return res
+        .status(400)
+        .json({ errors: "This account already exists" });
+    }
+
+    accountSnap = await accountsRef.where("name", "==", name).get();
+    if (!accountSnap.empty) {
+      return res
+        .status(400)
+        .json({ errors: "This account already exists" });
+    }
+
+    const newAccount = accountDb.doc(id).set(updateAccount);
+    const oldAccount = accountDb.doc(accountId);
+
+    const batch = db.batch();
+    batch.set(newAccount);
+    batch.delete(oldAccount);
+    batch.commit();
+  }
+  else await accountsRef.doc(accountId).update(updateAccount);
 })
 
 // CREATE ACCOUNT (REQUIRES ADMIN)

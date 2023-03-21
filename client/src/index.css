@@ -49,6 +49,10 @@
         @apply border-t border-gray-200;
     }
 
+    .table-row-button {
+        @apply hover:bg-gray-200 active:bg-gray-300
+    }
+
     .dropdown-menu-window-primary {
         @apply absolute shadow-2xl pl-2
     }
