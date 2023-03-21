@@ -6,6 +6,7 @@ import { Login, ForgotPass, ResetPass } from "./pages/login";
 import Home from "./pages/home";
 import AdminDash from "./pages/adminDashboard";
 import { EmailForm, AdminMain, UpdateUserForm, RegisterAdmin } from "./pages/adminDashboard";
+import { ChartOfAccounts } from "./pages/chartOfAccounts/chartOfAccounts";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/admindashboard/view" element={<AdminMain />} />
         <Route path="/admindashboard/update/:email" element={<UpdateUserForm />} />
         <Route path="/admindashboard/register" element={<RegisterAdmin />} />
+        <Route path="/chartofaccounts" element={<ChartOfAccounts />}/>
       </Routes>
     </>
   );

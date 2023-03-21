@@ -5,7 +5,7 @@ const validator = (schema) => (payload) =>
 
 const accountSchema = Joi.object({
   number: Joi.number().integer(),
-  order: joi.string().length(3).pattern(/^[0-9]+$/).required(),
+  order: Joi.string().length(3).pattern(/^[0-9]+$/).required(),
   name: Joi.string().min(3).max(15).required(),
   desc: Joi.string().min(3).max(300).required(),
   normalSide: Joi.string().length(1).required(),

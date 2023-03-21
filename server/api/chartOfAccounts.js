@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
+const { ROLE, VERIFY, STATUS } = require("./roles-validator/roles");
+
 const { authUser, authRole } = require("./middleware/basicAuth");
 
 const Joi = require('joi')
@@ -13,9 +15,10 @@ const accountsRef = db.collection('accounts');
 
 // GET CHART OF ACCOUNTS
 router.get("/", authUser, async (req, res) => {
-  const accountsDb = await accountsRef.orderBy("id", "desc").get();
+  const accountsDb = await accountsRef.get();
   const accounts = accountsDb.docs.map((doc) => {
-    const { id, name, desc, category, statement, active } = doc.data();
+    const { name, desc, category, statement, active } = doc.data();
+    const id = doc.id
     return { id, name, desc, category, statement, active };
   });
 
@@ -204,4 +207,6 @@ router.post('/createAccount', authUser, authRole(ROLE.ADMIN), async (req, res) =
     active: true
   });
   res.send('Successfully added account');
-})
+});
+
+module.exports = router;
