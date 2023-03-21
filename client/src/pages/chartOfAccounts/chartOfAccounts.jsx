@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import jwt_decode from "jwt-decode";
 const token = localStorage.getItem("token");
 
 function ChartOfAccounts() {
@@ -34,9 +33,8 @@ function ChartOfAccounts() {
         setLoading(false);
       })
       .catch((err) => {
-        <Link to="/login"></Link>;
+        window.location.href = "/login";
         console.error(err);
-        setLoading(false);
       });
   }, [config])
 

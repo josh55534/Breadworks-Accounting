@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
 const { ROLE, VERIFY, STATUS } = require("./roles-validator/roles");
-
 const { authUser, authRole } = require("./middleware/basicAuth");
 
 const Joi = require('joi')
@@ -15,10 +13,9 @@ const accountsRef = db.collection('accounts');
 
 // GET CHART OF ACCOUNTS
 router.get("/", authUser, async (req, res) => {
-  const accountsDb = await accountsRef.get();
+  const accountsDb = await accountsRef.orderBy("id", "desc").get();
   const accounts = accountsDb.docs.map((doc) => {
-    const { name, desc, category, statement, active } = doc.data();
-    const id = doc.id
+    const { id, name, desc, category, statement, active } = doc.data();
     return { id, name, desc, category, statement, active };
   });
 
@@ -26,16 +23,16 @@ router.get("/", authUser, async (req, res) => {
 })
 
 // GET ACCOUNT INFO
-router.get("/account/:account", authUser, async (req, res) => {
-  const accountId = req.params.account;
+router.get("/account/:accountId", authUser, async (req, res) => {
+  const accountId = req.params.accountId;
+  const fetchId = await accountsRef.doc(accountId).get();
 
-  let accountDb = await accountsRef.doc(accountId).get();
-  if (accountDb.empty) {
-    res.status(404).json({ errors: "Account not found" })
+  if (fetchId.empty) {
+    return res.status(400).json({ errors: "Account not found" });
   }
 
-  let accountData = await accountDb.data();
-
+  const accountData = fetchId.data();
+  accountData.balance = parseFloat(accountData.balance).toFixed(2);
   res.json(accountData);
 })
 
@@ -43,47 +40,49 @@ router.get("/account/:account", authUser, async (req, res) => {
 router.put('/activate/:account', authUser, authRole(ROLE.ADMIN), async (req, res) => {
   const accountId = req.params.account;
 
-  let accountDb = await accountsRef.doc(acocuntId).get();
-  if (accountDb.empty) {
-    res.status(404).json({ errors: "Account not found" })
+  let fetchId = await accountsRef.where("id", "==", accountId).get();
+
+  if (fetchId.empty) {
+    return res.status(400).json({ errors: "Account not found" });
   }
 
   await accountsRef.doc(accountId).update({
     active: true
   })
 
-  res.send(`Account ${acocuntId} is now activated`)
+  res.send(`Account ${accountId} is now activated`)
 })
 
 // DEACTIVATE ACCOUNT
-router.put('/activate/:account', authUser, authRole(ROLE.ADMIN), async (req, res) => {
+router.put('/deactivate/:account', authUser, authRole(ROLE.ADMIN), async (req, res) => {
   const accountId = req.params.account;
+  let fetchId = await accountsRef.where("id", "==", accountId).get();
 
-  let accountDb = await accountsRef.doc(acocuntId).get();
-  if (accountDb.empty) {
-    res.status(404).json({ errors: "Account not found" })
+  if (fetchId.empty) {
+    return res.status(400).json({ errors: "Account not found" });
   }
 
-  let accountData = await accountDb.data();
+  let accountData = await accountsRef.doc(accountId).get().then(accountDb => accountDb.data());
 
   if (accountData.balance != 0) {
-    res.status(400).json({ errors: "Account has a nonzero balance" })
+    return res.status(400).json({ errors: "Account has a nonzero balance" })
   }
 
   await accountsRef.doc(accountId).update({
     active: false
   })
 
-  res.send(`Account ${acocuntId} is now deactivated`)
+  res.send(`Account ${accountId} is now deactivated`)
 })
 
 // UPDATE ACCOUNT (REQUIRES ADMIN)
-router.put('update/:account', authUser, authRole(ROLE.ADMIN), async (req, res) => {
+router.put('/update/:account', authUser, authRole(ROLE.ADMIN), async (req, res) => {
   const accountId = req.params.account;
 
-  let accountDb = await accountsRef.doc(accountId).get()
-  if (accountDb.empty) {
-    res.status(404).json({ errors: "Account not found" });
+  let fetchId = await accountsRef.where("id", "==", accountId).get();
+
+  if (fetchId.empty) {
+    return res.status(400).json({ errors: "Account not found" });
   }
 
   const { error, value } = validateAccount(req.body);
@@ -95,51 +94,28 @@ router.put('update/:account', authUser, authRole(ROLE.ADMIN), async (req, res) =
     }
     return res.status(400).json({ errors: errorFull });
   }
+  let accountData = await accountsRef.doc(accountId).get().then(accountDb => accountDb.data());
 
-  let accountData = await accountDb.data();
 
   const updateAccount = {
     number: req.body.number || accountData.number,
-    order: req.body.number || accountData.number,
-    name: req.body.number || accountData.number,
-    desc: req.body.number || accountData.number,
-    normalSide: req.body.number || accountData.number,
-    category: req.body.number || accountData.number,
-    subcategory: req.body.number || accountData.number,
-    balance: req.body.number || accountData.number,
-    credit: req.body.number || accountData.number,
-    debit: req.body.number || accountData.number,
-    assignedUsers: req.body.number || accountData.number,
-    comment: req.body.number || accountData.number,
-    statement: req.body.number || accountData.number
+    order: req.body.order || accountData.order,
+    name: req.body.name || accountData.name,
+    desc: req.body.desc || accountData.desc,
+    normalSide: req.body.normalSide || accountData.normalSide,
+    category: req.body.category || accountData.category,
+    subcategory: req.body.subcategory || accountData.subcategory,
+    balance: req.body.balance || accountData.balance,
+    credit: req.body.credit || accountData.credit,
+    debit: req.body.debit || accountData.debit,
+    assignedUsers: req.body.assignedUsers || accountData.assignedUsers,
+    comment: req.body.comment || accountData.comment,
+    statement: req.body.statement || accountData.statement
   };
 
-  const id = number + "" + order;
+  await accountsRef.doc(accountId).update(updateAccount);
 
-  if (id != accountId) {
-    let accountSnap = await accountsRef.doc(id).get();
-    if (!accountSnap.empty) {
-      return res
-        .status(400)
-        .json({ errors: "This account already exists" });
-    }
-
-    accountSnap = await accountsRef.where("name", "==", name).get();
-    if (!accountSnap.empty) {
-      return res
-        .status(400)
-        .json({ errors: "This account already exists" });
-    }
-
-    const newAccount = accountDb.doc(id).set(updateAccount);
-    const oldAccount = accountDb.doc(accountId);
-
-    const batch = db.batch();
-    batch.set(newAccount);
-    batch.delete(oldAccount);
-    batch.commit();
-  }
-  else await accountsRef.doc(accountId).update(updateAccount);
+  res.send('Successfully updated account');
 })
 
 // CREATE ACCOUNT (REQUIRES ADMIN)
@@ -171,19 +147,19 @@ router.post('/createAccount', authUser, authRole(ROLE.ADMIN), async (req, res) =
   }
 
   const id = number + "" + order;
-  let accountSnap = await accountsRef.doc(id).get();
-  if (!accountSnap.empty) {
-    return res
-      .status(400)
-      .json({ errors: "This account already exists" });
-  }
+  let account = await accountsRef.where("name", "==", name).get(); //Check if account name is in database already
 
-  accountSnap = await accountsRef.where("name", "==", name).get();
-  if (!accountSnap.empty) {
+  if (!account.empty)
     return res
       .status(400)
-      .json({ errors: "This account already exists" });
-  }
+      .json({ errors: "This account name has already been used." });
+
+  account = await accountsRef.where("number", "==", number).get(); //Check if account number is in database already
+
+  if (!account.empty)
+    return res
+      .status(400)
+      .json({ errors: "This account number has already been used." });
 
   const dateCreated = new Date();
   const date = dateCreated.getMonth() + "/" + dateCreated.getDate() + "/" + dateCreated.getFullYear();
@@ -191,6 +167,7 @@ router.post('/createAccount', authUser, authRole(ROLE.ADMIN), async (req, res) =
   const time = date + " : " + timestamp;
 
   await accountsRef.doc(id).set({
+    id: id,
     number,
     order,
     name,
@@ -204,9 +181,10 @@ router.post('/createAccount', authUser, authRole(ROLE.ADMIN), async (req, res) =
     assignedUsers,
     comment,
     statement,
+    dateTimeAdded: time,
     active: true
   });
   res.send('Successfully added account');
-});
+})
 
 module.exports = router;
