@@ -19,7 +19,7 @@ function Header() {
   function handleLogout() {
     localStorage.removeItem("token");
     setShowDropdown(false);
-    window.location.reload();
+    window.location.href="/";
   }
 
   return (

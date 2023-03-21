@@ -13,4 +13,5 @@ const STATUS = {
 	ACTIVATED: "activated",
 	DEACTIVATED: "deactivated",
   };
+  
 module.exports = { ROLE: ROLE, VERIFY: VERIFY, STATUS: STATUS };
