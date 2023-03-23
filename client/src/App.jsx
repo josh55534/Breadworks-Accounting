@@ -6,7 +6,7 @@ import { Login, ForgotPass, ResetPass } from "./pages/login";
 import Home from "./pages/home";
 import AdminDash from "./pages/adminDashboard";
 import { EmailForm, AdminMain, UpdateUserForm, RegisterAdmin } from "./pages/adminDashboard";
-import { ChartOfAccounts } from "./pages/chartOfAccounts/chartOfAccounts";
+import { AdminAddAccount, ChartOfAccounts } from "./pages/chartOfAccounts/chartOfAccounts";
 import { Account } from "./pages/chartOfAccounts/account";
 
 function App() {
@@ -27,6 +27,7 @@ function App() {
         <Route path="/admindashboard/register" element={<RegisterAdmin />} />
         <Route path="/chartofaccounts" element={<ChartOfAccounts />} />
         <Route path="/account/:accountId" element={<Account />} />
+        <Route path="/chartofaccounts/addAccount/" element={<AdminAddAccount />} />
       </Routes>
     </>
   );
