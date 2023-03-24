@@ -68,4 +68,20 @@
     .dropdown-menu-button-primary {
         @apply w-full py-3 bg-white border-gray-400 border-t px-10 rounded hover:bg-gray-300 active:bg-gray-500;
     }
+
+    .btn-logout {
+        @apply text-sm rounded text-indigo-500 font-medium;
+    }
+
+    .account-leaflet {
+        @apply flex flex-row mt-auto mr-4 bg-white rounded p-3 gap-4
+    }
+
+    .account-leaflet-info {
+        @apply flex flex-col gap-3
+    }
+
+    .profile-picture {
+        @apply cursor-pointer border-indigo-500 rounded-full border-2 aspect-square
+    }
 }

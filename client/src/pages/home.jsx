@@ -18,9 +18,6 @@ function Home() {
 
 	return (
 		<div>
-			{/* <div className="grid place-items-center mt-5 bg-yellow-800 text-white py-1 px-2">
-				{data ? <div>{data}</div> : <div>Loading...</div>}
-			</div> */}
 			<div className="flex flex-row justify-center gap-10">
 				{token && (
 					<Link to="/chartofaccounts">

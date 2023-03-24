@@ -36,7 +36,7 @@ function Login() {
         setMessage("");
         navigate("/");
         window.location.reload();
-      }, 3000);
+      }, 1000);
     }
   }, [message]);
 
@@ -97,7 +97,6 @@ function Login() {
               Login
             </button>
           </div>
-          <p>{message}</p>
         </form>
       </div>
     );
