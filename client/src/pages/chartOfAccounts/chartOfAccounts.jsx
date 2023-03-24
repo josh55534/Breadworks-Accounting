@@ -51,7 +51,8 @@ function ChartOfAccounts() {
 
   return (
     <>
-      <div className="window-primary max-w-5xl">
+      <div className="window-primary max-w-5xl text-center">
+        <h2>Chart of Accounts</h2>
         <form>
           {loading ? (
             <div className="flex items-center justify-center h-fit">
