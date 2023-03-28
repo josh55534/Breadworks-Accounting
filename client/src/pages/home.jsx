@@ -15,7 +15,6 @@ function Home() {
 			.then((text) => setData(text));
 	}, []);
 
-
 	return (
 		<div>
 			<div className="flex flex-row justify-center gap-10">

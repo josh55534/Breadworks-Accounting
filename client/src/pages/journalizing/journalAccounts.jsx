@@ -51,55 +51,64 @@ function JournalAccounts() {
   // TODO: ADD LOADING TEXT
   return (
     <>
-      <div className="window-primary max-w-5xl text-center">
+      <div className="window-primary max-w-5xl text-center pb-4">
         <h2>Journal</h2>
         {loading ? (
           <div className="flex items-center justify-center h-fit">
             Loading...
           </div>) : (
-          <div className="form-primary mb-0">
-            <table className="user-table">
-              <thead>
-                <tr>
-                  <th className="user-table-header">
-                    Account ID
-                  </th>
-                  <th className="user-table-header">
-                    Name
-                  </th>
-                  <th className="user-table-header">
-                    Description
-                  </th>
-                  <th className="user-table-header text-center">
-                    Category
-                  </th>
-                  <th className="user-table-header text-center">
-                    Statement
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {accountIds.map((id, index) => {
-                  if (accountStatus[index]) {
-                    return (
-                      <tr
-                        className="table-row-button"
-                        key={index}
-                        onClick={() => { window.location.href = `/journal/${id}` }}
-                      >
-                        <td className="user-table-body">{id}</td>
-                        <td className="user-table-body">{accountNames[index]}</td>
-                        <td className="user-table-body">{accountDescs[index]}</td>
-                        <td className="user-table-body text-center">{accountCategories[index]}</td>
-                        <td className="user-table-body text-center">{accountStatements[index]}</td>
-                      </tr>
-                    )
+          <>
+            <div className="form-primary mb-4">
+              <table className="user-table">
+                <thead>
+                  <tr>
+                    <th className="user-table-header">
+                      Account ID
+                    </th>
+                    <th className="user-table-header">
+                      Name
+                    </th>
+                    <th className="user-table-header">
+                      Description
+                    </th>
+                    <th className="user-table-header text-center">
+                      Category
+                    </th>
+                    <th className="user-table-header text-center">
+                      Statement
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {accountIds.map((id, index) => {
+                    if (accountStatus[index]) {
+                      return (
+                        <tr
+                          className="table-row-button"
+                          key={index}
+                          onClick={() => { window.location.href = `/journal/account/${id}` }}
+                        >
+                          <td className="user-table-body">{id}</td>
+                          <td className="user-table-body">{accountNames[index]}</td>
+                          <td className="user-table-body">{accountDescs[index]}</td>
+                          <td className="user-table-body text-center">{accountCategories[index]}</td>
+                          <td className="user-table-body text-center">{accountStatements[index]}</td>
+                        </tr>
+                      )
+                    }
                   }
-                }
-                )}
-              </tbody>
-            </table>
-          </div>
+                  )}
+                </tbody>
+              </table>
+            </div>
+            <div className="flex flex-row justify-end">
+              <Link to="new-entry">
+                  <button className="btn-primary">
+                    New Entry
+                  </button>
+              </Link>
+            </div>
+          </>
         )}
       </div>
     </>

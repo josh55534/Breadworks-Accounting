@@ -3,8 +3,105 @@ import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 const token = localStorage.getItem("token");
 
-function JournalEntry () {
+function JournalEntry() {
+  const { journalEntryID } = useParams();
+  const [debitAccountID, setDebitID] = useState("");
+  const [debitAccountName, setDebitName] = useState("");
+  const [creditAccountID, setCreditID] = useState("");
+  const [creditAccountName, setCreditName] = useState("");
+  const [desc, setDesc] = useState("");
+  const [date, setDate] = useState("");
+  const [amount, setAmount] = useState();
+  const [journalStatus, setStatus] = useState("");
 
+  useEffect(() => {
+    // TODO: GET ACTUAL JOURNAL ENTRY DATA
+    setDebitID("1-001");
+    setDebitName("Cash");
+    setCreditID("2-001");
+    setCreditName("Debt");
+    setAmount(200.00);
+    setDesc("This is a journal entry");
+    setDate("2/23/2023");
+    setStatus("rejected");
+  })
+
+  const statusColor = (status) => {
+    if (status === "approved") {
+      return ("text-green-500")
+    }
+    else if (status === "pending") {
+      return ("text-yellow-500")
+    }
+    else if (status === "rejected") {
+      return ("text-red-500")
+    }
+  }
+
+  return (
+    <>
+      <div className="window-primary max-w-3xl">
+        <div className="flex justify-between">
+          <h2>Journal Entry: {journalEntryID}</h2>
+          <div className="flex flex-row gap-2 text-lg">
+            <p>Status:</p>
+            <p className={statusColor(journalStatus)}><strong>{journalStatus}</strong></p>
+          </div>
+        </div>
+        <div className="form-primary">
+          <table>
+            <thead>
+              <tr>
+                <th className="user-table-header text-left">
+                  Date
+                </th>
+                <th className="user-table-header text-left">
+                  Account
+                </th>
+                <th className="user-table-header">
+                  Debit
+                </th>
+                <th className="user-table-header">
+                  Credit
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="journal-data">
+                  {date}
+                </td>
+                <td className="journal-data">
+                  {debitAccountID + ": " + debitAccountName}
+                </td>
+                <td className="journal-data text-center">
+                  {amount}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                </td>
+                <td className="journal-data pl-10">
+                  {creditAccountID + ": " + creditAccountName}
+                </td>
+                <td>
+                </td>
+                <td className="journal-data text-center">
+                  {amount}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <p className="text-lg"><strong>Description:</strong> {desc}</p>
+          <Link to="/journal">
+            <button className="btn-primary btn-color-red">
+              Back
+            </button>
+          </Link>
+        </div>
+      </div>
+    </>
+  )
 }
 
 export { JournalEntry };

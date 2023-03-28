@@ -38,7 +38,7 @@
     }
 
     .window-primary {
-        @apply bg-white p-6 rounded-lg shadow-2xl w-full max-w-2xl mx-auto my-10;
+        @apply bg-white p-6 rounded-lg shadow-2xl w-full max-w-2xl mx-auto my-10 pb-2;
     }
 
     .form-primary {
@@ -50,7 +50,7 @@
     }
 
     .user-table-header {
-        @apply font-medium text-gray-700;
+        @apply font-medium text-gray-700 border-b border-gray-200;
     }
 
     .user-table-body {
@@ -87,5 +87,9 @@
 
     .profile-picture {
         @apply cursor-pointer border-indigo-500 rounded-full border-2 aspect-square
+    }
+
+    .journal-data {
+        @apply text-lg p-1;
     }
 }

@@ -11,8 +11,16 @@ import { Account } from "./pages/chartOfAccounts/account";
 import { JournalAccounts } from "./pages/journalizing/journalAccounts";
 import { JournalList } from "./pages/journalizing/journalList";
 import { JournalEntry } from "./pages/journalizing/journalEntry";
+const token = localStorage.getItem("token");
 
 function App() {
+
+  useEffect(() => {
+    if(!token && !(window.location.pathname.startsWith("/register") || window.location.pathname.startsWith("/login") || window.location.pathname==="/")) {
+      window.location.href="/";
+    }
+  })
+  
   return (
     <>
       <Header />
@@ -35,8 +43,8 @@ function App() {
         <Route path="/chartofaccounts/addAccount/" element={<AdminAddAccount />} />
 
         <Route path="/journal" element={<JournalAccounts />} />
-        <Route path="/journal/:accountId" element={<JournalList />} />
-        <Route path="/journal/:accountId/:journalEntry" element={<JournalEntry />} />
+        <Route path="/journal/account/:accountId" element={<JournalList />} />
+        <Route path="/journal/entry/:journalEntryID" element={<JournalEntry />} />
       </Routes>
     </>
   );
