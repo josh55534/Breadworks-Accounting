@@ -4,6 +4,7 @@ import axios from "axios";
 const token = localStorage.getItem("token");
 
 function JournalEntry() {
+  // TODO: ADD JOURNAL ENTRY FILE DOWNLOAD
   const { journalEntryID } = useParams();
   const [debitAccountID, setDebitID] = useState("");
   const [debitAccountName, setDebitName] = useState("");

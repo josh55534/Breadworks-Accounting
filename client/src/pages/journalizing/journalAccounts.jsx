@@ -48,7 +48,6 @@ function JournalAccounts() {
       });
   }, [config])
 
-  // TODO: ADD LOADING TEXT
   return (
     <>
       <div className="window-primary max-w-5xl text-center pb-4">

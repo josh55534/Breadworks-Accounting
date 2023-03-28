@@ -4,7 +4,9 @@ import axios from "axios";
 const token = localStorage.getItem("token");
 
 function JournalList () {
-
+  // TODO: ADD ACCOUNT INFO
+  //    ADD JOURNAL ENTRIES RELATING TO ACCOUNT
+  //    ADD WAY TO NAVIGATE TO JOURNAL ENTRY VIEW
 }
 
 export { JournalList };
