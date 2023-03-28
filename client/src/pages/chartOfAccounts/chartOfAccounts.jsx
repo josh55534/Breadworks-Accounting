@@ -37,6 +37,7 @@ function ChartOfAccounts() {
         let decoded;
         if (token) {
           decoded = jwt_decode(token);
+          
         }
         if (decoded.user.role === "admin") {
           setAdmin(true);
