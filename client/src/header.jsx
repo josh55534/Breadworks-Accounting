@@ -1,11 +1,13 @@
+import jwt_decode from "jwt-decode";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import accountIcon from "./assets/accountIcon.png";
 import LogoPic from "./assets/Breadworks.fw.png";
 
+
 function Logo(props) {
   return (
-    <div className="grid place-items-center mt-5">
+    <div className="flex justify-center">
       <Link to="/" onClick={() => window.location.href = "/"}>
         <img src={LogoPic} alt="Logo" />
       </Link>
@@ -14,54 +16,68 @@ function Logo(props) {
 
 function Header() {
   const token = localStorage.getItem("token");
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [Fname, setName] = useState("");
 
   function handleLogout() {
     localStorage.removeItem("token");
-    setShowDropdown(false);
-    window.location.href="/";
+    window.location.href = "/";
   }
+
+  useEffect(() => {
+    if (token) {
+      var decoded = jwt_decode(token)
+      setName(decoded.user.Fname);
+    }
+  })
 
   return (
     <header>
-      <div>
+      <div className="grid grid-cols-3 my-auto justify-end py-5">
+        <p></p>
         <Logo />
         {token && (
-          <div className="pt-5 flex justify-end mr-2">
+          <div className="flex justify-end">
             <div
-              className="relative"
-              onClick={() => setShowDropdown(!showDropdown)}
+              className="account-leaflet"
             >
-              <img src={accountIcon} alt="AccountPicture" className="cursor-pointer pr-3" />
-              {showDropdown && (
-                <div className="absolute right-0 bg-white shadow-lg rounded-lg py-2 mt-2">
-                  <button className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
-                    onClick={handleLogout}
-                  >
-                    Logout
-                  </button>
+              <div className="container w-auto">
+                <img src={accountIcon} alt="AccountPicture" className="profile-picture" />
+              </div>
+              <div className="account-leaflet-info">
+                <p className="mt-auto">Welcome, {Fname}</p>
+                <div className="flex flex-row justify-between">
+                <button className="btn-logout"
+                  onClick={handleLogout}
+                >
+                  Profile
+                </button>
+                <button className="btn-logout"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
                 </div>
-              )}
+              </div>
             </div>
           </div>
         )}
 
         {!token && location.pathname !== "/login" && location.pathname !== "/register" && (
-          <div className="pt-5 flex justify-end mr-2 gap-2">
-            <Link to='/login' onClick={() => window.location.href = "/login"}>
-              <button
-                className="btn-primary"
-              >
-                Login
-              </button>
-            </Link>
-            <Link to='/register' onClick={() => window.location.href = "/register"}>
-              <button
-                className="btn-primary btn-color-red"
-              >
-                Register
-              </button>
-            </Link>
+          <div className="flex justify-end">
+            <div
+              className="account-leaflet"
+            >
+              <img src={accountIcon} alt="AccountPicture" className="profile-picture" />
+              <div className="account-leaflet-info">
+                <p className="mt-auto">Not signed in</p>
+                <button
+                  className="btn-logout ml-auto"
+                  onClick={() => window.location.href = "/login"}
+                >
+                  Login
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>

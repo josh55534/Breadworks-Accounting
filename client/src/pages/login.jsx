@@ -36,7 +36,7 @@ function Login() {
         setMessage("");
         navigate("/");
         window.location.reload();
-      }, 3000);
+      }, 1000);
     }
   }, [message]);
 
@@ -73,10 +73,8 @@ function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <Link to="/login/forgotpassword" className="mx-1">
-                <a className="text-indigo-500 font-medium text-sm">
-                  Forgot Password?
-                </a>
+              <Link to="/login/forgotpassword" className="text-indigo-500 font-medium text-sm mx-1">
+                Forgot Password?
               </Link>
             </div>
           </div>
@@ -87,17 +85,14 @@ function Login() {
 
           <div className="flex flex-row pb-2">
             <div className="flex w-full m-auto">
-              <Link to="/register">
-                <a className="btn-secondary">
-                  Create Account
-                </a>
+              <Link to="/register" className="btn-secondary">
+                Create Account
               </Link>
             </div>
             <button className="btn-primary">
               Login
             </button>
           </div>
-          <p>{message}</p>
         </form>
       </div>
     );

@@ -13,7 +13,7 @@ const accountsRef = db.collection('accounts');
 
 // GET CHART OF ACCOUNTS
 router.get("/", authUser, async (req, res) => {
-  const accountsDb = await accountsRef.orderBy("id", "desc").get();
+  const accountsDb = await accountsRef.orderBy("id", "asc").get();
   const accounts = accountsDb.docs.map((doc) => {
     const { id, name, desc, category, statement, active } = doc.data();
     return { id, name, desc, category, statement, active };
@@ -169,7 +169,7 @@ router.post('/createAccount', authUser, authRole(ROLE.ADMIN), async (req, res) =
     return res.status(400).json({ errors: errorFull });
   }
 
-  const id = number + "" + order;
+  const id = number + "-" + order;
   let account = await accountsRef.where("name", "==", name).get(); //Check if account name is in database already
 
   if (!account.empty)
@@ -177,7 +177,7 @@ router.post('/createAccount', authUser, authRole(ROLE.ADMIN), async (req, res) =
       .status(400)
       .json({ errors: "This account name has already been used." });
 
-  account = await accountsRef.where("number", "==", number).get(); //Check if account number is in database already
+  account = await accountsRef.where("id", "==", id).get(); //Check if account number is in database already
 
   if (!account.empty)
     return res

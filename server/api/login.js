@@ -67,6 +67,7 @@ router.post("/", async (req, res) => {
     user: {
       id: user.id,
       role: user.role,
+      Fname: user.Fname
     },
   };
 

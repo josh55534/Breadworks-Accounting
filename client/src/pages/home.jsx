@@ -15,24 +15,27 @@ function Home() {
 			.then((text) => setData(text));
 	}, []);
 
-
 	return (
 		<div>
-			{/* <div className="grid place-items-center mt-5 bg-yellow-800 text-white py-1 px-2">
-				{data ? <div>{data}</div> : <div>Loading...</div>}
-			</div> */}
 			<div className="flex flex-row justify-center gap-10">
 				{token && (
-					<Link to="/chartofaccounts">
-						<button className="mt-4 bg-orange-600 rounded-sm hover:bg-orange-700">
-							Chart of Accounts
-						</button>
-					</Link>
+					<>
+						<Link to="/chartofaccounts">
+							<button className="btn-navbar">
+								Chart of Accounts
+							</button>
+						</Link>
+						<Link to="/journal">
+							<button className="btn-navbar">
+								Journal
+							</button>
+						</Link>
+					</>
 				)}
 				{decoded && decoded.user.role === "admin" && (
 
 					<Link to='/admindashboard'>
-						<button className="mt-4 bg-orange-600 rounded-sm hover:bg-orange-700"
+						<button className="btn-navbar"
 							onClick={() => {
 							}}
 						>
