@@ -34,7 +34,7 @@ const signupAdminSchema = Joi.object({
 });
 
 const loginSchema = Joi.object({
-	email: Joi.string().email().required(),
+	username: Joi.string().required(),
 	password: Joi.string().min(3).max(10).required(),
 });
 

@@ -32,12 +32,12 @@ router.post("/", async (req, res) => {
     for (x = 0; x < error.details.length; x++) {
       errorFull.push(error.details[x].message);
     }
-    return res.status(400).json({ errors: errorFull});
+    return res.status(400).json({ errors: errorFull });
   }
 
 
   let user = await usersRef.where("email", "==", email).get(); //Check if email is in database already
-  
+
   if (!user.empty)
     return res
       .status(400)
@@ -62,7 +62,7 @@ router.post("/", async (req, res) => {
   const id = `${Fname.charAt(0)}${Lname}${addZero()}${
     //Creates id with first initial of first name, full last name, month and year created
     dateCreated.getMonth() + 1
-  }${sliceYear()}`;
+    }${sliceYear()}`;
 
   const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -81,8 +81,9 @@ router.post("/", async (req, res) => {
       zip_code,
     },
     DOB,
-	verify: VERIFY.UNVERIFIED,
-	status: STATUS.ACTIVATED
+    verify: VERIFY.UNVERIFIED,
+    status: STATUS.ACTIVATED,
+    passAttempts: 0
   });
 
   const payload = {
@@ -103,7 +104,7 @@ router.post("/", async (req, res) => {
     }
   );
 
-sendRegistertoAdmin(id, email)
+  sendRegistertoAdmin(id, email)
 
 
 });

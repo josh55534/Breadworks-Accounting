@@ -4,7 +4,7 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 const token = localStorage.getItem("token");
 
-export const Login = () => {
+function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -12,10 +12,10 @@ export const Login = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
+    setError(null);
     axios
       .post("http://localhost:5000/login", {
-        email: username,
+        username: username,
         password: password,
       })
       .then((res) => {
@@ -36,7 +36,7 @@ export const Login = () => {
         setMessage("");
         navigate("/");
         window.location.reload();
-      }, 3000);
+      }, 1000);
     }
   }, [message]);
 
@@ -44,66 +44,62 @@ export const Login = () => {
     return <Navigate replace to="/" />;
   } else {
     return (
-      <div className="flex flex-col items-center">
-        <div className="flex justify-center items-center mb-10 mt-10">
-          <form
-            className="bg-white p-6 rounded-lg shadow-md"
-            onSubmit={handleSubmit}
-          >
-            <h2 className="text-lg font-medium mb-4">Login</h2>
-            <div className="mb-4">
-              <label className="block font-medium mb-2" htmlFor="username">
-                Email
+      <div className="window-primary">
+        <form onSubmit={handleSubmit} >
+          <h2>Login</h2>
+
+          <div className="form-primary">
+            <div>
+              <label htmlFor="username">
+                Username
               </label>
               <input
-                className="border border-gray-400 p-2 w-full"
+                className="txt-primary"
                 type="text"
                 id="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
             </div>
-            <div className="mb-4">
-              <label className="block font-medium mb-2" htmlFor="password">
+
+            <div>
+              <label htmlFor="password">
                 Password
               </label>
               <input
-                className="border border-gray-400 p-2 w-full"
+                className="txt-primary mb-1"
                 type="password"
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+              <Link to="/login/forgotpassword" className="text-indigo-500 font-medium text-sm mx-1">
+                Forgot Password?
+              </Link>
             </div>
-            {error ? (
-              <div className="text-red-500 font-medium mb-4">{error}</div>
-            ) : null}
-            <button className="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600">
+          </div>
+
+          {error ? (
+            <div className="text-red-500 font-medium mb-4">{error}</div>
+          ) : null}
+
+          <div className="flex flex-row pb-2">
+            <div className="flex w-full m-auto">
+              <Link to="/register" className="btn-secondary">
+                Create Account
+              </Link>
+            </div>
+            <button className="btn-primary">
               Login
             </button>
-            <p>{message}</p>
-          </form>
-        </div>
-        <div className="pb-10">
-          <Link to="/register">
-            <button className="bg-red-600 text-white py-2 px-4 rounded-full hover:bg-red-800">
-              Not signed up?
-            </button>
-          </Link>
-        </div>
-        <div className="pb-10">
-          <Link to="/login/forgotpassword">
-            <button className="bg-red-400 text-white py-2 px-4 rounded-full hover:bg-red-500">
-              Forgot Password?
-            </button>
-          </Link>
-        </div>
+          </div>
+        </form>
       </div>
     );
   }
 };
 
-export function ForgotPass() {
+function ForgotPass() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState(null);
   const [message, setMessage] = useState("");
@@ -119,46 +115,48 @@ export function ForgotPass() {
         console.log(res.data);
         localStorage.setItem("token", res.data.token);
         setMessage(`An email was sent to ${email} with a password reset link`);
+        setError(null);
       })
       .catch((err) => {
         setError(err.response.data.errors);
+        setMessage("");
       });
   };
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="flex justify-center items-center mb-10 mt-10">
-        <form
-          className="bg-white p-6 rounded-lg shadow-md"
-          onSubmit={handleSubmit}
-        >
-          <h2 className="text-lg font-medium mb-4">Enter your email</h2>
-          <div className="mb-4">
-            <label className="block font-medium mb-2" htmlFor="email">
+    <div className="window-primary">
+      <form onSubmit={handleSubmit}>
+        <h2>Password Reset</h2>
+
+        <div className="form-primary">
+          <div>
+            <label htmlFor="email">
               Email
             </label>
             <input
-              className="border border-gray-400 p-2 w-full"
+              className="txt-primary"
               type="text"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          {error ? (
-            <div className="text-red-500 font-medium mb-4">{error}</div>
-          ) : null}
-          <button className="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600">
+        </div>
+        {error ? (
+          <div className="text-red-500 font-medium mb-4">{error}</div>
+        ) : null}
+        <div className="flex justify-end">
+          <button className="btn-primary">
             Reset Password
           </button>
-          <p>{message}</p>
-        </form>
-      </div>
+        </div>
+        <p class="mt-2">{message}</p>
+      </form>
     </div>
   );
 }
 
-export function ResetPass() {
+function ResetPass() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -170,10 +168,10 @@ export function ResetPass() {
       var decoded = jwt_decode(token);
       setEmail(decoded.user.email);
     }
-      else if (!token || decoded.user.forgotpassword === false) {
-        navigate('/');
-      }
-    
+    else if (!token || decoded.user.forgotpassword === false) {
+      navigate('/');
+    }
+
   }, []);
 
   const handleSubmit = async (event) => {
@@ -194,15 +192,12 @@ export function ResetPass() {
   };
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="flex justify-center items-center mb-10 mt-10">
-        <form
-          className="bg-white p-6 rounded-lg shadow-md"
-          onSubmit={handleSubmit}
-        >
-          <h2 className="text-lg font-medium mb-4">Enter your new password</h2>
-          <div className="mb-4">
-            <label className="block font-medium mb-2" htmlFor="password">
+    <div className="window-primary">
+      <form onSubmit={handleSubmit} >
+        <h2>Enter your new password</h2>
+        <div className="form-primary">
+          <div>
+            <label htmlFor="password">
               Password
             </label>
             <input
@@ -213,15 +208,19 @@ export function ResetPass() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          {error ? (
-            <div className="text-red-500 font-medium mb-4">{error}</div>
-          ) : null}
-          <button className="bg-indigo-500 text-white py-2 px-4 rounded-full hover:bg-indigo-600">
+        </div>
+        {error ? (
+          <div className="text-red-500 font-medium mb-4">{error}</div>
+        ) : null}
+        <div className="flex justify-end">
+          <button className="btn-primary">
             Set Password
           </button>
-          <p>{message}</p>
-        </form>
-      </div>
+        </div>
+        <p>{message}</p>
+      </form>
     </div>
   );
 }
+
+export { Login, ResetPass, ForgotPass };
