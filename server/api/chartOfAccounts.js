@@ -26,11 +26,11 @@ router.get("/", authUser, async (req, res) => {
 router.get("/account/:account", authUser, async (req, res) => {
   const accountId = req.params.account;
 
-  if (fetchId.empty) {
+  if (accountId.empty) {
     return res.status(400).json({ errors: "Account not found" });
   }
 
-  let accountData = await accountDb.data();
+  let accountData = await accountsRef.doc(accountId).get().then(accountDb => accountDb.data());
 
   res.json(accountData);
 })
