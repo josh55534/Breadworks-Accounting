@@ -47,6 +47,7 @@ function App() {
         <Route path="/journal/account/:accountId" element={<JournalList />} />
         <Route path="/journal/entry/:journalEntryID" element={<JournalEntry />} />
         <Route path="/journal/new-entry" element={<CreateJournal />} />
+        <Route path="/journal/entries" element={<JournalList />} />
       </Routes>
     </>
   );
