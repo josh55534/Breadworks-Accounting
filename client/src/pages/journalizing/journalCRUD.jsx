@@ -16,7 +16,8 @@ function CreateJournal() {
   const [date, setDate] = useState("");
   const [amount, setAmount] = useState();
   const [file, setFile] = useState("");
-
+  const [userName, setUsername] = useState("")
+  
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
