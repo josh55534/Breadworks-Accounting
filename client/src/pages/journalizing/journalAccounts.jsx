@@ -13,6 +13,7 @@ function JournalAccounts() {
   const [accountStatements, setStatements] = useState([]);
   const [accountStatus, setStatus] = useState([]);
   const [isManager, setManager] = useState(false);
+  const [canJournal, setJournal] = useState(false);
 
   const config = {
     headers: {
@@ -37,9 +38,9 @@ function JournalAccounts() {
           decoded = jwt_decode(token);
 
         }
-        if (decoded.user.role === "manager") {
-          setManager(true);
-        }
+        
+        if (decoded.user.role === "manager") setManager(true);
+        if (decoded.user.role === "manager" || decoded.user.role === "basic") setJournal(true);
 
         setLoading(false);
       })
@@ -100,13 +101,15 @@ function JournalAccounts() {
                 </tbody>
               </table>
             </div>
-            <div className="flex flex-row justify-end">
-              <Link to="new-entry">
+            {canJournal && (
+              <div className="flex flex-row justify-end">
+                <Link to="new-entry">
                   <button className="btn-primary">
                     New Entry
                   </button>
-              </Link>
-            </div>
+                </Link>
+              </div>
+            )}
           </>
         )}
       </div>

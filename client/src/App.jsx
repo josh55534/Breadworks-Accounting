@@ -11,6 +11,7 @@ import { Account } from "./pages/chartOfAccounts/account";
 import { JournalAccounts } from "./pages/journalizing/journalAccounts";
 import { JournalList } from "./pages/journalizing/journalList";
 import { JournalEntry } from "./pages/journalizing/journalEntry";
+import { CreateJournal } from "./pages/journalizing/journalCRUD";
 const token = localStorage.getItem("token");
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
         <Route path="/journal" element={<JournalAccounts />} />
         <Route path="/journal/account/:accountId" element={<JournalList />} />
         <Route path="/journal/entry/:journalEntryID" element={<JournalEntry />} />
+        <Route path="/journal/new-entry" element={<CreateJournal />} />
       </Routes>
     </>
   );
