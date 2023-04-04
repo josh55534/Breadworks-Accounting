@@ -90,6 +90,6 @@
     }
 
     .journal-data {
-        @apply text-lg p-1;
+        @apply p-1;
     }
 }

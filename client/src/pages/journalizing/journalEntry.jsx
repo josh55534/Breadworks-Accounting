@@ -7,13 +7,15 @@ const token = localStorage.getItem("token");
 function JournalEntry() {
   // TODO: ADD JOURNAL ENTRY FILE DOWNLOAD
   const { journalEntryID } = useParams();
-  const [debitAccountID, setDebitID] = useState("");
-  const [debitAccountName, setDebitName] = useState("");
-  const [creditAccountID, setCreditID] = useState("");
-  const [creditAccountName, setCreditName] = useState("");
+  const [debitAccountID, setDebitID] = useState([]);
+  const [debitAccountName, setDebitName] = useState([]);
+  const [creditAccountID, setCreditID] = useState([]);
+  const [creditAccountName, setCreditName] = useState([]);
+  const [creditAmount, setcredit] = useState([]);
+  const [debitAmount, setDebit] = useState([]);
   const [desc, setDesc] = useState("");
   const [date, setDate] = useState("");
-  const [amount, setAmount] = useState();
+
   const [journalStatus, setStatus] = useState("");
   const [toBeVerified, setToBeVerified] = useState(false);
   const [isManager, setManager] = useState("");
@@ -26,11 +28,12 @@ function JournalEntry() {
 
   useEffect(() => {
     // TODO: GET ACTUAL JOURNAL ENTRY DATA
-    setDebitID("1-001");
-    setDebitName("Cash");
-    setCreditID("2-001");
-    setCreditName("Debt");
-    setAmount(200.00);
+    setDebitID(["1-001", "1-002"]);
+    setDebitName(["Cash", "Test"]);
+    setCreditID(["2-001"]);
+    setCreditName(["Debt"]);
+    setDebit([200.00, 2.99]);
+    setcredit([202.99]);
     setDesc("This is a journal entry");
     setDate("2/23/2023");
     setStatus("pending");
@@ -66,7 +69,7 @@ function JournalEntry() {
           </div>
         </div>
         <div className="form-primary">
-          <table>
+          <table className="user-table">
             <thead>
               <tr>
                 <th className="user-table-header text-left">
@@ -75,38 +78,42 @@ function JournalEntry() {
                 <th className="user-table-header text-left">
                   Account
                 </th>
-                <th className="user-table-header">
+                <th className="user-table-header text-center">
                   Debit
                 </th>
-                <th className="user-table-header">
+                <th className="user-table-header text-center">
                   Credit
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="journal-data">
-                  {date}
-                </td>
-                <td className="journal-data">
-                  {debitAccountID + ": " + debitAccountName}
-                </td>
-                <td className="journal-data text-center">
-                  {amount}
-                </td>
-              </tr>
-              <tr>
-                <td>
-                </td>
-                <td className="journal-data pl-10">
-                  {creditAccountID + ": " + creditAccountName}
-                </td>
-                <td>
-                </td>
-                <td className="journal-data text-center">
-                  {amount}
-                </td>
-              </tr>
+              {debitAccountID.map((d, index) => (
+                <tr className="user-table-body">
+                  <td>
+                    {index === 0 && date}
+                  </td>
+                  <td>
+                    {debitAccountID[index] + ": " + debitAccountName[index]}
+                  </td>
+                  <td className="text-center">
+                    {debitAmount[index]}
+                  </td>
+                </tr>
+              ))}
+              {creditAccountID.map((d, index) => (
+                <tr className="user-table-body">
+                  <td>
+                  </td>
+                  <td className="pl-10">
+                    {creditAccountID[index] + ": " + creditAccountName[index]}
+                  </td>
+                  <td className="text-center">
+                  </td>
+                  <td className="text-center">
+                    {creditAmount[index]}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
           <p className="text-lg"><strong>Description:</strong> {desc}</p>
