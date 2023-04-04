@@ -159,18 +159,6 @@ function CreateJournal() {
           </div>
           <div>
             <label>
-              Amount
-            </label>
-            <input
-              className="txt-primary"
-              id="subject"
-              type="text"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-            />
-          </div>
-          <div>
-            <label>
               Date
             </label>
             <input
