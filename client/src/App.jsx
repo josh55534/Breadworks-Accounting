@@ -11,7 +11,7 @@ import { Account } from "./pages/chartOfAccounts/account";
 import { JournalAccounts } from "./pages/journalizing/journalAccounts";
 import { JournalList, JournalListPending } from "./pages/journalizing/journalList";
 import { JournalEntry } from "./pages/journalizing/journalEntry";
-import { CreateJournal } from "./pages/journalizing/journalCRUD";
+import { CreateJournal } from "./pages/journalizing/journalCreate";
 import { AccountLedger } from "./pages/chartOfAccounts/accountLedger";
 import { JournalHome } from "./pages/journalizing/journalHome";
 const token = localStorage.getItem("token");
@@ -49,8 +49,8 @@ function App() {
         <Route path="/journal/account/" element={<JournalAccounts />} />
         <Route path="/journal/account/:accountId" element={<AccountLedger />} />
         <Route path="/journal/entry/:journalEntryID" element={<JournalEntry />} />
-        <Route path="/journal/new-entry" element={<CreateJournal />} />
         <Route path="/journal/entries" element={<JournalList />} />
+        <Route path="/journal/entries/new-entry" element={<CreateJournal />} />
         <Route path="/journal/entries/pending" element={<JournalListPending />} />
       </Routes>
     </>
