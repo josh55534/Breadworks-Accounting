@@ -18,6 +18,8 @@ function JournalEntry() {
   const [toBeVerified, setToBeVerified] = useState(false);
   const [isManager, setManager] = useState("");
 
+  const navigate = useNavigate();
+
   if (token) {
     var decoded = jwt_decode(token);
   }
@@ -109,11 +111,9 @@ function JournalEntry() {
           </table>
           <p className="text-lg"><strong>Description:</strong> {desc}</p>
           <div className="flex justify-between">
-            <Link to="/journal">
-              <button className="btn-primary btn-color-red">
-                Back
-              </button>
-            </Link>
+            <button className="btn-primary btn-color-red" onClick={() => navigate(-1)}>
+              Back
+            </button>
             {toBeVerified && isManager && (
               <button className="btn-primary"
                 onClick={handleVerify}
