@@ -166,13 +166,13 @@ function CreateJournal() {
                     />
                   </td>
                   <td>
-                    <button type="button" id={index} className="btn-primary btn-color-red" onClick={removeList}>-</button>
+                    <button type="button" id={index} className="btn-primary btn-color-red" onClick={removeList}>Remove</button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <button type="button" className="btn-primary" onClick={addList}>+</button>
+          <button type="button" className="btn-primary" onClick={addList}>Add Row</button>
         </div>
         <div>
           <label>
