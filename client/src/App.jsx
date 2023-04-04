@@ -9,7 +9,7 @@ import { EmailForm, AdminMain, UpdateUserForm, RegisterAdmin } from "./pages/adm
 import { AdminAddAccount, ChartOfAccounts } from "./pages/chartOfAccounts/chartOfAccounts";
 import { Account } from "./pages/chartOfAccounts/account";
 import { JournalAccounts } from "./pages/journalizing/journalAccounts";
-import { JournalList } from "./pages/journalizing/journalList";
+import { JournalList, JournalListPending } from "./pages/journalizing/journalList";
 import { JournalEntry } from "./pages/journalizing/journalEntry";
 import { CreateJournal } from "./pages/journalizing/journalCRUD";
 import { AccountLedger } from "./pages/chartOfAccounts/accountLedger";
@@ -49,6 +49,7 @@ function App() {
         <Route path="/journal/entry/:journalEntryID" element={<JournalEntry />} />
         <Route path="/journal/new-entry" element={<CreateJournal />} />
         <Route path="/journal/entries" element={<JournalList />} />
+        <Route path="/journal/entries/pending" element={<JournalListPending />} />
       </Routes>
     </>
   );

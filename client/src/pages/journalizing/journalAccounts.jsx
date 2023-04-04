@@ -102,7 +102,7 @@ function JournalAccounts() {
             <div className="flex justify-between">
               <div>
                 <Link to="entries">
-                  <button className="btn-primary">View Entries</button>
+                  <button className="btn-primary">General Journal</button>
                 </Link>
               </div>
               {canJournal && (

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 const token = localStorage.getItem("token");
 
 function JournalEntry() {
@@ -14,6 +15,12 @@ function JournalEntry() {
   const [date, setDate] = useState("");
   const [amount, setAmount] = useState();
   const [journalStatus, setStatus] = useState("");
+  const [toBeVerified, setToBeVerified] = useState(false);
+  const [isManager, setManager] = useState("");
+
+  if (token) {
+    var decoded = jwt_decode(token);
+  }
 
   useEffect(() => {
     // TODO: GET ACTUAL JOURNAL ENTRY DATA
@@ -24,8 +31,15 @@ function JournalEntry() {
     setAmount(200.00);
     setDesc("This is a journal entry");
     setDate("2/23/2023");
-    setStatus("rejected");
+    setStatus("pending");
+
+    if (journalStatus === "pending") setToBeVerified(true);
+    if (decoded.user.role === "manager") setManager(true);
   })
+
+  const handleVerify = () => {
+
+  }
 
   const statusColor = (status) => {
     if (status === "approved") {
@@ -94,11 +108,20 @@ function JournalEntry() {
             </tbody>
           </table>
           <p className="text-lg"><strong>Description:</strong> {desc}</p>
-          <Link to="/journal">
-            <button className="btn-primary btn-color-red">
-              Back
-            </button>
-          </Link>
+          <div className="flex justify-between">
+            <Link to="/journal">
+              <button className="btn-primary btn-color-red">
+                Back
+              </button>
+            </Link>
+            {toBeVerified && isManager && (
+              <button className="btn-primary"
+                onClick={handleVerify}
+              >
+                Update Status
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </>
