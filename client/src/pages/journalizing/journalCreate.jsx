@@ -55,6 +55,18 @@ function CreateJournal() {
     setAccountID(account)
   }
 
+  const changeDebit = (props) => {
+    var debit = [...debitAmount]
+    debit[props.target.id] = props.target.value;
+    setDebit(debit);
+  }
+
+  const changeCredit = (props) => {
+    var credit = [...creditAmount]
+    credit[props.target.id] = props.target.value;
+    setCredit(credit);
+  }
+
   const removeList = (props) => {
     if (rowID.length > 1) {
       var tempRowID, tempAccountID, tempCreditAmount, tempDebitAmount;
@@ -73,14 +85,19 @@ function CreateJournal() {
       setDebit(tempDebitAmount)
       setCredit(tempCreditAmount)
     }
+    else {
+      setRowID([0])
+      setAccountID(["none"]);
+      setDebit([])
+      setCredit([]);
+    }
   }
 
   const addList = (props) => {
-    var tempRowID, tempAccountID, tempCreditAmount, tempDebitAmount;
-    tempRowID = [...rowID];
-    tempAccountID = [...accountID];
-    tempCreditAmount = [...creditAmount];
-    tempDebitAmount = [...debitAmount];
+    var tempRowID = [...rowID];
+    var tempAccountID = [...accountID];
+    var tempCreditAmount = [...creditAmount];
+    var tempDebitAmount = [...debitAmount];
 
     tempRowID.push(tempRowID.length)
     tempAccountID.push("none")
@@ -96,112 +113,111 @@ function CreateJournal() {
   return (
     <div className="window-primary">
       <h2>New Journal Entry</h2>
-      <form>
-        <div className="form-primary">
-          <div>
-            <table className="user-table">
-              <thead>
-                <tr>
-                  <td className="user-table-header text-black">
-                    <label>Account</label>
+      <div className="form-primary">
+        <div>
+          <table className="user-table">
+            <thead>
+              <tr>
+                <td className="user-table-header text-black">
+                  <label>Account</label>
+                </td>
+                <td className="user-table-header text-black">
+                  <label>Debit</label>
+                </td>
+                <td className="user-table-header text-black">
+                  <label>Credit</label>
+                </td>
+              </tr>
+            </thead>
+            <tbody>
+              {rowID.map((d, index) => (
+                <tr key={index}>
+                  <td className="user-table-body">
+                    <select
+                      className="txt-primary ml-0"
+                      type="text"
+                      id={index}
+                      value={accountID[index]}
+                      onChange={changeAccount}
+                    >
+                      <option value="none" disabled hidden>Select an Option</option>
+                      {accountListID.map((id, index) => {
+                        return (
+                          <option value={id} key={index}>{accountList[index]}</option>
+                        )
+                      })}
+                    </select>
                   </td>
-                  <td className="user-table-header text-black">
-                    <label>Debit</label>
+                  <td className="user-table-body">
+                    <input
+                      className="txt-primary ml-0"
+                      type="text"
+                      id={index}
+                      value={debitAmount[index]}
+                      onChange={changeDebit}
+                    />
                   </td>
-                  <td className="user-table-header text-black">
-                    <label>Credit</label>
+                  <td className="user-table-body">
+                    <input
+                      className="txt-primary ml-0"
+                      type="text"
+                      id={index}
+                      value={creditAmount[index]}
+                    />
+                  </td>
+                  <td>
+                    <button type="button" id={index} className="btn-primary btn-color-red" onClick={removeList}>-</button>
                   </td>
                 </tr>
-              </thead>
-              <tbody>
-                {rowID.map((d, index) => (
-                  <tr key={index}>
-                    <td className="user-table-body">
-                      <select
-                        className="txt-primary ml-0"
-                        type="text"
-                        id={index}
-                        value={accountID[index]}
-                        onChange={changeAccount}
-                      >
-                        <option value="none" disabled hidden>Select an Option</option>
-                        {accountListID.map((id, index) => {
-                          return (
-                            <option value={id} key={index}>{accountList[index]}</option>
-                          )
-                        })}
-                      </select>
-                    </td>
-                    <td className="user-table-body">
-                      <input
-                        className="txt-primary ml-0"
-                        type="text"
-                        id={index}
-                        value={debitAmount[index]}
-                      />
-                    </td>
-                    <td className="user-table-body">
-                      <input
-                        className="txt-primary ml-0"
-                        type="text"
-                        id={index}
-                        value={creditAmount[index]}
-                      />
-                    </td>
-                    <td>
-                      <button type="button" id={index} className="btn-primary btn-color-red" onClick={removeList}>-</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <button type="button" className="btn-primary" onClick={addList}>+</button>
-          </div>
-          <div>
-            <label>
-              Date
-            </label>
-            <input
-              className="txt-primary"
-              id="subject"
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
-          </div>
-          <div>
-            <label>
-              Description
-            </label>
-            <input
-              className="txt-primary"
-              id="subject"
-              type="text"
-              value={desc}
-              onChange={(e) => setDesc(e.target.value)}
-            />
-          </div>
-          <div>
-            <label>
-              Supporting File
-            </label>
-            <input
-              className="txt-primary"
-              id="file"
-              type="file"
-              onChange={(e) => setFile(e.target.files[0])}
-            />
-          </div>
+              ))}
+            </tbody>
+          </table>
+          <button type="button" className="btn-primary" onClick={addList}>+</button>
         </div>
-        <div className="flex justify-between">
-          <Link to="/journal/entries" className="btn-primary btn-color-red">
-            Go Back
-          </Link>
-          <button className="btn-primary" onClick={handleSubmit}>
-            Add Entry
-          </button>
+        <div>
+          <label>
+            Date
+          </label>
+          <input
+            className="txt-primary"
+            id="subject"
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
         </div>
-      </form >
+        <div>
+          <label>
+            Description
+          </label>
+          <input
+            className="txt-primary"
+            id="subject"
+            type="text"
+            value={desc}
+            onChange={(e) => setDesc(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>
+            Supporting File
+          </label>
+          <input
+            className="txt-primary"
+            id="file"
+            type="file"
+            onChange={(e) => setFile(e.target.files[0])}
+          />
+        </div>
+      </div>
+      <div className="flex justify-between">
+        <Link to="/journal/entries" className="btn-primary btn-color-red">
+          Go Back
+        </Link>
+        <button className="btn-primary" onClick={handleSubmit}>
+          Add Entry
+        </button>
+      </div>
     </div >
   )
 }
