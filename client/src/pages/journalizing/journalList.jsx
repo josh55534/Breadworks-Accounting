@@ -28,20 +28,18 @@ function GeneralJournalList(props) {
   return (
     <>
       <tr>
-        <td className="user-table-body">{props.date}</td>
-        <td className="user-table-body">{props.debitAcct}</td>
-        <Link to={`/journal/entry/${props.id}`}>
-          <td className="user-table-body text-center">{props.id}</td>
-        </Link>
-        <td className="user-table-body">{props.amount}</td>
-        <td className="user-table-body"></td>
+        <td className="user-table-body border-gray-500">{props.date}</td>
+        <td className="user-table-body border-gray-500">{props.debitAcct}</td>
+        <td className="user-table-body border-gray-500 text-center"><Link to={`/journal/entry/${props.id}`}>{props.id}</Link></td>
+        <td className="user-table-body border-gray-500 text-center">{props.amount}</td>
+        <td className="user-table-body border-gray-500"></td>
       </tr>
       <tr>
         <td className="user-table-body"></td>
         <td className="user-table-body pl-4">{props.creditAcct}</td>
         <td className="user-table-body"></td>
         <td className="user-table-body"></td>
-        <td className="user-table-body">{props.amount}</td>
+        <td className="user-table-body text-center">{props.amount}</td>
         <td className="user-table-body"></td>
       </tr>
       <tr>
