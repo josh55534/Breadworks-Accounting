@@ -135,7 +135,7 @@ function CreateJournal() {
           </div>
         </div>
         <div className="flex justify-between">
-          <Link to="/journal" className="btn-primary btn-color-red">
+          <Link to="/journal/entries" className="btn-primary btn-color-red">
             Go Back
           </Link>
           <button className="btn-primary">

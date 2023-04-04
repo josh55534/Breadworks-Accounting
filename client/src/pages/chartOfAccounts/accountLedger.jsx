@@ -46,7 +46,7 @@ function AccountLedger() {
     <>
       <div className="window-primary max-w-5xl">
         <h2 className="mb-2">Account Ledger</h2>
-        <div className="flex justify-between">
+        <div className="flex justify-between ml-2">
           <div>
             <label>Account ID: {accountId}</label>
             <label>Account Name: {accountName}</label>
@@ -99,7 +99,11 @@ function AccountLedger() {
               })}
             </tbody>
           </table>
+
         </div>
+        <Link to="/journal/account">
+          <button className="btn-primary btn-color-red mt-1">Back</button>
+        </Link>
       </div>
     </>
   )

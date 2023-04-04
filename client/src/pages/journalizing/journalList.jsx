@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
+import { JournalHome, JournalNavbar } from "./journalHome";
 const token = localStorage.getItem("token");
 
 function JournalListData(props) {
@@ -79,7 +80,8 @@ function JournalList() {
     <>
       <div className="window-primary max-w-5xl text-center">
         <h2>General Journal</h2>
-        <div className="form-primary">
+        <JournalNavbar />
+        <div className="form-primary mt-4">
           <table className="user-table">
             <thead>
               <tr>
@@ -115,10 +117,7 @@ function JournalList() {
               ))}
             </tbody>
           </table>
-          <div className="flex justify-between">
-            <Link to="/journal">
-              <button className="btn-primary btn-color-red">Journal Home</button>
-            </Link>
+          <div className="flex justify-end">
             {canJournal && (
               <div className="flex flex-row justify-end">
                 <Link to="new-entry">
@@ -154,7 +153,8 @@ function JournalListPending() {
     <>
       <div className="window-primary max-w-5xl text-center">
         <h2>Pending Entries</h2>
-        <div className="form-primary">
+        <JournalNavbar />
+        <div className="form-primary mt-4">
           <table className="user-table">
             <thead>
               <tr>
@@ -189,11 +189,6 @@ function JournalListPending() {
               })}
             </tbody>
           </table>
-          <div className="flex justify-left">
-            <Link to="/journal">
-              <button className="btn-primary btn-color-red">Journal Home</button>
-            </Link>
-          </div>
         </div>
       </div>
     </>
