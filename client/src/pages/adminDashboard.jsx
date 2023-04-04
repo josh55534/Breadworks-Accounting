@@ -4,6 +4,37 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 const token = localStorage.getItem("token");
 
+function AdminNavbar() {
+  return (
+    <div className="flex justify-center gap-5">
+      <Link to="/admindashboard/email">
+        <button
+          className="btn-primary"
+          onClick={() => { }}
+        >
+          Email
+        </button>
+      </Link>
+      <Link to="/admindashboard/view">
+        <button
+          className="btn-primary"
+          onClick={() => { }}
+        >
+          View Users
+        </button>
+      </Link>
+      <Link to="/admindashboard/register">
+        <button
+          className="btn-primary"
+          onClick={() => { }}
+        >
+          New User
+        </button>
+      </Link>
+    </div>
+  )
+}
+
 function AdminHeader() {
   //Gets the main page of adminDashboard which returns "admin dashboard" if authorized as an administrator
   const [data, setData] = useState(null);
@@ -29,34 +60,9 @@ function AdminHeader() {
   } else {
     return (
       <>
-        <div className="bg-orange-600 w-fit rounded-sm font-bold mx-auto">
-          {data ? <div>{data}</div> : <div>Loading...</div>}
-        </div>
-        <div className="flex justify-center">
-          <Link to="/admindashboard/email">
-            <button
-              className="mt-4 bg-orange-600 rounded-sm hover:bg-orange-700 ml-2"
-              onClick={() => { }}
-            >
-              Email
-            </button>
-          </Link>
-          <Link to="/admindashboard/view">
-            <button
-              className="mt-4 bg-orange-600 rounded-sm hover:bg-orange-700 ml-2"
-              onClick={() => { }}
-            >
-              View Users
-            </button>
-          </Link>
-          <Link to="/admindashboard/register">
-            <button
-              className="mt-4 bg-orange-600 rounded-sm hover:bg-orange-700 ml-2"
-              onClick={() => { }}
-            >
-              Register
-            </button>
-          </Link>
+        <div className="window-primary max-w-5xl text-center">
+          <h2>Admin Dashboard</h2>
+          <AdminNavbar />
         </div>
       </>
     );
@@ -123,15 +129,16 @@ function AdminMain() {
 
   return (
     <>
-      <AdminHeader />
-      <div className="window-primary max-w-5xl px-2">
+      <div className="window-primary max-w-5xl px-2 text-center">
+        <h2>Users</h2>
+        <AdminNavbar />
         <form>
           {loading ? (
             <div className="flex items-center justify-center h-fit">
               Loading...
             </div>
           ) : (
-            <div className="form-primary mb-0">
+            <div className="form-primary mt-4">
               <table className="user-table">
                 <thead>
                   <tr>
@@ -219,10 +226,9 @@ function AdminMain() {
               </table>
             </div>
           )}
-
         </form>
       </div >
-      </>
+    </>
   );
 }
 
@@ -291,14 +297,15 @@ function EmailForm() {
 
   return (
     <>
-      <AdminHeader />
       <div className="window-primary max-w-5xl">
+        <h2 className="text-center">Email</h2>
+        <AdminNavbar/>
         <form onSubmit={handleSubmit}>
           <div className="form-primary">
             {loading ? (<p>Loading...</p>) : (
               <div>
                 <label htmlFor="email">
-                  Email
+                  Recipient
                 </label>
                 <select
                   className="txt-primary"
@@ -620,10 +627,10 @@ function RegisterAdmin() {
 
   return (
     <>
-      <AdminHeader />
-      <div className="window-primary">
+      <div className="window-primary max-w-5xl">
         <form onSubmit={handleSubmit}>
-          <h2>Register</h2>
+          <h2 className="text-center">New User</h2>
+          <AdminNavbar />
           <div className="form-primary">
             <div>
               <label htmlFor="Fname">
