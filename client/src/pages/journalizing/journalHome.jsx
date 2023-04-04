@@ -16,7 +16,7 @@ function JournalNavbar() {
 function JournalHome() {
     return (
         <div className="window-primary max-w-5xl">
-            <h2 className="text-center">Journal Home</h2>
+            <h2 className="text-center">Journal</h2>
             <JournalNavbar />
             <div className="text-center mt-2">
                 <label>To get started, click on one of the tabs above.</label>
@@ -27,13 +27,13 @@ function JournalHome() {
                 <div className="mt-1">
                     <label>Accounts</label>
                     <p className="ml-4">
-                        Lists all accounts and by selecting an account, the user may see the account ledger.
+                        Lists all accounts and by selecting an account, the user can view the account ledger.
                     </p>
                 </div>
                 <div className="mt-2">
                     <label>General Journal</label>
                     <p className="ml-4">
-                        Lists all journal entries in the general journal. Accountants and Managers may create new journal entries
+                        Lists all journal entries in the general journal. Accountants and Managers can create new journal entries
                         on the general ledger page. Selecting a journal entry will bring up details about the entry.
                     </p>
                 </div>

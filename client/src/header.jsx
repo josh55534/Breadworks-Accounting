@@ -40,7 +40,7 @@ function HeadNavbar() {
 							onClick={() => {
 							}}
 						>
-							Go to Admin Dashboard
+							Admin Dashboard
 						</button>
 					</Link>
 

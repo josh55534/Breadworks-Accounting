@@ -60,9 +60,35 @@ function AdminHeader() {
   } else {
     return (
       <>
-        <div className="window-primary max-w-5xl text-center">
-          <h2>Admin Dashboard</h2>
+        <div className="window-primary max-w-5xl">
+          <h2 className="text-center">Admin Dashboard</h2>
           <AdminNavbar />
+          <div className="text-center mt-2">
+                <label>To get started, click on one of the tabs above.</label>
+                <label>Information on the tabs can be found below.</label>
+            </div>
+            <label className="mt-2">Information:</label>
+            <div className="ml-4">
+                <div className="mt-1">
+                    <label>Email</label>
+                    <p className="ml-4">
+                        Administrators can send emails to the other users of the system.
+                    </p>
+                </div>
+                <div className="mt-2">
+                    <label>View Users</label>
+                    <p className="ml-4">
+                        Displays a list of all users. Administrators can view and update individual user information here, as well as 
+                        change account access. Administrators may also activate or deactivate accounts.
+                    </p>
+                </div>
+                <div className="mt-2">
+                    <label>New User</label>
+                    <p className="ml-4">
+                        Administrators can create new accounts by manually inputting the user information.
+                    </p>
+                </div>
+            </div>
         </div>
       </>
     );

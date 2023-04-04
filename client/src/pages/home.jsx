@@ -15,14 +15,16 @@ function LoggedIn() {
 				<div className="mt-1">
 					<label>Chart of Accounts</label>
 					<p className="ml-4">
-						Lists all accounts and their general information. Administrators may also create and edit account information here.
+						Lists all accounts and their general information. Administrators can also create and edit account information here.
 					</p>
 				</div>
 				<div className="mt-2">
 					<label>Journal</label>
 					<p className="ml-4">
-						Journalizes transactions. Accountants and Managers may create new journal entries to update balance of accounts.
-						New journal entries must go through review by managers before their changes go into effect.
+						View and create journal transactions. Accountants and Managers can create new journal entries to update balance of accounts.
+						Managers can see a list of pending journal entries and either approve or reject changes. New journal entries must be approved
+						by managers before their changes go into effect. Journal entries may be viewed directly from the general journal, or as 
+						transactions in account ledgers.
 					</p>
 				</div>
 			</div>
