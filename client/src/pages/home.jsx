@@ -4,7 +4,7 @@ import jwt_decode from "jwt-decode";
 
 function LoggedIn() {
 	return (
-		<div className="window-primary max-w-5xl">
+		<div className="window-primary max-w-7xl">
 			<div className="text-center">
 				<h2>Breadworks Home Page</h2>
 				<label>To get started, click on one of the tabs above.</label>
@@ -34,10 +34,10 @@ function LoggedIn() {
 
 function LandingPage() {
 	return (
-		<div className="window-primary max-w-5xl text-center">
+		<div className="window-primary text-center max-w-3xl">
 			<h2 className="text-center">Let's Get This Bread!</h2>
 			<label>Start accounting now!</label>
-			<div className="flex justify-center gap-5 mt-3">
+			<div className="flex justify-center gap-28 mt-3">
 				<div className="flex flex-col text-center">
 					<p>Have an account?</p>
 					<Link to="/login" className="btn-primary mx-auto">

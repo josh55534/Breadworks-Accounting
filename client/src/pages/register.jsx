@@ -64,7 +64,7 @@ function Register() {
   }, [message]);
 
   return (
-    <div className="window-primary">
+    <div className="window-primary max-w-2xl">
       <form onSubmit={handleSubmit}>
         <h2>Register</h2>
 

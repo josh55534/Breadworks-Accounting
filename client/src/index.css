@@ -38,7 +38,7 @@
     }
 
     .window-primary {
-        @apply bg-white p-6 rounded-lg shadow-2xl w-full max-w-2xl mx-auto my-10 pb-2;
+        @apply bg-white p-6 rounded-lg shadow-2xl w-full max-w-7xl mx-auto my-10 pb-2;
     }
 
     .form-primary {

@@ -44,7 +44,7 @@ function CreateJournal() {
   }, [config])
 
   return (
-    <div className="window-primary max-w-5xl">
+    <div className="window-primary">
       <h2>New Journal Entry</h2>
       <form>
         <div className="form-primary">

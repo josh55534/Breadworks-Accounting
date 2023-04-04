@@ -52,7 +52,7 @@ function ChartOfAccounts() {
 
   return (
     <>
-      <div className="window-primary max-w-5xl text-center">
+      <div className="window-primary text-center">
         <h2>Chart of Accounts</h2>
         <form>
           {loading ? (
@@ -205,7 +205,7 @@ function AdminAddAccount() {
 
   return (
     <>
-      <div className="window-primary max-w-5xl">
+      <div className="window-primary">
         <h2>Create New Account</h2>
         {loading ? (
           <div className="flex items-center justify-center h-fit">

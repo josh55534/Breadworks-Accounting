@@ -15,7 +15,7 @@ function JournalNavbar() {
 
 function JournalHome() {
     return (
-        <div className="window-primary max-w-5xl">
+        <div className="window-primary">
             <h2 className="text-center">Journal</h2>
             <JournalNavbar />
             <div className="text-center mt-2">

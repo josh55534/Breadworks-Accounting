@@ -44,7 +44,7 @@ function AccountLedger() {
 
   return (
     <>
-      <div className="window-primary max-w-5xl">
+      <div className="window-primary">
         <h2 className="mb-2">Account Ledger</h2>
         <div className="flex justify-between ml-2">
           <div>

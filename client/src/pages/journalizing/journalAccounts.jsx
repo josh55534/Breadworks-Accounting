@@ -41,7 +41,7 @@ function JournalAccounts() {
 
   return (
     <>
-      <div className="window-primary max-w-5xl text-center">
+      <div className="window-primary text-center">
 
         <h2>Accounts</h2>
         <JournalNavbar />

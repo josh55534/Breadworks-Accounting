@@ -53,7 +53,7 @@ function Account() {
   }, [config])
 
   return (
-    <div className="window-primary max-w-5xl">
+    <div className="window-primary">
       <h2>Account Details: {accountId} - {name}</h2>
       <div className="form-primary">
         <div>

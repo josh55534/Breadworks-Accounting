@@ -78,7 +78,7 @@ function JournalList() {
 
   return (
     <>
-      <div className="window-primary max-w-5xl text-center">
+      <div className="window-primary text-center">
         <h2>General Journal</h2>
         <JournalNavbar />
         <div className="form-primary mt-4">
@@ -151,7 +151,7 @@ function JournalListPending() {
 
   return (
     <>
-      <div className="window-primary max-w-5xl text-center">
+      <div className="window-primary text-center">
         <h2>Pending Entries</h2>
         <JournalNavbar />
         <div className="form-primary mt-4">

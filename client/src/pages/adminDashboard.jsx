@@ -60,7 +60,7 @@ function AdminHeader() {
   } else {
     return (
       <>
-        <div className="window-primary max-w-5xl">
+        <div className="window-primary">
           <h2 className="text-center">Admin Dashboard</h2>
           <AdminNavbar />
           <div className="text-center mt-2">
@@ -155,7 +155,7 @@ function AdminMain() {
 
   return (
     <>
-      <div className="window-primary max-w-5xl px-2 text-center">
+      <div className="window-primary px-2 text-center">
         <h2>Users</h2>
         <AdminNavbar />
         <form>
@@ -323,7 +323,7 @@ function EmailForm() {
 
   return (
     <>
-      <div className="window-primary max-w-5xl">
+      <div className="window-primary">
         <h2 className="text-center">Email</h2>
         <AdminNavbar/>
         <form onSubmit={handleSubmit}>
@@ -653,7 +653,7 @@ function RegisterAdmin() {
 
   return (
     <>
-      <div className="window-primary max-w-5xl">
+      <div className="window-primary">
         <form onSubmit={handleSubmit}>
           <h2 className="text-center">New User</h2>
           <AdminNavbar />
