@@ -10,18 +10,21 @@ function LoggedIn() {
 				<label>To get started, click on one of the tabs above.</label>
 				<label>Information on the tabs can be found below.</label>
 			</div>
-			<div className="mt-2">
-				<label>Chart of Accounts</label>
-				<p className="ml-4">
-					Lists all accounts and their general information. Administrators may also create and edit account information here.
-				</p>
-			</div>
-			<div className="mt-2">
-				<label>Journal</label>
-				<p className="ml-4">
-					Journalizes transactions. Accountants and Managers may create new journal entries to update balance of accounts.
-					New journal entries must go through review by managers before their changes go into effect.
-				</p>
+			<label>Information:</label>
+			<div className="ml-4">
+				<div className="mt-1">
+					<label>Chart of Accounts</label>
+					<p className="ml-4">
+						Lists all accounts and their general information. Administrators may also create and edit account information here.
+					</p>
+				</div>
+				<div className="mt-2">
+					<label>Journal</label>
+					<p className="ml-4">
+						Journalizes transactions. Accountants and Managers may create new journal entries to update balance of accounts.
+						New journal entries must go through review by managers before their changes go into effect.
+					</p>
+				</div>
 			</div>
 		</div>
 	)
