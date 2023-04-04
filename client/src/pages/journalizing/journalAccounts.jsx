@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import jwt_decode from "jwt-decode";
 const token = localStorage.getItem("token");
 
 function JournalAccounts() {
@@ -12,7 +11,7 @@ function JournalAccounts() {
   const [accountCategories, setCategories] = useState([]);
   const [accountStatements, setStatements] = useState([]);
   const [accountStatus, setStatus] = useState([]);
-  const [canJournal, setJournal] = useState(false);
+  
 
   const config = {
     headers: {
@@ -32,14 +31,6 @@ function JournalAccounts() {
         setStatements(data.map((d) => d.statement));
         setStatus(data.map((d) => d.active));
 
-        let decoded;
-        if (token) {
-          decoded = jwt_decode(token);
-
-        }
-
-        if (decoded.user.role === "manager" || decoded.user.role === "basic") setJournal(true);
-
         setLoading(false);
       })
       .catch((err) => {
@@ -50,7 +41,7 @@ function JournalAccounts() {
   return (
     <>
       <div className="window-primary max-w-5xl text-center pb-4">
-        <h2>Journal</h2>
+        <h2>Journal Accounts</h2>
         {loading ? (
           <div className="flex items-center justify-center h-fit">
             Loading...
@@ -99,21 +90,10 @@ function JournalAccounts() {
                 </tbody>
               </table>
             </div>
-            <div className="flex justify-between">
-              <div>
-                <Link to="entries">
-                  <button className="btn-primary">General Journal</button>
+            <div className="flex justify-left">
+                <Link to="/journal">
+                  <button className="btn-primary btn-color-red">Journal Home</button>
                 </Link>
-              </div>
-              {canJournal && (
-                <div className="flex flex-row justify-end">
-                  <Link to="new-entry">
-                    <button className="btn-primary">
-                      New Entry
-                    </button>
-                  </Link>
-                </div>
-              )}
             </div>
           </>
         )}

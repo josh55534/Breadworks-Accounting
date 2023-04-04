@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 const token = localStorage.getItem("token");
 
 function JournalListData(props) {
@@ -61,9 +62,17 @@ function JournalList() {
   const [debitAcct, setDebitAcct] = useState([]); // array of journal entry debit accounts
   const [creditAcct, setCreditAcct] = useState([]); // array of journal entry credit accounts
   const [amounts, setAmounts] = useState([]); // array of journal entry amounts
+  const [canJournal, setJournal] = useState(false);
 
   useEffect(() => {
     // TODO: GET JOURNAL ENTRY LIST
+    let decoded;
+    if (token) {
+      decoded = jwt_decode(token);
+
+    }
+
+    if (decoded.user.role === "manager" || decoded.user.role === "basic") setJournal(true);
   })
 
   return (
@@ -108,11 +117,17 @@ function JournalList() {
           </table>
           <div className="flex justify-between">
             <Link to="/journal">
-              <button className="btn-primary btn-color-red">Back</button>
+              <button className="btn-primary btn-color-red">Journal Home</button>
             </Link>
-            <Link to="/journal/entries/pending">
-              <button className="btn-primary">Pending Entries</button>
-            </Link>
+            {canJournal && (
+              <div className="flex flex-row justify-end">
+                <Link to="new-entry">
+                  <button className="btn-primary">
+                    New Entry
+                  </button>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -175,8 +190,8 @@ function JournalListPending() {
             </tbody>
           </table>
           <div className="flex justify-left">
-            <Link to="/journal/entries">
-              <button className="btn-primary btn-color-red">Back</button>
+            <Link to="/journal">
+              <button className="btn-primary btn-color-red">Journal Home</button>
             </Link>
           </div>
         </div>
