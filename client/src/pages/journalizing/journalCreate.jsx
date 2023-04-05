@@ -9,6 +9,7 @@ const token = localStorage.getItem("token");
 function CreateJournal() {
   const defaultRow = {
     accountID:"none",
+    accountName: "",
     creditAmount: 0.0,
     debitAmount: 0.0,
     debitAfter: "N/A",
@@ -63,6 +64,7 @@ function CreateJournal() {
       userName: userName
     }, config)
     .then((res) => {
+      window.location.href = "/journal/entries"
       console.log(res)
     })
     .catch((err) => {
@@ -73,6 +75,7 @@ function CreateJournal() {
   const changeAccount = (props) => {
     var account = [...rowID]
     account[props.target.id].accountID = props.target.value;
+    account[props.target.id].accountName = accountList[props.target.id];
     setRowID(account)
   }
 
