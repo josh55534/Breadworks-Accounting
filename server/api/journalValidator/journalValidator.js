@@ -8,7 +8,9 @@ const journalSchema = Joi.object({
     Joi.object({
       accountID: Joi.string().required(),
       creditAmount: Joi.number().precision(2),
-      debitAmount: Joi.number().precision(2)
+      debitAmount: Joi.number().precision(2),
+      debitAfter: Joi.string().required(),
+      creditAfter: Joi.string().required()
     })).required(),
     desc: Joi.string().required(),
     date: Joi.string().required(),

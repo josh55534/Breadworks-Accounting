@@ -9,8 +9,10 @@ const token = localStorage.getItem("token");
 function CreateJournal() {
   const defaultRow = {
     accountID:"none",
-    creditAmount: "0",
-    debitAmount: "0",
+    creditAmount: 0.0,
+    debitAmount: 0.0,
+    debitAfter: "N/A",
+    creditAfter: "N/A"
   };
 
   const [accountList, setAccountList] = useState([])
@@ -149,7 +151,7 @@ function CreateJournal() {
                   <td className="user-table-body">
                     <input
                       className="txt-primary ml-0"
-                      type="text"
+                      type="number"
                       id={index}
                       value={rowID[index].debitAmount}
                       onChange={changeDebit}
@@ -158,7 +160,7 @@ function CreateJournal() {
                   <td className="user-table-body">
                     <input
                       className="txt-primary ml-0"
-                      type="text"
+                      type="number"
                       id={index}
                       value={rowID[index].creditAmount}
                       onChange={changeCredit}

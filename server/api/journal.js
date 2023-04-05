@@ -30,6 +30,27 @@ router.post('/new-entry', authUser, authAccountant(ROLE.MANAGER, ROLE.BASIC), as
     return res.status(400).json({ errors: errorFull });
   }
 
+  var totalCredit = 0;
+  var totalDebit = 0;
+
+  for(x in transactions) {
+    transactions[x].creditAmount = parseFloat(transactions[x].creditAmount)
+    transactions[x].debitAmount = parseFloat(transactions[x].debitAmount)
+
+    totalCredit += transactions[x].creditAmount;
+    totalDebit += transactions[x].debitAmount;
+
+    console.log(x + ": " + totalDebit)
+    console.log(x + ": " + totalCredit)
+  }
+
+  console.log(totalCredit);
+  console.log(totalDebit)
+
+  if(totalCredit !== totalDebit) {
+    return res.status(400).json({ errors: "Credit must equal debit" })
+  }
+
   const snapshot = await journalRef.count().get();
   const journalID = "" + (snapshot.data().count + 1);
 
