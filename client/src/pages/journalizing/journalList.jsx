@@ -29,27 +29,38 @@ function JournalListData(props) {
 function GeneralJournalList(props) {
   return (
     <>
-      <tr>
-        <td className="user-table-body border-gray-500">{props.date}</td>
-        <td className="user-table-body border-gray-500">{props.debitAcct}</td>
-        <td className="user-table-body border-gray-500 text-center"><Link to={`/journal/entry/${props.id}`}>{props.id}</Link></td>
-        <td className="user-table-body border-gray-500 text-center">{props.amount}</td>
-        <td className="user-table-body border-gray-500"></td>
-      </tr>
-      <tr>
-        <td className="user-table-body"></td>
-        <td className="user-table-body pl-4">{props.creditAcct}</td>
-        <td className="user-table-body"></td>
-        <td className="user-table-body"></td>
-        <td className="user-table-body text-center">{props.amount}</td>
-        <td className="user-table-body"></td>
-      </tr>
+      {props.rowID.map((d, index) => (
+        <>
+          {d.creditAmount === 0 && (
+            <tr>
+              <td className={index == 0 ? "user-table-body border-gray-500" : "user-table-body"}>{index == 0 && props.date}</td>
+              <td className={index == 0 ? "user-table-body border-gray-500" : "user-table-body"}>{d.accountName}</td>
+              <td className={index == 0 ? "user-table-body border-gray-500 text-center" : "user-table-body text-center"}>{index == 0 && <Link to={`/journal/entry/${props.id}`}>{props.id}</Link>}</td>
+              <td className={index == 0 ? "user-table-body border-gray-500 text-center" : "user-table-body text-center"}>{d.debitAmount}</td>
+              <td className={index == 0 ? "user-table-body border-gray-500" : "user-table-body"}></td>
+            </tr>
+          )}
+        </>
+      ))}
+      {props.rowID.map((d, index) => (
+        <>
+          {d.debitAmount === 0 && (
+            <tr>
+              <td className="user-table-body"></td>
+              <td className="user-table-body pl-10">{d.accountName}</td>
+              <td className="user-table-body text-center"></td>
+              <td className="user-table-body"></td>
+              <td className="user-table-body text-center">{d.creditAmount}</td>
+              
+            </tr>
+          )}
+        </>
+      ))}
       <tr>
         <td className="user-table-body"></td>
         <td className="user-table-body"><em>{props.desc}</em></td>
-        <td className="user-table-body"></td>
-        <td className="user-table-body"></td>
-        <td className="user-table-body"></td>
+        <td className="user-table-body text-center"></td>
+        <td className="user-table-body text-center"></td>
         <td className="user-table-body"></td>
       </tr>
     </>
@@ -59,11 +70,15 @@ function GeneralJournalList(props) {
 function JournalList() {
   const [entryDate, setDate] = useState([]); // array of journal entry dates
   const [entryID, setID] = useState([]); // array of journal entry PR's (id)
+  const [rowID, setRowID] = useState([]);
   const [entryDesc, setDesc] = useState([]); // array of journal entry descriptions
-  const [debitAcct, setDebitAcct] = useState([]); // array of journal entry debit accounts
-  const [creditAcct, setCreditAcct] = useState([]); // array of journal entry credit accounts
-  const [amounts, setAmounts] = useState([]); // array of journal entry amounts
   const [canJournal, setJournal] = useState(false);
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
 
   useEffect(() => {
     // TODO: GET JOURNAL ENTRY LIST
@@ -72,6 +87,17 @@ function JournalList() {
       decoded = jwt_decode(token);
 
     }
+
+    axios
+      .get("http://localhost:5000/journal/entries", config)
+      .then((res) => {
+        const { data } = res;
+        setID(data.map((d) => d.id));
+        setRowID(data.map((d) => d.transactions));
+        setDate(data.map((d) => d.date))
+        setDesc(data.map((d) => d.desc))
+      })
+      .catch();
 
     if (decoded.user.role === "manager" || decoded.user.role === "basic") setJournal(true);
   })
@@ -108,9 +134,7 @@ function JournalList() {
                   key={index}
 
                   date={entryDate[index]}
-                  amount={amounts[index]}
-                  debitAcct={debitAcct[index]}
-                  creditAcct={creditAcct[index]}
+                  rowID={rowID[index]}
                   id={id}
                   desc={entryDesc[index]}
                 />
