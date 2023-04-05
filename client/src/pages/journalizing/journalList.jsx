@@ -32,7 +32,7 @@ function GeneralJournalList(props) {
       {props.rowID.map((d, index) => (
         <>
           {d.creditAmount === 0 && (
-            <tr>
+            <tr key={d.id}>
               <td className={index == 0 ? "user-table-body border-gray-500" : "user-table-body"}>{index == 0 && props.date}</td>
               <td className={index == 0 ? "user-table-body border-gray-500" : "user-table-body"}>{d.accountName}</td>
               <td className={index == 0 ? "user-table-body border-gray-500 text-center" : "user-table-body text-center"}>{index == 0 && <Link to={`/journal/entry/${props.id}`}>{props.id}</Link>}</td>
@@ -45,7 +45,7 @@ function GeneralJournalList(props) {
       {props.rowID.map((d, index) => (
         <>
           {d.debitAmount === 0 && (
-            <tr>
+            <tr key={d.id}>
               <td className="user-table-body"></td>
               <td className="user-table-body pl-10">{d.accountName}</td>
               <td className="user-table-body text-center"></td>
@@ -131,8 +131,6 @@ function JournalList() {
             <tbody>
               {entryID.map((id, index) => (
                 <GeneralJournalList
-                  key={index}
-
                   date={entryDate[index]}
                   rowID={rowID[index]}
                   id={id}

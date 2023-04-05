@@ -4,15 +4,41 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 const token = localStorage.getItem("token");
 
+function GeneralJournalList(props) {
+  return (
+    <>
+      {props.rowID.map((d, index) => (
+        <>
+          {d.creditAmount === 0 && (
+            <tr key={index}>
+              <td className="user-table-body">{index == 0 && props.date}</td>
+              <td className="user-table-body">{d.accountName}</td>
+              <td className="user-table-body text-center">{d.debitAmount}</td>
+              <td className="user-table-body"></td>
+            </tr>
+          )}
+        </>
+      ))}
+      {props.rowID.map((d, index) => (
+        <>
+          {d.debitAmount === 0 && (
+            <tr>
+              <td className="user-table-body">{index == 0 && props.date}</td>
+              <td className="user-table-body pl-10">{d.accountName}</td>
+              <td className="user-table-body text-center"></td>
+              <td className="user-table-body text-center">{d.creditAmount}</td>
+            </tr>
+          )}
+        </>
+      ))}
+    </>
+  )
+}
+
 function JournalEntry() {
   // TODO: ADD JOURNAL ENTRY FILE DOWNLOAD
   const { journalEntryID } = useParams();
-  const [debitAccountID, setDebitID] = useState([]);
-  const [debitAccountName, setDebitName] = useState([]);
-  const [creditAccountID, setCreditID] = useState([]);
-  const [creditAccountName, setCreditName] = useState([]);
-  const [creditAmount, setcredit] = useState([]);
-  const [debitAmount, setDebit] = useState([]);
+  const [rowID, setRowID] = useState([]);
   const [desc, setDesc] = useState("");
   const [date, setDate] = useState("");
 
@@ -22,21 +48,27 @@ function JournalEntry() {
 
   const navigate = useNavigate();
 
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
   if (token) {
     var decoded = jwt_decode(token);
   }
 
   useEffect(() => {
     // TODO: GET ACTUAL JOURNAL ENTRY DATA
-    setDebitID(["1-001", "1-002"]);
-    setDebitName(["Cash", "Test"]);
-    setCreditID(["2-001"]);
-    setCreditName(["Debt"]);
-    setDebit([200.00, 2.99]);
-    setcredit([202.99]);
-    setDesc("This is a journal entry");
-    setDate("2/23/2023");
-    setStatus("pending");
+    axios
+      .get(`http://localhost:5000/journal/entry/${journalEntryID}`, config)
+      .then((res) => {
+        const { data } = res;
+        setRowID(data.transactions);
+        setDesc(data.desc);
+        setDate(data.date);
+        setStatus(data.status);
+      })
 
     if (journalStatus === "pending") setToBeVerified(true);
     if (decoded.user.role === "manager") setManager(true);
@@ -87,33 +119,10 @@ function JournalEntry() {
               </tr>
             </thead>
             <tbody>
-              {debitAccountID.map((d, index) => (
-                <tr className="user-table-body">
-                  <td>
-                    {index === 0 && date}
-                  </td>
-                  <td>
-                    {debitAccountID[index] + ": " + debitAccountName[index]}
-                  </td>
-                  <td className="text-center">
-                    {debitAmount[index]}
-                  </td>
-                </tr>
-              ))}
-              {creditAccountID.map((d, index) => (
-                <tr className="user-table-body">
-                  <td>
-                  </td>
-                  <td className="pl-10">
-                    {creditAccountID[index] + ": " + creditAccountName[index]}
-                  </td>
-                  <td className="text-center">
-                  </td>
-                  <td className="text-center">
-                    {creditAmount[index]}
-                  </td>
-                </tr>
-              ))}
+              <GeneralJournalList
+                date={date}
+                rowID={rowID}
+              />
             </tbody>
           </table>
           <p className="text-lg"><strong>Description:</strong> {desc}</p>
