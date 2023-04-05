@@ -39,9 +39,6 @@ router.post('/new-entry', authUser, authAccountant(ROLE.MANAGER, ROLE.BASIC), as
 
     totalCredit += transactions[x].creditAmount;
     totalDebit += transactions[x].debitAmount;
-
-    console.log(x + ": " + totalDebit)
-    console.log(x + ": " + totalCredit)
   }
 
   console.log(totalCredit);
@@ -66,7 +63,16 @@ router.post('/new-entry', authUser, authAccountant(ROLE.MANAGER, ROLE.BASIC), as
   res.send('Successfully added journal')
 })
 
-// TODO: GET ALL APPROVED JOURNAL ENTRIES
+// TODO: GET ALL JOURNAL ENTRIES
+router.get("/entries/", authUser, async(req, res) => {
+  const journalDb = await journalRef.orderBy("id", "desc").get();
+  const journals = journalDb.docs.map((doc) => {
+    const { id, date, transactions, desc } = doc.data();
+    return { id, date, transactions, desc }
+  });
+
+  res.json(journals);
+})
 
 // TODO: GET PENDING JOURNAL ENTRIES
 
