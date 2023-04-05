@@ -11,7 +11,7 @@ const db = admin.firestore();
 
 const journalRef = db.collection('journals')
 
-// TODO: CREATE JOURNAL ENTRIES
+// CREATE JOURNAL ENTRIES
 router.post('/new-entry', authUser, authAccountant(ROLE.MANAGER, ROLE.BASIC), async (req, res) => {
   const {
     transactions,
@@ -63,7 +63,7 @@ router.post('/new-entry', authUser, authAccountant(ROLE.MANAGER, ROLE.BASIC), as
   res.send('Successfully added journal')
 })
 
-// TODO: GET ALL JOURNAL ENTRIES
+// GET ALL JOURNAL ENTRIES
 router.get("/entries/", authUser, async(req, res) => {
   const journalDb = await journalRef.orderBy("id", "desc").get();
   const journals = journalDb.docs.map((doc) => {
@@ -76,7 +76,19 @@ router.get("/entries/", authUser, async(req, res) => {
 
 // TODO: GET PENDING JOURNAL ENTRIES
 
-// TODO: GET ONE JOURNAL ENTRY
+// GET ONE JOURNAL ENTRY
+router.get('/entry/:entryID', authUser, async(req,res) =>{
+  const entryID = req.params.entryID;
+
+  const fetchID = await journalRef.doc(entryID).get();
+
+  if(fetchID.empty) {
+    return res.status(400).json({ errors: "Account not found" });
+  }
+
+  const entry = fetchID.data();
+  res.json(entry);
+})
 
 // TODO: UPDATE JOURNAL ENTRY (APPROVED/REJECTED)
 
