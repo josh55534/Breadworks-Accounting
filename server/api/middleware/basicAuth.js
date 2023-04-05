@@ -37,8 +37,18 @@ function authRole(role) {
   };
 }
 
+function authAccountant(role1, role2) {
+  return (req, res, next) => {
+    if (req.user.role !== role1 && req.user.role !== role2) {
+      res.status(401);
+      return res.status(401).json({ errors: "Not allowed need accounting role" });
+    }
+    next();
+  };
+}
 
 module.exports = {
   authUser,
-  authRole
+  authRole,
+  authAccountant
 };

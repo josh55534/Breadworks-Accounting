@@ -7,18 +7,22 @@ const token = localStorage.getItem("token");
 
 
 function CreateJournal() {
+  const defaultRow = {
+    accountID:"none",
+    creditAmount: "0",
+    debitAmount: "0",
+  };
+
   const [accountList, setAccountList] = useState([])
   const [accountListID, setAccountListId] = useState([])
 
-  const [rowID, setRowID] = useState([0])
-  const [accountID, setAccountID] = useState(["none"]);
-  const [creditAmount, setCredit] = useState([])
-  const [debitAmount, setDebit] = useState([]);
+  const [rowID, setRowID] = useState([defaultRow])
   const [desc, setDesc] = useState("");
   const [date, setDate] = useState("");
-  const [amount, setAmount] = useState();
   const [file, setFile] = useState("");
-  const [userName, setUsername] = useState("")
+  const [userName, setUsername] = useState(" ")
+
+
 
   const config = {
     headers: {
@@ -42,72 +46,66 @@ function CreateJournal() {
         setAccountList(filtered.map((d) => d.id + " " + d.name));
         setAccountListId(filtered.map((d) => d.id));
       })
+      .catch((err) => {
+        console.error(err);
+      });
 
   }, [config])
 
   const handleSubmit = () => {
-
+    axios
+    .post("http://localhost:5000/journal/new-entry", {
+      transactions: rowID,
+      desc: desc,
+      date: date,
+      userName: userName
+    }, config)
+    .then((res) => {
+      console.log(res)
+    })
+    .catch((err) => {
+      console.log(err.response.data.errors)
+    })
   }
 
   const changeAccount = (props) => {
-    var account = [...accountID]
-    account[props.target.id] = props.target.value;
-    setAccountID(account)
+    var account = [...rowID]
+    account[props.target.id].accountID = props.target.value;
+    setRowID(account)
   }
 
   const changeDebit = (props) => {
-    var debit = [...debitAmount]
-    debit[props.target.id] = props.target.value;
-    setDebit(debit);
+    var debit = [...rowID]
+    debit[props.target.id].debitAmount = props.target.value;
+    setRowID(debit);
   }
 
   const changeCredit = (props) => {
-    var credit = [...creditAmount]
-    credit[props.target.id] = props.target.value;
-    setCredit(credit);
+    var credit = [...rowID]
+    credit[props.target.id].creditAmount = props.target.value;
+    setRowID(credit);
   }
 
   const removeList = (props) => {
     if (rowID.length > 1) {
-      var tempRowID, tempAccountID, tempCreditAmount, tempDebitAmount;
+      var tempRowID;
       tempRowID = [...rowID];
-      tempAccountID = [...accountID];
-      tempCreditAmount = [...creditAmount];
-      tempDebitAmount = [...debitAmount];
 
       tempRowID.splice(props.target.id, 1);
-      tempAccountID.splice(props.target.id, 1);
-      tempCreditAmount.splice(props.target.id, 1);
-      tempDebitAmount.splice(props.target.id, 1);
 
       setRowID(tempRowID);
-      setAccountID(tempAccountID)
-      setDebit(tempDebitAmount)
-      setCredit(tempCreditAmount)
     }
     else {
-      setRowID([0])
-      setAccountID(["none"]);
-      setDebit([])
-      setCredit([]);
+      setRowID([defaultRow])
     }
   }
 
   const addList = (props) => {
     var tempRowID = [...rowID];
-    var tempAccountID = [...accountID];
-    var tempCreditAmount = [...creditAmount];
-    var tempDebitAmount = [...debitAmount];
 
-    tempRowID.push(tempRowID.length)
-    tempAccountID.push("none")
-    tempCreditAmount.push("");
-    tempDebitAmount.push("");
+    tempRowID.push(defaultRow)
 
     setRowID(tempRowID);
-    setAccountID(tempAccountID)
-    setDebit(tempDebitAmount)
-    setCredit(tempCreditAmount)
   }
 
   return (
@@ -137,7 +135,7 @@ function CreateJournal() {
                       className="txt-primary ml-0"
                       type="text"
                       id={index}
-                      value={accountID[index]}
+                      value={rowID[index].accountID}
                       onChange={changeAccount}
                     >
                       <option value="none" disabled hidden>Select an Option</option>
@@ -153,7 +151,7 @@ function CreateJournal() {
                       className="txt-primary ml-0"
                       type="text"
                       id={index}
-                      value={debitAmount[index]}
+                      value={rowID[index].debitAmount}
                       onChange={changeDebit}
                     />
                   </td>
@@ -162,7 +160,8 @@ function CreateJournal() {
                       className="txt-primary ml-0"
                       type="text"
                       id={index}
-                      value={creditAmount[index]}
+                      value={rowID[index].creditAmount}
+                      onChange={changeCredit}
                     />
                   </td>
                   <td>
