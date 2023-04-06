@@ -5,27 +5,6 @@ import jwt_decode from "jwt-decode";
 import { JournalHome, JournalNavbar } from "./journalHome";
 const token = localStorage.getItem("token");
 
-function JournalListData(props) {
-  var color = "";
-
-  if (props.status === "approved") color = "text-green-500"
-  else if (props.status === "pending") color = "text-yellow-500"
-  else if (props.status === "rejected") color = "text-red-500"
-
-  return (
-    <tr
-      className="table-row-button"
-      key={props.key}
-      onClick={props.onClick}>
-      <td className="user-table-body">{props.id}</td>
-      <td className="user-table-body">{props.desc}</td>
-      <td className="user-table-body">{props.date}</td>
-      <td className="user-table-body">{props.user}</td>
-      <td className={"user-table-body " + color}>{props.status}</td>
-    </tr>
-  )
-}
-
 function GeneralJournalList(props) {
   return (
     <>
@@ -51,7 +30,7 @@ function GeneralJournalList(props) {
               <td className="user-table-body text-center"></td>
               <td className="user-table-body"></td>
               <td className="user-table-body text-center">{d.creditAmount}</td>
-              
+
             </tr>
           )}
         </>
@@ -156,19 +135,47 @@ function JournalList() {
   )
 }
 
+
+function JournalListData(props) {
+  var color = "";
+
+  if (props.status === "approved") color = "text-green-500"
+  else if (props.status === "pending") color = "text-yellow-500"
+  else if (props.status === "rejected") color = "text-red-500"
+
+  return (
+    <tr
+      className="table-row-button"
+      key={props.key}
+    >
+      <td className="user-table-body">{props.desc}</td>
+      <td className="user-table-body text-center">{<Link to={`/journal/entry/${props.id}`}>{props.id}</Link>}</td>
+      <td className="user-table-body">{props.date}</td>
+      <td className="user-table-body">{props.user}</td>
+      <td className={"text-center user-table-body " + color}><strong>{props.status}</strong></td>
+    </tr>
+  )
+}
+
 function JournalListPending() {
-  const [entryID, setID] = useState([]);
-  const [entryDesc, setDesc] = useState([]);
-  const [entryDate, setDate] = useState([]);
-  const [entryUser, setUser] = useState([]);
-  const [entryStatus, setStatus] = useState([]);
+  const [rowID, setRowID] = useState([])
 
-  const journalEntryClick = () => {
+  const [isLoading, setLoading] = useState(true);
 
-  }
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
 
   useEffect(() => {
-    // TODO: GET JOURNAL ENTRY LIST
+    axios
+      .get('http://localhost:5000/journal/entries/pending', config)
+      .then((res) => {
+        setRowID(res.data)
+        setLoading(false);
+      })
+
   })
 
   return (
@@ -181,10 +188,10 @@ function JournalListPending() {
             <thead>
               <tr>
                 <th className="user-table-header">
-                  ID
-                </th>
-                <th className="user-table-header">
                   Description
+                </th>
+                <th className="user-table-header text-center">
+                  PR
                 </th>
                 <th className="user-table-header">
                   Date
@@ -198,17 +205,22 @@ function JournalListPending() {
               </tr>
             </thead>
             <tbody>
-              {entryID.map((id, index) => {
-                <JournalListData
-                  key={index}
-                  onClick={journalEntryClick}
-                  id={id}
-                  desc={entryDesc}
-                  date={entryDate}
-                  user={entryUser}
-                  status={entryStatus}
-                />
-              })}
+              {!isLoading && (
+                <>
+                  {rowID.map((data) => (
+                    <JournalListData
+                      key={data.id}
+                      id={data.id}
+                      desc={data.desc}
+                      date={data.date}
+                      user={data.userName}
+                      status={data.status}
+
+                    />
+                  ))
+                  }
+                </>
+              )}
             </tbody>
           </table>
         </div>
