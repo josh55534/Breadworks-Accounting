@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import jwt_decode from "jwt-decode";
+import { JournalHome, JournalNavbar } from "./journalHome";
 const token = localStorage.getItem("token");
 
 function JournalAccounts() {
@@ -12,7 +12,7 @@ function JournalAccounts() {
   const [accountCategories, setCategories] = useState([]);
   const [accountStatements, setStatements] = useState([]);
   const [accountStatus, setStatus] = useState([]);
-  const [isManager, setManager] = useState(false);
+
 
   const config = {
     headers: {
@@ -32,15 +32,6 @@ function JournalAccounts() {
         setStatements(data.map((d) => d.statement));
         setStatus(data.map((d) => d.active));
 
-        let decoded;
-        if (token) {
-          decoded = jwt_decode(token);
-
-        }
-        if (decoded.user.role === "manager") {
-          setManager(true);
-        }
-
         setLoading(false);
       })
       .catch((err) => {
@@ -50,14 +41,16 @@ function JournalAccounts() {
 
   return (
     <>
-      <div className="window-primary max-w-5xl text-center pb-4">
-        <h2>Journal</h2>
+      <div className="window-primary text-center">
+
+        <h2>Accounts</h2>
+        <JournalNavbar />
         {loading ? (
           <div className="flex items-center justify-center h-fit">
             Loading...
           </div>) : (
           <>
-            <div className="form-primary mb-4">
+            <div className="form-primary mt-4">
               <table className="user-table">
                 <thead>
                   <tr>
@@ -99,13 +92,6 @@ function JournalAccounts() {
                   )}
                 </tbody>
               </table>
-            </div>
-            <div className="flex flex-row justify-end">
-              <Link to="new-entry">
-                  <button className="btn-primary">
-                    New Entry
-                  </button>
-              </Link>
             </div>
           </>
         )}

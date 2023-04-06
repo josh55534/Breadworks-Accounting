@@ -9,8 +9,11 @@ import { EmailForm, AdminMain, UpdateUserForm, RegisterAdmin } from "./pages/adm
 import { AdminAddAccount, ChartOfAccounts } from "./pages/chartOfAccounts/chartOfAccounts";
 import { Account } from "./pages/chartOfAccounts/account";
 import { JournalAccounts } from "./pages/journalizing/journalAccounts";
-import { JournalList } from "./pages/journalizing/journalList";
+import { JournalList, JournalListPending } from "./pages/journalizing/journalList";
 import { JournalEntry } from "./pages/journalizing/journalEntry";
+import { CreateJournal } from "./pages/journalizing/journalCreate";
+import { AccountLedger } from "./pages/chartOfAccounts/accountLedger";
+import { JournalHome } from "./pages/journalizing/journalHome";
 const token = localStorage.getItem("token");
 
 function App() {
@@ -24,8 +27,9 @@ function App() {
   return (
     <>
       <Header />
-      <Home/>
       <Routes>
+        <Route path="/" element={<Home />}/>
+
         <Route path="/register" element={<Register />} />
 
         <Route path="/login" element={<Login />} />
@@ -42,9 +46,13 @@ function App() {
         <Route path="/account/:accountId" element={<Account />} />
         <Route path="/chartofaccounts/addAccount/" element={<AdminAddAccount />} />
 
-        <Route path="/journal" element={<JournalAccounts />} />
-        <Route path="/journal/account/:accountId" element={<JournalList />} />
+        <Route path="/journal" element={<JournalHome />} />
+        <Route path="/journal/account/" element={<JournalAccounts />} />
+        <Route path="/journal/account/:accountId" element={<AccountLedger />} />
         <Route path="/journal/entry/:journalEntryID" element={<JournalEntry />} />
+        <Route path="/journal/entries" element={<JournalList />} />
+        <Route path="/journal/entries/new-entry" element={<CreateJournal />} />
+        <Route path="/journal/entries/pending" element={<JournalListPending />} />
       </Routes>
     </>
   );

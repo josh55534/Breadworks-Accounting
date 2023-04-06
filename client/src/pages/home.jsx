@@ -2,56 +2,64 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 
-
-function Home() {
-	const [data, setData] = useState(null);
-	const token = localStorage.getItem("token");
-	if (token) {
-		var decoded = jwt_decode(token);
-	}
-	useEffect(() => {
-		fetch("http://localhost:5000/")
-			.then((response) => response.text())
-			.then((text) => setData(text));
-	}, []);
-
+function LoggedIn() {
 	return (
-		<div>
-			<div className="flex flex-row justify-center gap-10">
-				{token && (
-					<>
-						<Link to="/chartofaccounts">
-							<button className="btn-navbar">
-								Chart of Accounts
-							</button>
-						</Link>
-						<Link to="/journal">
-							<button className="btn-navbar">
-								Journal
-							</button>
-						</Link>
-					</>
-				)}
-				{decoded && decoded.user.role === "admin" && (
-
-					<Link to='/admindashboard'>
-						<button className="btn-navbar"
-							onClick={() => {
-							}}
-						>
-							Go to Admin Dashboard
-						</button>
-					</Link>
-
-				)}
-				{decoded && decoded.user.verify === "unverified" && (
-					<div className="mx-auto bg-red-600 text-slate-100 w-80 mt-4">
-						You will recieve an email at {decoded.user.email} after an Admin verifies your account
-					</div>
-				)}
+		<div className="window-primary max-w-7xl">
+			<div className="text-center">
+				<h2>Breadworks Home Page</h2>
+				<label>To get started, click on one of the tabs above.</label>
+				<label>Information on the tabs can be found below.</label>
+			</div>
+			<label>Information:</label>
+			<div className="ml-4">
+				<div className="mt-1">
+					<label>Chart of Accounts</label>
+					<p className="ml-4">
+						Lists all accounts and their general information. Administrators can also create and edit account information here.
+					</p>
+				</div>
+				<div className="mt-2">
+					<label>Journal</label>
+					<p className="ml-4">
+						View and create journal transactions. Accountants and Managers can create new journal entries to update balance of accounts.
+						Managers can see a list of pending journal entries and either approve or reject changes. New journal entries must be approved
+						by managers before their changes go into effect. Journal entries may be viewed directly from the general journal, or as 
+						transactions in account ledgers.
+					</p>
+				</div>
 			</div>
 		</div>
-	);
+	)
+}
+
+function LandingPage() {
+	return (
+		<div className="window-primary text-center max-w-3xl">
+			<h2 className="text-center">Let's Get This Bread!</h2>
+			<label>Start accounting now!</label>
+			<div className="flex justify-center gap-28 mt-3">
+				<div className="flex flex-col text-center">
+					<p>Have an account?</p>
+					<Link to="/login" className="btn-primary mx-auto">
+						Login
+					</Link>
+				</div>
+				<div className="flex flex-col text-center">
+					<p>New Users</p>
+					<Link to="/register" className="btn-primary btn-color-red mx-auto">
+						Create Account
+					</Link>
+				</div>
+			</div>
+		</div>
+	)
+}
+
+function Home() {
+	const token = localStorage.getItem("token");
+
+	if (token) return (<LoggedIn />)
+	else return (<LandingPage />)
 }
 
 export default Home;

@@ -17,6 +17,7 @@ app.use('/register', require('./register'));
 app.use('/login', require('./login'));
 app.use('/adminDashboard', require('./adminDashboard'))
 app.use('/chartOfAccounts', require('./chartOfAccounts'))
+app.use('/journal', require('./journal'))
 
 app.get('/', (req, res) =>{
 	res.send('Welcome to the Breadworks Accounting Home Page');

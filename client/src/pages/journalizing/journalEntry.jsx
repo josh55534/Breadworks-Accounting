@@ -1,31 +1,101 @@
 import React, { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 const token = localStorage.getItem("token");
+
+function GeneralJournalList(props) {
+  return (
+    <>
+      {props.rowID.map((d, index) => (
+        <>
+          {d.creditAmount === 0 && (
+            <tr key={index}>
+              <td className="user-table-body">{index == 0 && props.date}</td>
+              <td className="user-table-body">{d.accountName}</td>
+              <td className="user-table-body text-center">{d.debitAmount}</td>
+              <td className="user-table-body"></td>
+            </tr>
+          )}
+        </>
+      ))}
+      {props.rowID.map((d, index) => (
+        <>
+          {d.debitAmount === 0 && (
+            <tr>
+              <td className="user-table-body">{index == 0 && props.date}</td>
+              <td className="user-table-body pl-10">{d.accountName}</td>
+              <td className="user-table-body text-center"></td>
+              <td className="user-table-body text-center">{d.creditAmount}</td>
+            </tr>
+          )}
+        </>
+      ))}
+    </>
+  )
+}
 
 function JournalEntry() {
   // TODO: ADD JOURNAL ENTRY FILE DOWNLOAD
   const { journalEntryID } = useParams();
-  const [debitAccountID, setDebitID] = useState("");
-  const [debitAccountName, setDebitName] = useState("");
-  const [creditAccountID, setCreditID] = useState("");
-  const [creditAccountName, setCreditName] = useState("");
+  const [rowID, setRowID] = useState([]);
   const [desc, setDesc] = useState("");
   const [date, setDate] = useState("");
-  const [amount, setAmount] = useState();
+
   const [journalStatus, setStatus] = useState("");
+  const [toBeVerified, setToBeVerified] = useState(false);
+  const [isManager, setManager] = useState("");
+
+  const navigate = useNavigate();
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  if (token) {
+    var decoded = jwt_decode(token);
+  }
 
   useEffect(() => {
-    // TODO: GET ACTUAL JOURNAL ENTRY DATA
-    setDebitID("1-001");
-    setDebitName("Cash");
-    setCreditID("2-001");
-    setCreditName("Debt");
-    setAmount(200.00);
-    setDesc("This is a journal entry");
-    setDate("2/23/2023");
-    setStatus("rejected");
+    axios
+      .get(`http://localhost:5000/journal/entry/${journalEntryID}`, config)
+      .then((res) => {
+        const { data } = res;
+        setRowID(data.transactions);
+        setDesc(data.desc);
+        setDate(data.date);
+        setStatus(data.status);
+      })
+
+    if (journalStatus === "pending") setToBeVerified(true);
+    if (decoded.user.role === "manager") setManager(true);
   })
+
+  const handleReject = () => {
+    axios
+      .put(`http://localhost:5000/journal/entry/reject/${journalEntryID}`, null, config)
+      .then((res) => {
+        console.log(res)
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  const handleApprove = () => {
+    axios
+      .put(`http://localhost:5000/journal/entry/approve/${journalEntryID}`, null, config)
+      .then((res) => {
+        console.log(res)
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
 
   const statusColor = (status) => {
     if (status === "approved") {
@@ -50,7 +120,7 @@ function JournalEntry() {
           </div>
         </div>
         <div className="form-primary">
-          <table>
+          <table className="user-table">
             <thead>
               <tr>
                 <th className="user-table-header text-left">
@@ -59,46 +129,41 @@ function JournalEntry() {
                 <th className="user-table-header text-left">
                   Account
                 </th>
-                <th className="user-table-header">
+                <th className="user-table-header text-center">
                   Debit
                 </th>
-                <th className="user-table-header">
+                <th className="user-table-header text-center">
                   Credit
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="journal-data">
-                  {date}
-                </td>
-                <td className="journal-data">
-                  {debitAccountID + ": " + debitAccountName}
-                </td>
-                <td className="journal-data text-center">
-                  {amount}
-                </td>
-              </tr>
-              <tr>
-                <td>
-                </td>
-                <td className="journal-data pl-10">
-                  {creditAccountID + ": " + creditAccountName}
-                </td>
-                <td>
-                </td>
-                <td className="journal-data text-center">
-                  {amount}
-                </td>
-              </tr>
+              <GeneralJournalList
+                date={date}
+                rowID={rowID}
+              />
             </tbody>
           </table>
           <p className="text-lg"><strong>Description:</strong> {desc}</p>
-          <Link to="/journal">
-            <button className="btn-primary btn-color-red">
+          <div className="flex justify-between">
+            <button className="btn-primary btn-color-red" onClick={() => navigate(-1)}>
               Back
             </button>
-          </Link>
+            {toBeVerified && isManager && (
+              <div className="flex flex-row gap-2">
+                <button className="btn-primary btn-color-red"
+                  onClick={handleReject}
+                >
+                  Reject
+                </button>
+                <button className="btn-primary"
+                  onClick={handleApprove}
+                >
+                  Approve
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>

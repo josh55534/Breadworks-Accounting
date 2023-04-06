@@ -9,7 +9,7 @@ const accountSchema = Joi.object({
   name: Joi.string().min(3).required(),
   desc: Joi.string().min(3).max(300).required(),
   normalSide: Joi.string().length(1).required(),
-  category: Joi.string().min(5).max(9).required(),
+  category: Joi.string().min(5).max(11).required(),
   subcategory: Joi.string().min(3).required(),
   balance: Joi.number().precision(2),
   credit: Joi.number().precision(2),
