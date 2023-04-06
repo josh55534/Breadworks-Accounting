@@ -74,7 +74,17 @@ router.get("/entries/", authUser, async(req, res) => {
   res.json(journals);
 })
 
-// TODO: GET PENDING JOURNAL ENTRIES
+// GET PENDING JOURNAL ENTRIES
+router.get('/entries/pending', authUser, async(req,res) =>{
+  const journalDb = await journalRef.where("status", "==", "pending").orderBy("id","desc").get();
+
+  const entry = journalDb.docs.map((doc) => {
+    const { id, desc, date, userName, status } = doc.data();
+    return { id, desc, date, userName, status }
+  })
+
+  res.json(entry);
+})
 
 // GET ONE JOURNAL ENTRY
 router.get('/entry/:entryID', authUser, async(req,res) =>{
