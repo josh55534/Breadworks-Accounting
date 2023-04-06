@@ -74,7 +74,15 @@ function JournalEntry() {
   })
 
   const handleReject = () => {
-
+    axios
+      .put(`http://localhost:5000/journal/entry/reject/${journalEntryID}`, null, config)
+      .then((res) => {
+        console.log(res)
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
 
   const handleApprove = () => {
@@ -87,7 +95,6 @@ function JournalEntry() {
       .catch((err) => {
         console.log(err)
       })
-
   }
 
   const statusColor = (status) => {
