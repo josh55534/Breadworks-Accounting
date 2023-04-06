@@ -6,6 +6,11 @@ import { JournalHome, JournalNavbar } from "./journalHome";
 const token = localStorage.getItem("token");
 
 function GeneralJournalList(props) {
+  var statusColor;
+  if (props.status === "approved") statusColor = "text-green-500"
+  else if (props.status === "pending") statusColor = "text-yellow-500"
+  else if (props.status === "rejected") statusColor = "text-red-500"
+
   return (
     <>
       {props.rowID.map((d, index) => (
@@ -17,6 +22,7 @@ function GeneralJournalList(props) {
               <td className={index == 0 ? "user-table-body border-gray-500 text-center" : "user-table-body text-center"}>{index == 0 && <Link to={`/journal/entry/${props.id}`}>{props.id}</Link>}</td>
               <td className={index == 0 ? "user-table-body border-gray-500 text-center" : "user-table-body text-center"}>{d.debitAmount}</td>
               <td className={index == 0 ? "user-table-body border-gray-500" : "user-table-body"}></td>
+              <td className={index == 0 ? "user-table-body border-gray-500 text-center "+statusColor: "user-table-body text-center"}>{index == 0 &&<strong>{props.status}</strong>}</td>
             </tr>
           )}
         </>
@@ -30,7 +36,7 @@ function GeneralJournalList(props) {
               <td className="user-table-body text-center"></td>
               <td className="user-table-body"></td>
               <td className="user-table-body text-center">{d.creditAmount}</td>
-
+              <td className="user-table-body text-center"></td>
             </tr>
           )}
         </>
@@ -40,6 +46,7 @@ function GeneralJournalList(props) {
         <td className="user-table-body"><em>{props.desc}</em></td>
         <td className="user-table-body text-center"></td>
         <td className="user-table-body text-center"></td>
+        <td className="user-table-body"></td>
         <td className="user-table-body"></td>
       </tr>
     </>
@@ -52,6 +59,7 @@ function JournalList() {
   const [rowID, setRowID] = useState([]);
   const [entryDesc, setDesc] = useState([]); // array of journal entry descriptions
   const [canJournal, setJournal] = useState(false);
+  const [status, setStatus] = useState([])
 
   const config = {
     headers: {
@@ -60,7 +68,7 @@ function JournalList() {
   };
 
   useEffect(() => {
-    // TODO: GET JOURNAL ENTRY LIST
+    // GET JOURNAL ENTRY LIST
     let decoded;
     if (token) {
       decoded = jwt_decode(token);
@@ -72,9 +80,10 @@ function JournalList() {
       .then((res) => {
         const { data } = res;
         setID(data.map((d) => d.id));
-        setRowID(data.map((d) => d.transactions));
+        setStatus(data.map((d) => d.status))
         setDate(data.map((d) => d.date))
         setDesc(data.map((d) => d.desc))
+        setRowID(data.map((d) => d.transactions))
       })
       .catch();
 
@@ -105,6 +114,9 @@ function JournalList() {
                 <th className="user-table-header text-center">
                   Credits
                 </th>
+                <th className="user-table-header text-center">
+                  Status
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -114,6 +126,7 @@ function JournalList() {
                   rowID={rowID[index]}
                   id={id}
                   desc={entryDesc[index]}
+                  status={status[index]}
                 />
               ))}
             </tbody>

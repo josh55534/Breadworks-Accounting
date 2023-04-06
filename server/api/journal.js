@@ -68,8 +68,8 @@ router.post('/new-entry', authUser, authAccountant(ROLE.MANAGER, ROLE.BASIC), as
 router.get("/entries/", authUser, async (req, res) => {
   const journalDb = await journalRef.orderBy("id", "desc").get();
   const journals = journalDb.docs.map((doc) => {
-    const { id, date, transactions, desc } = doc.data();
-    return { id, date, transactions, desc }
+    const { id, date, transactions, desc, status } = doc.data();
+    return { id, date, transactions, desc, status }
   });
 
   res.json(journals);
