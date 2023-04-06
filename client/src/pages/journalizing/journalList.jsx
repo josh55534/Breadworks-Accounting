@@ -146,7 +146,7 @@ function JournalListData(props) {
   return (
     <tr
       className="table-row-button"
-      key={props.key}
+      key={props.id}
     >
       <td className="user-table-body">{props.desc}</td>
       <td className="user-table-body text-center">{<Link to={`/journal/entry/${props.id}`}>{props.id}</Link>}</td>
@@ -209,7 +209,6 @@ function JournalListPending() {
                 <>
                   {rowID.map((data) => (
                     <JournalListData
-                      key={data.id}
                       id={data.id}
                       desc={data.desc}
                       date={data.date}
