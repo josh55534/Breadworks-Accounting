@@ -102,7 +102,7 @@ router.get('/entry/:entryID', authUser, async (req, res) => {
 })
 
 // UPDATE JOURNAL ENTRY (APPROVED)
-router.put('/entry/approve/:entryID', authUser, authRole(ROLE.MANAGER), async (req, res) => {  
+router.put('/entry/approve/:entryID', authUser, authRole(ROLE.MANAGER), async (req, res) => {
   const entryID = req.params.entryID;
 
   const entryRef = journalRef.doc(entryID);
@@ -135,11 +135,11 @@ router.put('/entry/approve/:entryID', authUser, authRole(ROLE.MANAGER), async (r
       transaction.creditAfter = accountData.credit;
       transaction.debitAfter = accountData.debit;
 
-      if(accountData.normalSide === "L") {
+      if (accountData.normalSide === "L") {
         accountData.balance += transaction.debitAmount;
         accountData.balance -= transaction.creditAmount;
       }
-      else if(accountData.normalSide === "R") {
+      else if (accountData.normalSide === "R") {
         accountData.balance += transaction.creditAmount;
         accountData.balance -= transaction.debitAmount;
       }
@@ -156,8 +156,27 @@ router.put('/entry/approve/:entryID', authUser, authRole(ROLE.MANAGER), async (r
   batch.update(entryRef, entry);
 
   batch.commit().then(() => {
-    res.send("Update successfully");
+    res.send("Updated successfully");
   });
+})
+
+// UPDATE JOURNAL ENTRY (REJECTED)
+router.put('/entry/reject/:entryID', authUser, authRole(ROLE.MANAGER), async (req, res) => {
+  const entryID = req.params.entryID;
+
+  const entryRef = journalRef.doc(entryID);
+
+  fetchID = await entryRef.get()
+
+  if (fetchID.empty) {
+    return res.status(400).json({ errors: "Account not found" });
+  }
+
+  var entry = fetchID.data();
+  entry.status = "rejected";
+
+  await entryRef.set(entry);
+  res.send("Updated succesfully")
 })
 
 // TODO: GET ACCOUNT LEDGER
