@@ -120,7 +120,7 @@ router.put('/update/:account', authUser, authRole(ROLE.ADMIN), async (req, res) 
 
 // CREATE ACCOUNT (REQUIRES ADMIN)
 router.post('/createAccount', authUser, authRole(ROLE.ADMIN), async (req, res) => {
-  const {
+  var {
     number,
     order,
     name,
@@ -165,6 +165,9 @@ router.post('/createAccount', authUser, authRole(ROLE.ADMIN), async (req, res) =
   const date = dateCreated.getMonth() + "/" + dateCreated.getDate() + "/" + dateCreated.getFullYear();
   const timestamp = dateCreated.getUTCHours() + ":" + dateCreated.getUTCMinutes();
   const time = date + " : " + timestamp;
+  balance = parseFloat(balance);
+  credit = parseFloat(credit);
+  debit = parseFloat(debit);
 
   await accountsRef.doc(id).set({
     id: id,
