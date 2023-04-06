@@ -49,8 +49,8 @@ router.post('/new-entry', authUser, authAccountant(ROLE.MANAGER, ROLE.BASIC), as
     return res.status(400).json({ errors: "Credit must equal debit" })
   }
 
-  const snapshot = await journalRef.count().get();
-  const journalID = "" + (snapshot.data().count + 1);
+  const counter = await journalRef.count().get();
+  const journalID = "" + (counter.data().count + 1);
 
   await journalRef.doc(journalID).set({
     id: journalID,
@@ -94,7 +94,7 @@ router.get('/entry/:entryID', authUser, async (req, res) => {
   const fetchID = await journalRef.doc(entryID).get();
 
   if (fetchID.empty) {
-    return res.status(400).json({ errors: "Account not found" });
+    return res.status(400).json({ errors: "Journal not found" });
   }
 
   const entry = fetchID.data();
@@ -109,13 +109,13 @@ router.put('/entry/approve/:entryID', authUser, authRole(ROLE.MANAGER), async (r
 
   const fetchID = await entryRef.get();
   if (fetchID.empty) {
-    return res.status(400).json({ errors: "Account not found" });
+    return res.status(400).json({ errors: "Journal not found" });
   }
 
   var entry = fetchID.data();
 
   if (entry.status !== "pending") {
-    return res.status(400).json({ errors: "Account not pending" });
+    return res.status(400).json({ errors: "Journal not pending" });
   }
 
   const batch = db.batch();
@@ -169,7 +169,7 @@ router.put('/entry/reject/:entryID', authUser, authRole(ROLE.MANAGER), async (re
   fetchID = await entryRef.get()
 
   if (fetchID.empty) {
-    return res.status(400).json({ errors: "Account not found" });
+    return res.status(400).json({ errors: "Journal not found" });
   }
 
   var entry = fetchID.data();
@@ -180,5 +180,67 @@ router.put('/entry/reject/:entryID', authUser, authRole(ROLE.MANAGER), async (re
 })
 
 // TODO: GET ACCOUNT LEDGER
+router.get('/accountLedger/:accountID', authUser, async (req, res) => {
+  const accountID = req.params.accountID;
+
+  const accountRef = accountsRef.doc(accountID);
+  fetchID = await accountRef.get();
+
+  if (fetchID.empty) {
+    return res.status(400).json({ errors: "Account not found" })
+  }
+
+  const accountData = fetchID.data();
+  const accountName = accountData.name;
+  const accountBalance = accountData.balance;
+
+  const counter = await journalRef.count().get();
+  const numAccounts = counter.data().count;
+
+  var journalData = [];
+  var journalEntry;
+  var transactionList;
+  var data = {
+    date: "",
+    desc: "",
+    id: "",
+    debit: 0.0,
+    credit: 0.0,
+    totalCredit: 0.0,
+    totalDebit: 0.0
+  }
+
+  for (var x = numAccounts; x > 0; x--) {
+    journalEntry = (await journalRef.doc("" + x).get()).data();
+
+    if (journalEntry.status === "approved") {
+      transactionList = journalEntry.transactions
+      for (y in transactionList) {
+
+        if (transactionList[y].accountID == accountID) {
+          data.date = journalEntry.date;
+          data.desc = journalEntry.desc;
+          data.id = journalEntry.id;
+          data.debit = transactionList[y].debitAmount;
+          data.credit = transactionList[y].creditAmount;
+          data.totalCredit = transactionList[y].creditAfter;
+          data.totalDebit = transactionList[y].debitAfter;
+
+          journalData.push({ ...data });
+        }
+      }
+    }
+  }
+
+  const package = {
+    accountName: accountName,
+    accountBalance: accountBalance,
+    journalData: journalData
+  }
+
+  res.send(package);
+
+
+})
 
 module.exports = router;
