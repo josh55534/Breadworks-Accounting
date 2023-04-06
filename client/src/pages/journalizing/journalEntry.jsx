@@ -59,7 +59,6 @@ function JournalEntry() {
   }
 
   useEffect(() => {
-    // TODO: GET ACTUAL JOURNAL ENTRY DATA
     axios
       .get(`http://localhost:5000/journal/entry/${journalEntryID}`, config)
       .then((res) => {
@@ -74,7 +73,20 @@ function JournalEntry() {
     if (decoded.user.role === "manager") setManager(true);
   })
 
-  const handleVerify = () => {
+  const handleReject = () => {
+
+  }
+
+  const handleApprove = () => {
+    axios
+      .put(`http://localhost:5000/journal/entry/approve/${journalEntryID}`, null, config)
+      .then((res) => {
+        console.log(res)
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log(err)
+      })
 
   }
 
@@ -131,11 +143,18 @@ function JournalEntry() {
               Back
             </button>
             {toBeVerified && isManager && (
-              <button className="btn-primary"
-                onClick={handleVerify}
-              >
-                Update Status
-              </button>
+              <div className="flex flex-row gap-2">
+                <button className="btn-primary btn-color-red"
+                  onClick={handleReject}
+                >
+                  Reject
+                </button>
+                <button className="btn-primary"
+                  onClick={handleApprove}
+                >
+                  Approve
+                </button>
+              </div>
             )}
           </div>
         </div>
