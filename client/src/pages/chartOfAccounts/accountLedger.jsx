@@ -4,20 +4,21 @@ import axios from "axios";
 const token = localStorage.getItem("token");
 
 function JournalListData(props) {
-
   return (
-    <tr
-      className="table-row-button"
-      key={props.key}
-    >
-      <td className="user-table-body">{props.date}</td>
-      <td className="user-table-body">{props.desc}</td>
-      <td className="user-table-body" onClick={props.onClick}>{props.id}</td>
-      <td className="user-table-body">{props.debit}</td>
-      <td className="user-table-body">{props.credit}</td>
-      <td className="user-table-body">{props.totalDebit}</td>
-      <td className="user-table-body">{props.totalCredit}</td>
-    </tr>
+    <>
+      <tr
+        className=""
+        key={props.key}
+      >
+        <td className="user-table-body">{props.date}</td>
+        <td className="user-table-body">{props.desc}</td>
+        <td className="user-table-body text-center" onClick={props.onClick}><Link to={`/journal/entry/${props.id}`}>{props.id}</Link></td>
+        <td className="user-table-body text-center">{props.debit}</td>
+        <td className="user-table-body text-center">{props.credit}</td>
+        <td className="user-table-body text-center">{props.totalDebit}</td>
+        <td className="user-table-body text-center">{props.totalCredit}</td>
+      </tr>
+    </>
   )
 }
 
@@ -26,20 +27,27 @@ function AccountLedger() {
   const [accountName, setName] = useState("")
   const [balance, setBalance] = useState("");
 
-  const [entryID, setID] = useState([]);
-  const [entryDesc, setDesc] = useState([]);
-  const [entryDate, setDate] = useState([]);
-  const [entryDebit, setDebit] = useState([]);
-  const [entryCredit, setCredit] = useState([]);
-  const [totalCredit, setTotalCredit] = useState([]);
-  const [totalDebit, setTotalDebit] = useState([]);
+  const [rowID, setRowID] = useState([])
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
 
   const journalEntryClick = () => {
 
   }
 
   useEffect(() => {
-    // TODO: GET ACCOUNT LEDGER
+    axios
+      .get(`http://localhost:5000/journal/accountLedger/${accountId}`, config)
+      .then((res) => {
+        const data = res.data;
+        setRowID(data.journalData)
+        setBalance(data.accountBalance);
+        setName(data.accountName)
+      })
   })
 
   return (
@@ -84,19 +92,19 @@ function AccountLedger() {
               </tr>
             </thead>
             <tbody>
-              {entryID.map((id, index) => {
+              {rowID.map((id, index) => (
                 <JournalListData
                   key={index}
                   onClick={journalEntryClick}
-                  date={entryDate}
-                  desc={entryDesc}
-                  id={id}
-                  debit={entryDebit}
-                  credit={entryCredit}
-                  totalDebit={totalDebit}
-                  totalCredit={totalCredit}
+                  date={rowID[index].date}
+                  desc={rowID[index].desc}
+                  id={rowID[index].id}
+                  debit={rowID[index].debit}
+                  credit={rowID[index].credit}
+                  totalDebit={rowID[index].totalDebit}
+                  totalCredit={rowID[index].totalCredit}
                 />
-              })}
+              ))}
             </tbody>
           </table>
 
