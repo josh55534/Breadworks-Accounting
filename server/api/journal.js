@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { ROLE, VERIFY, STATUS } = require("./roles-validator/roles");
-const { authUser, authAccountant } = require("./middleware/basicAuth");
+const { authUser, authAccountant, authRole } = require("./middleware/basicAuth");
 
 const Joi = require('joi')
 
@@ -9,7 +9,8 @@ const admin = require('firebase-admin');
 const { validateJournal } = require("./journalValidator/journalValidator");
 const db = admin.firestore();
 
-const journalRef = db.collection('journals')
+const journalRef = db.collection('journals');
+const accountsRef = db.collection('accounts');
 
 // CREATE JOURNAL ENTRIES
 router.post('/new-entry', authUser, authAccountant(ROLE.MANAGER, ROLE.BASIC), async (req, res) => {
@@ -33,7 +34,7 @@ router.post('/new-entry', authUser, authAccountant(ROLE.MANAGER, ROLE.BASIC), as
   var totalCredit = 0;
   var totalDebit = 0;
 
-  for(x in transactions) {
+  for (x in transactions) {
     transactions[x].creditAmount = parseFloat(transactions[x].creditAmount)
     transactions[x].debitAmount = parseFloat(transactions[x].debitAmount)
 
@@ -44,7 +45,7 @@ router.post('/new-entry', authUser, authAccountant(ROLE.MANAGER, ROLE.BASIC), as
   console.log(totalCredit);
   console.log(totalDebit)
 
-  if(totalCredit !== totalDebit) {
+  if (totalCredit !== totalDebit) {
     return res.status(400).json({ errors: "Credit must equal debit" })
   }
 
@@ -64,7 +65,7 @@ router.post('/new-entry', authUser, authAccountant(ROLE.MANAGER, ROLE.BASIC), as
 })
 
 // GET ALL JOURNAL ENTRIES
-router.get("/entries/", authUser, async(req, res) => {
+router.get("/entries/", authUser, async (req, res) => {
   const journalDb = await journalRef.orderBy("id", "desc").get();
   const journals = journalDb.docs.map((doc) => {
     const { id, date, transactions, desc } = doc.data();
@@ -75,8 +76,8 @@ router.get("/entries/", authUser, async(req, res) => {
 })
 
 // GET PENDING JOURNAL ENTRIES
-router.get('/entries/pending', authUser, async(req,res) =>{
-  const journalDb = await journalRef.where("status", "==", "pending").orderBy("id","desc").get();
+router.get('/entries/pending', authUser, async (req, res) => {
+  const journalDb = await journalRef.where("status", "==", "pending").orderBy("id", "desc").get();
 
   const entry = journalDb.docs.map((doc) => {
     const { id, desc, date, userName, status } = doc.data();
@@ -87,12 +88,12 @@ router.get('/entries/pending', authUser, async(req,res) =>{
 })
 
 // GET ONE JOURNAL ENTRY
-router.get('/entry/:entryID', authUser, async(req,res) =>{
+router.get('/entry/:entryID', authUser, async (req, res) => {
   const entryID = req.params.entryID;
 
   const fetchID = await journalRef.doc(entryID).get();
 
-  if(fetchID.empty) {
+  if (fetchID.empty) {
     return res.status(400).json({ errors: "Account not found" });
   }
 
@@ -100,7 +101,64 @@ router.get('/entry/:entryID', authUser, async(req,res) =>{
   res.json(entry);
 })
 
-// TODO: UPDATE JOURNAL ENTRY (APPROVED/REJECTED)
+// UPDATE JOURNAL ENTRY (APPROVED)
+router.put('/entry/approve/:entryID', authUser, authRole(ROLE.MANAGER), async (req, res) => {  
+  const entryID = req.params.entryID;
+
+  const entryRef = journalRef.doc(entryID);
+
+  const fetchID = await entryRef.get();
+  if (fetchID.empty) {
+    return res.status(400).json({ errors: "Account not found" });
+  }
+
+  var entry = fetchID.data();
+
+  if (entry.status !== "pending") {
+    return res.status(400).json({ errors: "Account not pending" });
+  }
+
+  const batch = db.batch();
+  var accountDb;
+  var accountData;
+  var accountRef;
+
+  for (var transaction of entry.transactions) {
+    try {
+      accountRef = accountsRef.doc(transaction.accountID);
+      accountDb = await accountRef.get();
+      accountData = accountDb.data();
+
+      accountData.credit += transaction.creditAmount;
+      accountData.debit += transaction.debitAmount;
+
+      transaction.creditAfter = accountData.credit;
+      transaction.debitAfter = accountData.debit;
+
+      if(accountData.normalSide === "L") {
+        accountData.balance += transaction.debitAmount;
+        accountData.balance -= transaction.creditAmount;
+      }
+      else if(accountData.normalSide === "R") {
+        accountData.balance += transaction.creditAmount;
+        accountData.balance -= transaction.debitAmount;
+      }
+
+      batch.update(accountRef, accountData)
+    }
+    catch (e) {
+      console.log("error happened here")
+    }
+  }
+
+  entry.status = "approved"
+
+  batch.update(entryRef, entry);
+
+  batch.commit().then(() => {
+    res.send("Update successfully");
+  });
+})
 
 // TODO: GET ACCOUNT LEDGER
 
