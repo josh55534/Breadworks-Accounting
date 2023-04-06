@@ -75,7 +75,8 @@ function CreateJournal() {
   const changeAccount = (props) => {
     var account = [...rowID]
     account[props.target.id].accountID = props.target.value;
-    account[props.target.id].accountName = accountList[props.target.id];
+    account[props.target.id].accountName = accountList[accountListID.indexOf(props.target.value)];
+    console.log(account);
     setRowID(account)
   }
 
