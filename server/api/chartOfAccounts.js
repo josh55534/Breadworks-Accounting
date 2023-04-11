@@ -40,7 +40,7 @@ router.get("/account/:accountId", authUser, async (req, res) => {
   }
 
   const accountData = fetchId.data();
-  accountData.balance = parseFloat(accountData.balance).toFixed(2);
+  accountData.balance = parseFloat(accountData.balance);
   res.json(accountData);
 })
 
