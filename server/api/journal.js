@@ -1,5 +1,7 @@
 const fs = require('fs');
 
+const {v4 : uuidv4} = require('uuid')
+
 const express = require("express");
 const router = express.Router();
 
@@ -74,7 +76,7 @@ router.post('/new-entry', upload.single('file'), async (req, res) => {
 
 
 
-  await journalRef.doc(""+journalID).set({
+  await journalRef.doc("" + journalID).set({
     id: journalID,
     transactions,
     desc,
@@ -85,7 +87,13 @@ router.post('/new-entry', upload.single('file'), async (req, res) => {
     .then(async (res) => {
       const files = fs.readdirSync('uploads/')
 
-      await documentBucket.upload(`uploads/${files[0]}`, {destination: `journalDocuments/${journalID}/${files[0]}`})
+      await documentBucket.upload(`uploads/${files[0]}`, {
+        destination: `journalDocuments/${journalID}/${files[0]}`, public: true, metadata: {
+          metadata: {
+            firebaseStorageDownloadTokens: uuidv4(),
+          }
+        }
+      })
       fs.unlink(`uploads/${files[0]}`, (err) => {
         console.log(err)
       });
