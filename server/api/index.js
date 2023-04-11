@@ -11,6 +11,7 @@ const serviceAccount = require('../config/serviceAccount.json');
 
 admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount),
+	storageBucket: 'gs://fir-demo-94d61.appspot.com'
 });
 
 app.use('/register', require('./register'));

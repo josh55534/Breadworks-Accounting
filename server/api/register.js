@@ -30,7 +30,8 @@ router.post("/", async (req, res) => {
     //If input is invalid list all errors
     const errorFull = [];
     for (x = 0; x < error.details.length; x++) {
-      errorFull.push(error.details[x].message);
+      console.log(error.details[x])
+      errorFull.push(error.details[x].context.key);
     }
     return res.status(400).json({ errors: errorFull });
   }

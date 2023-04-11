@@ -19,6 +19,7 @@ function CreateJournal() {
   const [accountList, setAccountList] = useState([])
   const [accountListID, setAccountListId] = useState([])
 
+  const data = new FormData();
   const [rowID, setRowID] = useState([defaultRow])
   const [desc, setDesc] = useState("");
   const [date, setDate] = useState("");
@@ -56,13 +57,13 @@ function CreateJournal() {
   }, [config])
 
   const handleSubmit = () => {
+    rowID.map((d, index) => data.append(`transactions[${index}]`, JSON.stringify(rowID[index])))
+    data.append('desc', desc);
+    data.append('date', date);
+    data.append('userName', userName);
+    data.append('file', file);
     axios
-    .post("http://localhost:5000/journal/new-entry", {
-      transactions: rowID,
-      desc: desc,
-      date: date,
-      userName: userName
-    }, config)
+    .post("http://localhost:5000/journal/new-entry", data)
     .then((res) => {
       window.location.href = "/journal/entries"
       console.log(res)

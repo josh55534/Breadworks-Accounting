@@ -13,9 +13,10 @@ const journalSchema = Joi.object({
       debitAfter: Joi.string().required(),
       creditAfter: Joi.string().required()
     })).required(),
-    desc: Joi.string().required(),
+    desc: Joi.string().allow(null, ''),
     date: Joi.string().required(),
     userName: Joi.string().required(),
+    file: Joi.any()
 })
 
 exports.validateJournal = validator(journalSchema);

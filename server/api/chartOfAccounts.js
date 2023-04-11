@@ -13,11 +13,19 @@ const accountsRef = db.collection('accounts');
 
 // GET CHART OF ACCOUNTS
 router.get("/", authUser, async (req, res) => {
+  const filter = req.query;
+
   const accountsDb = await accountsRef.orderBy("id", "asc").get();
-  const accounts = accountsDb.docs.map((doc) => {
+  const accountsList = accountsDb.docs.map((doc) => {
     const { id, name, desc, category, statement, active } = doc.data();
     return { id, name, desc, category, statement, active };
   });
+
+  let accounts = [...accountsList];
+
+  if (filter.search !== undefined) {
+    accounts = accounts.filter(account => (account.id.includes(filter.search.toLowerCase()) || account.name.toLowerCase().includes(filter.search.toLowerCase())));
+  }
 
   res.json(accounts);
 })
@@ -30,8 +38,13 @@ router.get("/account/:account", authUser, async (req, res) => {
     return res.status(400).json({ errors: "Account not found" });
   }
 
+
+  const accountData = fetchId.data();
+  accountData.balance = parseFloat(accountData.balance);
+
   let accountData = await accountsRef.doc(accountId).get().then(accountDb => accountDb.data());
 
+// Journal
   res.json(accountData);
 })
 

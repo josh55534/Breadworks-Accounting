@@ -13,10 +13,10 @@ function JournalListData(props) {
         <td className="user-table-body">{props.date}</td>
         <td className="user-table-body">{props.desc}</td>
         <td className="user-table-body text-center" onClick={props.onClick}><Link to={`/journal/entry/${props.id}`}>{props.id}</Link></td>
-        <td className="user-table-body text-center">{props.debit}</td>
-        <td className="user-table-body text-center">{props.credit}</td>
-        <td className="user-table-body text-center">{props.totalDebit}</td>
-        <td className="user-table-body text-center">{props.totalCredit}</td>
+        <td className="user-table-body text-center">{props.debit.toLocaleString('en', {useGrouping:true, minimumFractionDigits: 2})}</td>
+        <td className="user-table-body text-center">{props.credit.toLocaleString('en', {useGrouping:true, minimumFractionDigits: 2})}</td>
+        <td className="user-table-body text-center">{props.totalDebit.toLocaleString('en', {useGrouping:true, minimumFractionDigits: 2})}</td>
+        <td className="user-table-body text-center">{props.totalCredit.toLocaleString('en', {useGrouping:true, minimumFractionDigits: 2})}</td>
       </tr>
     </>
   )
@@ -61,7 +61,7 @@ function AccountLedger() {
           </div>
           <div className="flex flex-col items-center">
             <label className="text-center">Balance</label>
-            <label className="txt-primary py-0 ml-0">{balance}</label>
+            <label className="txt-primary py-0 ml-0">{balance.toLocaleString('en', {useGrouping:true, minimumFractionDigits: 2})}</label>
           </div>
         </div>
         <div className="form-primary mt-2">

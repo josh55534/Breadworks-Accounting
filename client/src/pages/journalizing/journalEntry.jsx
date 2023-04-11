@@ -13,7 +13,7 @@ function GeneralJournalList(props) {
             <tr key={index}>
               <td className="user-table-body">{index == 0 && props.date}</td>
               <td className="user-table-body">{d.accountName}</td>
-              <td className="user-table-body text-center">{d.debitAmount}</td>
+              <td className="user-table-body text-center">{d.debitAmount.toLocaleString('en', {useGrouping:true, minimumFractionDigits: 2})}</td>
               <td className="user-table-body"></td>
             </tr>
           )}
@@ -26,7 +26,7 @@ function GeneralJournalList(props) {
               <td className="user-table-body">{index == 0 && props.date}</td>
               <td className="user-table-body pl-10">{d.accountName}</td>
               <td className="user-table-body text-center"></td>
-              <td className="user-table-body text-center">{d.creditAmount}</td>
+              <td className="user-table-body text-center">{d.creditAmount.toLocaleString('en', {useGrouping:true, minimumFractionDigits: 2})}</td>
             </tr>
           )}
         </>

@@ -108,9 +108,9 @@ function Account() {
             <input
               disabled
               className="txt-primary"
-              type="number"
+              type="text"
               id="balance"
-              value={balance} />
+              value={balance.toLocaleString('en', {useGrouping:true, minimumFractionDigits: 2})} />
           </div>
         </div>
         <div className="flex flex-row justify-end gap-4">
@@ -121,9 +121,9 @@ function Account() {
               <input
                 disabled
                 className="txt-primary"
-                type="number"
+                type="text"
                 id="credit"
-                value={credit} />
+                value={credit.toLocaleString('en', {useGrouping:true, minimumFractionDigits: 2})} />
             </div>
           </div>
           <div>
@@ -133,9 +133,9 @@ function Account() {
               <input
                 disabled
                 className="txt-primary"
-                type="number"
+                type="text"
                 id="debit"
-                value={debit} />
+                value={debit.toLocaleString('en', {useGrouping:true, minimumFractionDigits: 2})} />
             </div>
           </div>
         </div>
