@@ -16,7 +16,6 @@ admin.initializeApp({
 
 app.use('/register', require('./register'));
 app.use('/login', require('./login'));
-app.use('/private', require('./private'))
 app.use('/adminDashboard', require('./adminDashboard'))
 app.use('/chartOfAccounts', require('./chartOfAccounts'))
 app.use('/journal', require('./journal'))
