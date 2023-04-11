@@ -22,7 +22,7 @@ router.get("/", authUser, async (req, res) => {
   });
 
   let accounts = [...accountsList];
-  
+
   if (filter.search !== undefined) {
     accounts = accounts.filter(account => (account.id.includes(filter.search) || account.name.includes(filter.search)));
   }

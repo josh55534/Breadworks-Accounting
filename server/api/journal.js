@@ -1,25 +1,48 @@
+const fs = require('fs');
+
 const express = require("express");
 const router = express.Router();
+
 const { ROLE, VERIFY, STATUS } = require("./roles-validator/roles");
+const { validateJournal } = require("./journalValidator/journalValidator");
 const { authUser, authAccountant, authRole } = require("./middleware/basicAuth");
 
 const Joi = require('joi')
 
 const admin = require('firebase-admin');
-const { validateJournal } = require("./journalValidator/journalValidator");
+const { getStorage } = require('firebase-admin/storage')
+const journalDocPath = "fir-demo-94d61.appspot.com/journalDocuments"
+
 const db = admin.firestore();
+
+const multer = require("multer")
+const storage = multer.diskStorage({
+  destination: (req, file, callBack) => {
+    callBack(null, 'uploads/')
+  },
+  filename: (req, file, callBack) => {
+    callBack(null, file.originalname)
+  }
+})
+let upload = multer({ storage: storage });
 
 const journalRef = db.collection('journals');
 const accountsRef = db.collection('accounts');
+const documentBucket = getStorage().bucket();
 
 // CREATE JOURNAL ENTRIES
-router.post('/new-entry', authUser, authAccountant(ROLE.MANAGER, ROLE.BASIC), async (req, res) => {
-  const {
+router.post('/new-entry', upload.single('file'), async (req, res) => {
+  var {
     transactions,
     desc,
     date,
     userName,
+    file
   } = req.body;
+
+  for (let x in transactions) {
+    transactions[x] = JSON.parse(transactions[x])
+  }
 
   const { error, value } = validateJournal(req.body);
 
@@ -42,15 +65,14 @@ router.post('/new-entry', authUser, authAccountant(ROLE.MANAGER, ROLE.BASIC), as
     totalDebit += transactions[x].debitAmount;
   }
 
-  console.log(totalCredit);
-  console.log(totalDebit)
-
   if (totalCredit !== totalDebit) {
     return res.status(400).json({ errors: "Credit must equal debit" })
   }
 
   const counter = await journalRef.count().get();
   const journalID = "" + (counter.data().count + 1);
+
+
 
   await journalRef.doc(journalID).set({
     id: journalID,
@@ -59,7 +81,15 @@ router.post('/new-entry', authUser, authAccountant(ROLE.MANAGER, ROLE.BASIC), as
     date,
     userName,
     status: "pending"
-  });
+  })
+    .then(async (res) => {
+      const files = fs.readdirSync('uploads/')
+
+      await documentBucket.upload(`uploads/${files[0]}`, {destination: `journalDocuments/${journalID}/${files[0]}`})
+      fs.unlink(`uploads/${files[0]}`, (err) => {
+        console.log(err)
+      });
+    });
 
   res.send('Successfully added journal')
 })
@@ -179,7 +209,7 @@ router.put('/entry/reject/:entryID', authUser, authRole(ROLE.MANAGER), async (re
   res.send("Updated succesfully")
 })
 
-// TODO: GET ACCOUNT LEDGER
+// GET ACCOUNT LEDGER
 router.get('/accountLedger/:accountID', authUser, async (req, res) => {
   const accountID = req.params.accountID;
 
