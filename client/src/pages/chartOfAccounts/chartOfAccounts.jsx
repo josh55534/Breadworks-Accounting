@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 const token = localStorage.getItem("token");
@@ -13,6 +13,7 @@ function ChartOfAccounts() {
   const [accountStatus, setStatus] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setAdmin] = useState(false);
+  const [search, setSearch] = useSearchParams();
 
   const config = {
     headers: {
@@ -21,8 +22,13 @@ function ChartOfAccounts() {
   };
 
   useEffect(() => {
+    var searchParam = "";
+    if(search.get('search') !== null) {
+      searchParam = `?search=${search.get('search')}`
+    }
+
     axios
-      .get("http://localhost:5000/chartOfAccounts", config)
+      .get(`http://localhost:5000/chartOfAccounts${searchParam}`, config)
       .then((res) => {
         const { data } = res;
         setIds(data.map((d) => d.id));
@@ -49,6 +55,10 @@ function ChartOfAccounts() {
   }, [config])
 
 
+  const changeSearch = (event) => {
+    if(event.target.value !== "") setSearch({search: event.target.value});
+    else setSearch("");
+  }
 
   return (
     <>
@@ -61,7 +71,12 @@ function ChartOfAccounts() {
             </div>) : (
             <div className="form-primary mb-0">
               <div className="flex flex-row justify-between">
-                <input className="txt-search" />
+                <input 
+                  className="txt-search" 
+                  placeholder="Search"
+                  value={search.get('search')}
+                  onChange={changeSearch}
+                  />
                 {isAdmin &&
                   <Link to="/chartofaccounts/addAccount/">
                     <button className="btn-primary">Add Account</button>
