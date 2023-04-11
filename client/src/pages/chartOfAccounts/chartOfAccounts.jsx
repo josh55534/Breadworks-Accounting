@@ -52,7 +52,7 @@ function ChartOfAccounts() {
       .catch((err) => {
         console.error(err);
       });
-  }, [config])
+  }, [search])
 
 
   const changeSearch = (event) => {

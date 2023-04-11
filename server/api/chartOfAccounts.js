@@ -24,7 +24,7 @@ router.get("/", authUser, async (req, res) => {
   let accounts = [...accountsList];
 
   if (filter.search !== undefined) {
-    accounts = accounts.filter(account => (account.id.includes(filter.search) || account.name.includes(filter.search)));
+    accounts = accounts.filter(account => (account.id.includes(filter.search.toLowerCase()) || account.name.toLowerCase().includes(filter.search.toLowerCase())));
   }
 
   res.json(accounts);

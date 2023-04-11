@@ -70,11 +70,11 @@ router.post('/new-entry', upload.single('file'), async (req, res) => {
   }
 
   const counter = await journalRef.count().get();
-  const journalID = "" + (counter.data().count + 1);
+  const journalID = (counter.data().count + 1);
 
 
 
-  await journalRef.doc(journalID).set({
+  await journalRef.doc(""+journalID).set({
     id: journalID,
     transactions,
     desc,

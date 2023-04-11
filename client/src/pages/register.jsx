@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 
 function Register() {
-  const [error, setError] = useState(null);
+  const [error, setError] = useState([]);
   const [Fname, setFname] = useState("");
   const [Lname, setLname] = useState("");
   const [email, setEmail] = useState("");
@@ -74,7 +74,7 @@ function Register() {
               First Name
             </label>
             <input
-              className="txt-primary"
+              className={error.includes("Fname") ? "txt-primary txt-primary-error" : "txt-primary"}
               type="text"
               id="Fname"
               value={Fname}
@@ -87,7 +87,7 @@ function Register() {
               Last Name
             </label>
             <input
-              className="txt-primary"
+              className={error.includes("Lname") ? "txt-primary txt-primary-error" : "txt-primary"}
               type="text"
               id="Lname"
               value={Lname}
@@ -100,7 +100,7 @@ function Register() {
               Email
             </label>
             <input
-              className="txt-primary"
+              className={error.includes("email") ? "txt-primary txt-primary-error" : "txt-primary"}
               type="text"
               id="email"
               value={email}
@@ -113,7 +113,7 @@ function Register() {
               Password
             </label>
             <input
-              className="txt-primary"
+              className={error.includes("password") ? "txt-primary txt-primary-error" : "txt-primary"}
               type="password"
               id="password"
               value={password}
@@ -126,7 +126,7 @@ function Register() {
               Street Address
             </label>
             <input
-              className="txt-primary"
+              className={error.includes("street_address") ? "txt-primary txt-primary-error" : "txt-primary"}
               type="text"
               id="street_address"
               name="street_address"
@@ -140,7 +140,7 @@ function Register() {
               City
             </label>
             <input
-              className="txt-primary"
+              className={error.includes("city") ? "txt-primary txt-primary-error" : "txt-primary"}
               type="text"
               id="city"
               name="city"
@@ -154,7 +154,7 @@ function Register() {
               State
             </label>
             <input
-              className="txt-primary"
+              className={error.includes("state") ? "txt-primary txt-primary-error" : "txt-primary"}
               type="text"
               id="state"
               name="state"
@@ -168,7 +168,7 @@ function Register() {
               Zip Code
             </label>
             <input
-              className="txt-primary"
+              className={error.includes("zip_code") ? "txt-primary txt-primary-error" : "txt-primary"}
               type="text"
               id="zip_code"
               name="zip_code"
@@ -182,7 +182,7 @@ function Register() {
               Date of Birth
             </label>
             <input
-              className="txt-primary"
+              className={error.includes("DOB") ? "txt-primary txt-primary-error" : "txt-primary"}
               type="date"
               id="DOB"
               value={DOB}
@@ -191,18 +191,10 @@ function Register() {
           </div>
         </div>
 
-        {error ? (
-          <div className="text-red-500 font-medium mb-4">{error}</div>
-        ) : null}
-
         <div className="flex flex-row pt-1">
           <div className="w-full m-auto">
-            <Link to='/login'>
-              <a
-                className="btn-secondary"
-              >
+            <Link to='/login' className="btn-secondary">
                 Already have an account?
-              </a>
             </Link>
           </div>
           <button className="btn-primary">
