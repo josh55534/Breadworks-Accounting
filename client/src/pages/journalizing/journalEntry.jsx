@@ -71,7 +71,7 @@ function JournalEntry() {
 
     if (journalStatus === "pending") setToBeVerified(true);
     if (decoded.user.role === "manager") setManager(true);
-  })
+  }, [])
 
   const handleReject = () => {
     axios
@@ -82,7 +82,7 @@ function JournalEntry() {
       })
       .catch((err) => {
         console.log(err)
-      })
+      }, [])
   }
 
   const handleApprove = () => {
@@ -94,7 +94,7 @@ function JournalEntry() {
       })
       .catch((err) => {
         console.log(err)
-      })
+      }, [])
   }
 
   const statusColor = (status) => {

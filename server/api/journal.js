@@ -12,6 +12,8 @@ const Joi = require('joi')
 const admin = require('firebase-admin');
 const { getStorage } = require('firebase-admin/storage')
 const journalDocPath = "fir-demo-94d61.appspot.com/journalDocuments"
+const eventLog = require('./eventLog');
+const jwt_decode = require('jwt-decode');
 
 const db = admin.firestore();
 
@@ -31,13 +33,12 @@ const accountsRef = db.collection('accounts');
 const documentBucket = getStorage().bucket();
 
 // CREATE JOURNAL ENTRIES
-router.post('/new-entry', upload.single('file'), async (req, res) => {
+router.post('/new-entry', async (req, res) => {
   var {
     transactions,
     desc,
     date,
-    userName,
-    file
+    userName
   } = req.body;
 
   for (let x in transactions) {
@@ -72,8 +73,6 @@ router.post('/new-entry', upload.single('file'), async (req, res) => {
   const counter = await journalRef.count().get();
   const journalID = (counter.data().count + 1);
 
-
-
   await journalRef.doc(""+journalID).set({
     id: journalID,
     transactions,
@@ -81,18 +80,11 @@ router.post('/new-entry', upload.single('file'), async (req, res) => {
     date,
     userName,
     status: "pending"
-  })
-    .then(async (res) => {
-      const files = fs.readdirSync('uploads/')
-
-      await documentBucket.upload(`uploads/${files[0]}`, {destination: `journalDocuments/${journalID}/${files[0]}`})
-      fs.unlink(`uploads/${files[0]}`, (err) => {
-        console.log(err)
-      });
-    });
+  });
 
   res.send('Successfully added journal')
 })
+
 
 // GET ALL JOURNAL ENTRIES
 router.get("/entries/", authUser, async (req, res) => {
@@ -175,6 +167,7 @@ router.put('/entry/approve/:entryID', authUser, authRole(ROLE.MANAGER), async (r
       }
 
       batch.update(accountRef, accountData)
+     //eventLog.createAccountEventLog(transaction);
     }
     catch (e) {
       console.log("error happened here")

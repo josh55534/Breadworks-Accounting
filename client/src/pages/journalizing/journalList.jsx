@@ -84,11 +84,11 @@ function JournalList() {
         setDate(data.map((d) => d.date))
         setDesc(data.map((d) => d.desc))
         setRowID(data.map((d) => d.transactions))
-      })
+      }, [])
       .catch();
 
     if (decoded.user.role === "manager" || decoded.user.role === "basic") setJournal(true);
-  })
+  }, [])
 
   return (
     <>
@@ -122,6 +122,7 @@ function JournalList() {
             <tbody>
               {entryID.map((id, index) => (
                 <GeneralJournalList
+                key={`${index}-${id}`}
                   date={entryDate[index]}
                   rowID={rowID[index]}
                   id={id}
@@ -187,9 +188,9 @@ function JournalListPending() {
       .then((res) => {
         setRowID(res.data)
         setLoading(false);
-      })
+      }, [])
 
-  })
+  }, [])
 
   return (
     <>
@@ -222,6 +223,7 @@ function JournalListPending() {
                 <>
                   {rowID.map((data) => (
                     <JournalListData
+                      key={data.id}
                       id={data.id}
                       desc={data.desc}
                       date={data.date}

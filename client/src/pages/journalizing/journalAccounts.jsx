@@ -21,6 +21,12 @@ function JournalAccounts() {
   };
 
   useEffect(() => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+  
     axios
       .get("http://localhost:5000/chartOfAccounts", config)
       .then((res) => {
@@ -31,13 +37,14 @@ function JournalAccounts() {
         setCategories(data.map((d) => d.category));
         setStatements(data.map((d) => d.statement));
         setStatus(data.map((d) => d.active));
-
+  
         setLoading(false);
       })
       .catch((err) => {
         console.error(err);
       });
-  }, [config])
+  }, []);
+  
 
   return (
     <>
