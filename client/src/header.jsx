@@ -5,54 +5,64 @@ import accountIcon from "./assets/accountIcon.png";
 import LogoPic from "./assets/Breadworks.fw.png";
 
 function HeadNavbar() {
-	const [data, setData] = useState(null);
-	const token = localStorage.getItem("token");
-	if (token) {
-		var decoded = jwt_decode(token);
-	}
-	useEffect(() => {
-		fetch("http://localhost:5000/")
-			.then((response) => response.text())
-			.then((text) => setData(text));
-	}, []);
+  const [data, setData] = useState(null);
+  const token = localStorage.getItem("token");
+  if (token) {
+    var decoded = jwt_decode(token);
+  }
+  useEffect(() => {
+    fetch("http://localhost:5000/")
+      .then((response) => response.text())
+      .then((text) => setData(text));
+  }, []);
 
-	return (
-		<div>
-			<div className="flex flex-row justify-center gap-10">
-				{token && (
-					<>
-						<Link to="/chartofaccounts">
-							<button className="btn-navbar">
-								Chart of Accounts
-							</button>
-						</Link>
-						<Link to="/journal">
-							<button className="btn-navbar">
-								Journal
-							</button>
-						</Link>
-					</>
-				)}
-				{decoded && decoded.user.role === "admin" && (
+  return (
+    <div>
+      <div className="flex flex-row justify-center gap-10">
+        {token && (
+          <>
+            <Link to="/chartofaccounts">
+              <button className="btn-navbar">
+                Chart of Accounts
+              </button>
+            </Link>
+            <Link to="/journal">
+              <button className="btn-navbar">
+                Journal
+              </button>
+            </Link>
+          </>
+        )}
+        {decoded && decoded.user.role === "admin" && (
 
-					<Link to='/admindashboard'>
-						<button className="btn-navbar"
-							onClick={() => {
-							}}
-						>
-							Admin Dashboard
-						</button>
-					</Link>
+          <Link to='/admindashboard'>
+            <button className="btn-navbar"
+              onClick={() => {
+              }}
+            >
+              Admin Dashboard
+            </button>
+          </Link>
 
-				)}
-				{decoded && decoded.user.verify === "unverified" && (
-					<div className="mx-auto bg-red-600 text-slate-100 w-80 mt-4">
-						You will recieve an email at {decoded.user.email} after an Admin verifies your account
-					</div>
-				)}
-			</div>
-		</div>
-	);
+        )}
+        {decoded && decoded.user.role === "manager" && (
+          <Link to='/documents'>
+            <button className="btn-navbar"
+              onClick={() => {
+              }}
+            >
+              Documents
+            </button>
+          </Link>
+        )}
+        {decoded && decoded.user.verify === "unverified" && (
+          <div className="mx-auto bg-red-600 text-slate-100 w-80 mt-4">
+            You will recieve an email at {decoded.user.email} after an Admin verifies your account
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 function Logo(props) {
@@ -96,16 +106,16 @@ function Header() {
               <div className="account-leaflet-info">
                 <p className="mt-auto">Welcome, {Fname}</p>
                 <div className="flex flex-row justify-between">
-                <button className="btn-logout"
-                  onClick={handleLogout}
-                >
-                  Profile
-                </button>
-                <button className="btn-logout"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </button>
+                  <button className="btn-logout"
+                    onClick={handleLogout}
+                  >
+                    Profile
+                  </button>
+                  <button className="btn-logout"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
                 </div>
               </div>
             </div>
@@ -131,7 +141,7 @@ function Header() {
           </div>
         )}
       </div>
-      <HeadNavbar/>
+      <HeadNavbar />
     </header>
   );
 };
