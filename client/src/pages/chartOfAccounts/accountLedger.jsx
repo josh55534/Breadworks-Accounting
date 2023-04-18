@@ -6,10 +6,7 @@ const token = localStorage.getItem("token");
 function JournalListData(props) {
   return (
     <>
-      <tr
-        className=""
-        key={props.key}
-      >
+      <tr className="" key={props.journalKey}>
         <td className="user-table-body">{props.date}</td>
         <td className="user-table-body">{props.desc}</td>
         <td className="user-table-body text-center" onClick={props.onClick}><Link to={`/journal/entry/${props.id}`}>{props.id}</Link></td>
@@ -21,6 +18,7 @@ function JournalListData(props) {
     </>
   )
 }
+
 
 function AccountLedger() {
   const { accountId } = useParams();
@@ -48,7 +46,7 @@ function AccountLedger() {
         setBalance(data.accountBalance);
         setName(data.accountName)
       })
-  })
+  }, [])
 
   return (
     <>

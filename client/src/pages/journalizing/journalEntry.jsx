@@ -82,7 +82,7 @@ function JournalEntry() {
       })
       .catch((err) => {
         console.log(err)
-      })
+      }, [])
   }
 
   const handleApprove = () => {
@@ -94,7 +94,7 @@ function JournalEntry() {
       })
       .catch((err) => {
         console.log(err)
-      })
+      }, [])
   }
 
   const statusColor = (status) => {

@@ -23,8 +23,8 @@ function ChartOfAccounts() {
 
   useEffect(() => {
     var searchParam = "";
-    if(search.get('search') !== null) {
-      searchParam = `?search=${search.get('search')}`
+    if (search.get("search") !== null) {
+      searchParam = `?search=${search.get("search")}`;
     }
 
     axios
@@ -43,7 +43,6 @@ function ChartOfAccounts() {
         let decoded;
         if (token) {
           decoded = jwt_decode(token);
-          
         }
         if (decoded.user.role === "admin") {
           setAdmin(true);
@@ -52,13 +51,42 @@ function ChartOfAccounts() {
       .catch((err) => {
         console.error(err);
       });
-  }, [search])
-
+  }, [search]);
 
   const changeSearch = (event) => {
-    if(event.target.value !== "") setSearch({search: event.target.value});
+    if (event.target.value !== "") setSearch({ search: event.target.value });
     else setSearch("");
-  }
+  };
+
+  const activateAccount = (accountId) => {
+    axios
+      .put(
+        `http://localhost:5000/chartOfAccounts/activate/${accountId}`,
+        {},
+        config
+      )
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const deactivateAccount = (accountId) => {
+    axios
+      .put(
+        `http://localhost:5000/chartOfAccounts/deactivate/${accountId}`,
+        {},
+        config
+      )
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
   return (
     <>
@@ -68,42 +96,34 @@ function ChartOfAccounts() {
           {loading ? (
             <div className="flex items-center justify-center h-fit">
               Loading...
-            </div>) : (
+            </div>
+          ) : (
             <div className="form-primary mb-0">
               <div className="flex flex-row justify-between">
-                <input 
-                  className="txt-search" 
+                <input
+                  className="txt-search"
                   placeholder="Search"
-                  value={search.get('search')}
+                  value={search.get("search") || ""}
                   onChange={changeSearch}
-                  />
-                {isAdmin &&
+                />
+                {isAdmin && (
                   <Link to="/chartofaccounts/addAccount/">
                     <button className="btn-primary">Add Account</button>
                   </Link>
-                }
+                )}
               </div>
               <table className="user-table">
                 <thead>
                   <tr>
-                    <th className="user-table-header">
-                      Account ID
-                    </th>
-                    <th className="user-table-header">
-                      Name
-                    </th>
-                    <th className="user-table-header">
-                      Description
-                    </th>
-                    <th className="user-table-header text-center">
-                      Category
-                    </th>
-                    <th className="user-table-header text-center">
-                      Statement
-                    </th>
-                    <th className="user-table-header text-center">
-                      Status
-                    </th>
+                    <th className="user-table-header">Account ID</th>
+                    <th className="user-table-header">Name</th>
+                    <th className="user-table-header">Description</th>
+                    <th className="user-table-header text-center">Category</th>
+                    <th className="user-table-header text-center">Statement</th>
+                    <th className="user-table-header text-center">Status</th>
+                    {isAdmin && (
+                      <th className="user-table-header">Activate/Deactivate</th>
+                    )}
                   </tr>
                 </thead>
                 <tbody>
@@ -111,14 +131,39 @@ function ChartOfAccounts() {
                     <tr
                       className="table-row-button"
                       key={index}
-                      onClick={() => { window.location.href = `/account/${id}` }}
+                      onClick={() => {
+                        window.location.href = `/account/${id}`;
+                      }}
                     >
-                      <td className="user-table-body">{id}</td>
+                      <td className="user-table-body py-2">{id}</td>
                       <td className="user-table-body">{accountNames[index]}</td>
                       <td className="user-table-body">{accountDescs[index]}</td>
-                      <td className="user-table-body text-center">{accountCategories[index]}</td>
-                      <td className="user-table-body text-center">{accountStatements[index]}</td>
-                      <td className="user-table-body text-center">{accountStatus[index] ? (<>activated</>) : (<>deactivated</>)}</td>
+                      <td className="user-table-body text-center">
+                        {accountCategories[index]}
+                      </td>
+                      <td className="user-table-body text-center">
+                        {accountStatements[index]}
+                      </td>
+                      <td className="user-table-body text-center">
+                        {accountStatus[index] ? (
+                          <>activated</>
+                        ) : (
+                          <>deactivated</>
+                        )}
+                      </td>
+                      {isAdmin && (
+                        <td className="user-table-body w-1">
+                          {accountStatus[index] ? (
+                            <button className="btn-primary btn-color-red" onClick={() => deactivateAccount(id)}>
+                              Deactivate
+                            </button>
+                          ) : (
+                            <button className="btn-primary btn-color-blue" onClick={() => activateAccount(id)}>
+                              Activate
+                            </button>
+                          )}
+                        </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>
@@ -126,7 +171,7 @@ function ChartOfAccounts() {
             </div>
           )}
         </form>
-      </div >
+      </div>
     </>
   );
 }
@@ -165,42 +210,45 @@ function AdminAddAccount() {
       .catch((err) => {
         console.error(err);
         setLoading(false);
-      })
-  })
+      });
+  });
 
   const handleAddAcct = () => {
     axios
-      .post("http://localhost:5000/chartOfAccounts/createAccount", {
-        number: number,
-        order: order,
-        name: name,
-        desc: desc,
-        normalSide: normalSide,
-        category: category,
-        subcategory: subcategory,
-        balance: balance,
-        credit: credit,
-        debit: debit,
-        assignedUsers: selectedUsers,
-        comment: comment,
-        statement: statement
-      }, config)
+      .post(
+        "http://localhost:5000/chartOfAccounts/createAccount",
+        {
+          number: number,
+          order: order,
+          name: name,
+          desc: desc,
+          normalSide: normalSide,
+          category: category,
+          subcategory: subcategory,
+          balance: balance,
+          credit: credit,
+          debit: debit,
+          assignedUsers: selectedUsers,
+          comment: comment,
+          statement: statement,
+        },
+        config
+      )
       .then((res) => {
         window.location.href = "/chartOfAccounts";
       })
       .catch((err) => {
-        console.log(err.response.data.errors)
-      })
-  }
+        console.log(err.response.data.errors);
+      });
+  };
 
   const selectColor = (props) => {
     if (selectedUsers.includes(props.target.value)) {
-      return "true"
-    }
-    else {
+      return "true";
+    } else {
       return "false";
     }
-  }
+  };
 
   const handleSelect = (props) => {
     let temp = selectedUsers;
@@ -209,14 +257,13 @@ function AdminAddAccount() {
     if (temp.includes(userName)) {
       let index = temp.indexOf(userName);
       temp.splice(index, 1);
-    }
-    else {
-      temp.push(userName)
+    } else {
+      temp.push(userName);
     }
 
     setSelected(temp);
-    console.log(selectedUsers)
-  }
+    console.log(selectedUsers);
+  };
 
   return (
     <>
@@ -226,191 +273,195 @@ function AdminAddAccount() {
           <div className="flex items-center justify-center h-fit">
             Loading...
           </div>
-        ) : (<>
-          <div className="form-primary pb-4">
-            <div>
-              <label>Account Number</label>
-              <input
-                className="txt-primary"
-                type="text"
-                id="Fname"
-                value={number}
-                onChange={(props) => setNumber(props.target.value)}
-              />
-            </div>
-            <div>
-              <label>Account Order</label>
-              <input
-                className="txt-primary"
-                type="text"
-                id="Fname"
-                value={order}
-                onChange={(props) => setOrder(props.target.value)}
-              />
-            </div>
-            <div>
-              <label>Name</label>
-              <input
-                className="txt-primary"
-                type="text"
-                id="Fname"
-                value={name}
-                onChange={(props) => setName(props.target.value)}
-              />
-            </div>
-            <div>
-              <label>Description</label>
-              <input
-                className="txt-primary"
-                type="text"
-                id="Desc"
-                value={desc}
-                onChange={(props) => setDesc(props.target.value)}
-              />
-            </div>
-            <div>
-              <label>Normal Side</label>
-              <input
-                className="txt-primary"
-                type="text"
-                id="normalSide"
-                value={normalSide}
-                onChange={(props) => setNormal(props.target.value)}
-              />
-            </div>
-            <div>
-              <label>Category</label>
-              <select
-                className="txt-primary"
-                type="text"
-                id="category"
-                value={category}
-                onChange={(props) => setCategory(props.target.value)}>
-                <option value="none" selected disabled hidden>Select an Option</option>
-                <option value="assets">Assets</option>
-                <option value="liabilites">Liabilities</option>
-                <option value="equity">Equity</option>
-              </select>
-            </div>
-            <div>
-              <label>Subcategory</label>
-              <input
-                className="txt-primary"
-                type="text"
-                id="subcat"
-                value={subcategory}
-                onChange={(props) => setSubcat(props.target.value)}
-              />
-            </div>
-            <div>
-              <label>Balance</label>
-              <div className="flex flex-row ml-2">
-                <p className="m-auto text-xl">$</p>
+        ) : (
+          <>
+            <div className="form-primary pb-4">
+              <div>
+                <label>Account Number</label>
                 <input
                   className="txt-primary"
-                  type="number"
-                  id="balance"
-                  value={balance}
-                  onChange={(props) => setBalance(props.target.value)}
+                  type="text"
+                  id="Fname"
+                  value={number}
+                  onChange={(props) => setNumber(props.target.value)}
                 />
               </div>
-            </div>
-            <div className="flex flex-row justify-end gap-4">
               <div>
-                <label>Credit</label>
+                <label>Account Order</label>
+                <input
+                  className="txt-primary"
+                  type="text"
+                  id="Fname"
+                  value={order}
+                  onChange={(props) => setOrder(props.target.value)}
+                />
+              </div>
+              <div>
+                <label>Name</label>
+                <input
+                  className="txt-primary"
+                  type="text"
+                  id="Fname"
+                  value={name}
+                  onChange={(props) => setName(props.target.value)}
+                />
+              </div>
+              <div>
+                <label>Description</label>
+                <input
+                  className="txt-primary"
+                  type="text"
+                  id="Desc"
+                  value={desc}
+                  onChange={(props) => setDesc(props.target.value)}
+                />
+              </div>
+              <div>
+                <label>Normal Side</label>
+                <input
+                  className="txt-primary"
+                  type="text"
+                  id="normalSide"
+                  value={normalSide}
+                  onChange={(props) => setNormal(props.target.value)}
+                />
+              </div>
+              <div>
+                <label>Category</label>
+                <select
+                  className="txt-primary"
+                  type="text"
+                  id="category"
+                  value={category}
+                  onChange={(props) => setCategory(props.target.value)}
+                >
+                  <option value="none" selected disabled hidden>
+                    Select an Option
+                  </option>
+                  <option value="assets">Assets</option>
+                  <option value="liabilites">Liabilities</option>
+                  <option value="equity">Equity</option>
+                </select>
+              </div>
+              <div>
+                <label>Subcategory</label>
+                <input
+                  className="txt-primary"
+                  type="text"
+                  id="subcat"
+                  value={subcategory}
+                  onChange={(props) => setSubcat(props.target.value)}
+                />
+              </div>
+              <div>
+                <label>Balance</label>
                 <div className="flex flex-row ml-2">
                   <p className="m-auto text-xl">$</p>
                   <input
                     className="txt-primary"
                     type="number"
-                    id="credit"
-                    value={credit}
-                    onChange={(props) => setCredit(props.target.value)}
+                    id="balance"
+                    value={balance}
+                    onChange={(props) => setBalance(props.target.value)}
                   />
+                </div>
+              </div>
+              <div className="flex flex-row justify-end gap-4">
+                <div>
+                  <label>Credit</label>
+                  <div className="flex flex-row ml-2">
+                    <p className="m-auto text-xl">$</p>
+                    <input
+                      className="txt-primary"
+                      type="number"
+                      id="credit"
+                      value={credit}
+                      onChange={(props) => setCredit(props.target.value)}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label>Debit</label>
+                  <div className="flex flex-row ml-2">
+                    <p className="m-auto text-xl">$</p>
+                    <input
+                      className="txt-primary"
+                      type="number"
+                      id="debit"
+                      value={debit}
+                      onChange={(props) => setDebit(props.target.value)}
+                    />
+                  </div>
                 </div>
               </div>
               <div>
-                <label>Debit</label>
-                <div className="flex flex-row ml-2">
-                  <p className="m-auto text-xl">$</p>
-                  <input
-                    className="txt-primary"
-                    type="number"
-                    id="debit"
-                    value={debit}
-                    onChange={(props) => setDebit(props.target.value)}
-                  />
+                <label>Assigned Users</label>
+                <input
+                  className="txt-primary"
+                  type="text"
+                  id="comment"
+                  disabled
+                  value={selectedUsers}
+                />
+                <div className="flex justify-end mt-2">
+                  <div className="flex flex-col">
+                    <label>Add Users</label>
+                    <select className="txt-primary" id="users" multiple>
+                      {userList.map((user, index) => (
+                        <option
+                          key={index}
+                          value={user}
+                          onClick={handleSelect}
+                          selected={selectColor}
+                        >
+                          {user}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div>
-              <label>Assigned Users</label>
-              <input
-                className="txt-primary"
-                type="text"
-                id="comment"
-                disabled
-                value={selectedUsers}
-              />
-              <div className="flex justify-end mt-2">
-                <div className="flex flex-col">
-                  <label>Add Users</label>
-                  <select
-                    className="txt-primary"
-                    id="users"
-                    multiple>
-                    {userList.map((user, index) => (
-                      <option
-                        key={index}
-                        value={user}
-                        onClick={handleSelect}
-                        selected={selectColor}>
-                        {user}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+              <div>
+                <label>Comment</label>
+                <input
+                  className="txt-primary"
+                  type="text"
+                  id="comment"
+                  value={comment}
+                  onChange={(props) => setComment(props.target.value)}
+                />
+              </div>
+              <div>
+                <label>Statement</label>
+                <select
+                  className="txt-primary"
+                  type="text"
+                  id="statement"
+                  value={statement}
+                  onChange={(props) => setStatement(props.target.value)}
+                >
+                  <option value="none" selected disabled hidden>
+                    Select an Option
+                  </option>
+                  <option value="BS">Balance Sheet</option>
+                  <option value="RE">Retained Earnings</option>
+                  <option value="IS">Income Statement</option>
+                </select>
               </div>
             </div>
-            <div>
-              <label>Comment</label>
-              <input
-                className="txt-primary"
-                type="text"
-                id="comment"
-                value={comment}
-                onChange={(props) => setComment(props.target.value)} />
-            </div>
-            <div>
-              <label>Statement</label>
-              <select
-                className="txt-primary"
-                type="text"
-                id="statement"
-                value={statement}
-                onChange={(props) => setStatement(props.target.value)}
-              >
-                <option value="none" selected disabled hidden>Select an Option</option>
-                <option value="BS">Balance Sheet</option>
-                <option value="RE">Retained Earnings</option>
-                <option value="IS">Income Statement</option>
-              </select>
-            </div>
-          </div>
-          <div className="flex justify-between">
-            <Link to="/chartofaccounts">
-              <button className="btn-primary btn-color-red">
-                Go Back
+            <div className="flex justify-between">
+              <Link to="/chartofaccounts">
+                <button className="btn-primary btn-color-red">Go Back</button>
+              </Link>
+              <button className="btn-primary" onClick={handleAddAcct}>
+                Add Account
               </button>
-            </Link>
-            <button className="btn-primary" onClick={handleAddAcct}>
-              Add Account
-            </button>
-          </div>
-        </>)}
+            </div>
+          </>
+        )}
       </div>
     </>
-  )
+  );
 }
 
-export { ChartOfAccounts, AdminAddAccount }
+export { ChartOfAccounts, AdminAddAccount };

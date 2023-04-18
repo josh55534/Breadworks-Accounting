@@ -14,6 +14,8 @@ const Joi = require('joi')
 const admin = require('firebase-admin');
 const { getStorage } = require('firebase-admin/storage')
 const journalDocPath = "fir-demo-94d61.appspot.com/journalDocuments"
+const eventLog = require('./eventLog');
+const jwt_decode = require('jwt-decode');
 
 const db = admin.firestore();
 
@@ -38,8 +40,7 @@ router.post('/new-entry', upload.single('file'), async (req, res) => {
     transactions,
     desc,
     date,
-    userName,
-    file
+    userName
   } = req.body;
 
   for (let x in transactions) {
@@ -74,8 +75,6 @@ router.post('/new-entry', upload.single('file'), async (req, res) => {
   const counter = await journalRef.count().get();
   const journalID = (counter.data().count + 1);
 
-
-
   await journalRef.doc("" + journalID).set({
     id: journalID,
     transactions,
@@ -101,6 +100,7 @@ router.post('/new-entry', upload.single('file'), async (req, res) => {
 
   res.send('Successfully added journal')
 })
+
 
 // GET ALL JOURNAL ENTRIES
 router.get("/entries/", authUser, async (req, res) => {
@@ -166,6 +166,7 @@ router.put('/entry/approve/:entryID', authUser, authRole(ROLE.MANAGER), async (r
       accountRef = accountsRef.doc(transaction.accountID);
       accountDb = await accountRef.get();
       accountData = accountDb.data();
+      var oldBalance = accountData.balance
 
       accountData.credit += transaction.creditAmount;
       accountData.debit += transaction.debitAmount;
@@ -173,16 +174,45 @@ router.put('/entry/approve/:entryID', authUser, authRole(ROLE.MANAGER), async (r
       transaction.creditAfter = accountData.credit;
       transaction.debitAfter = accountData.debit;
 
-      if (accountData.normalSide === "L") {
+      if (accountData.normalSide === "L" || accountData.normalSide === "l") {
         accountData.balance += transaction.debitAmount;
         accountData.balance -= transaction.creditAmount;
       }
-      else if (accountData.normalSide === "R") {
+      else if (accountData.normalSide === "R" || accountData.normalSide === "r") {
         accountData.balance += transaction.creditAmount;
         accountData.balance -= transaction.debitAmount;
       }
+      const updateAccount = {
+        name: accountData.name,
+        desc: accountData.desc,
+        normalSide: accountData.normalSide,
+        category: accountData.category,
+        subcategory: accountData.subcategory,
+        balance: oldBalance,
+        credit: accountData.credit,
+        debit: accountData.debit,
+        assignedUsers: accountData.assignedUsers,
+        comment: accountData.comment,
+        statement: accountData.statement
+      };
 
-      batch.update(accountRef, accountData)
+      const newAccount = {
+        name: accountData.name,
+        desc: accountData.desc,
+        normalSide: accountData.normalSide,
+        category: accountData.category,
+        subcategory: accountData.subcategory,
+        balance: accountData.balance,
+        credit: accountData.credit + transaction.creditAmount,
+        debit: accountData.debit + transaction.debitAmount,
+        assignedUsers: accountData.assignedUsers,
+        comment: accountData.comment,
+        statement: accountData.statement
+      };
+
+      batch.update(accountRef, newAccount);
+      await eventLog.saveEventLogUpdate(req, res, transaction.accountID, updateAccount, newAccount);
+
     }
     catch (e) {
       console.log("error happened here")

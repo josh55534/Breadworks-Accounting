@@ -42,6 +42,7 @@ function CreateJournal() {
     window.location.href = "http://localhost:3000/journal"
   }
   useEffect(() => {
+    setUsername(decoded.user.id);
     axios
       .get("http://localhost:5000/chartOfAccounts", config)
       .then((res) => {
@@ -54,7 +55,7 @@ function CreateJournal() {
         console.error(err);
       });
 
-  }, [config])
+  }, [])
 
   const handleSubmit = () => {
     rowID.map((d, index) => data.append(`transactions[${index}]`, JSON.stringify(rowID[index])))
@@ -72,6 +73,8 @@ function CreateJournal() {
       console.log(err.response.data.errors)
     })
   }
+  
+  
 
   const changeAccount = (props) => {
     var account = [...rowID]

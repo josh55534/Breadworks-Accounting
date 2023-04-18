@@ -14,7 +14,7 @@ const journalSchema = Joi.object({
       creditAfter: Joi.string().required()
     })).required(),
     desc: Joi.string().allow(null, ''),
-    date: Joi.string().required(),
+    date: Joi.date().required(),
     userName: Joi.string().required(),
     file: Joi.any()
 })

@@ -2,12 +2,11 @@ const express = require('express');
 const router = express.Router();
 const { ROLE, VERIFY, STATUS } = require("./roles-validator/roles");
 const { authUser, authRole } = require("./middleware/basicAuth");
-
 const Joi = require('joi')
-
 const admin = require('firebase-admin');
-const { validateAccount } = require('./accountValidator/accountValidator');
+const { validateAccount, validateUpdateAccount } = require('./accountValidator/accountValidator');
 const db = admin.firestore();
+const eventLog = require('./eventLog');
 
 const accountsRef = db.collection('accounts');
 
@@ -31,16 +30,17 @@ router.get("/", authUser, async (req, res) => {
 })
 
 // GET ACCOUNT INFO
-router.get("/account/:accountId", authUser, async (req, res) => {
-  const accountId = req.params.accountId;
-  const fetchId = await accountsRef.doc(accountId).get();
+router.get("/account/:account", authUser, async (req, res) => {
+  const accountId = req.params.account;
 
-  if (fetchId.empty) {
+  if (accountId.empty) {
     return res.status(400).json({ errors: "Account not found" });
   }
+  let accountData = await accountsRef.doc(accountId).get().then(accountDb => accountDb.data());
 
-  const accountData = fetchId.data();
   accountData.balance = parseFloat(accountData.balance);
+
+// Journal
   res.json(accountData);
 })
 
@@ -58,16 +58,19 @@ router.put('/activate/:account', authUser, authRole(ROLE.ADMIN), async (req, res
     active: true
   })
 
+  let accountData = await accountsRef.doc(accountId).get().then(accountDb => accountDb.data());
+  eventLog.saveEventLog(req, res, accountId, 'activate', accountData);
   res.send(`Account ${accountId} is now activated`)
 })
 
 // DEACTIVATE ACCOUNT
 router.put('/deactivate/:account', authUser, authRole(ROLE.ADMIN), async (req, res) => {
   const accountId = req.params.account;
-  let fetchId = await accountsRef.where("id", "==", accountId).get();
+  
 
-  if (fetchId.empty) {
-    return res.status(400).json({ errors: "Account not found" });
+  let accountDb = await accountsRef.doc(accountId).get();
+  if (accountDb.empty) {
+    res.status(404).json({ errors: "Account not found" })
   }
 
   let accountData = await accountsRef.doc(accountId).get().then(accountDb => accountDb.data());
@@ -79,6 +82,8 @@ router.put('/deactivate/:account', authUser, authRole(ROLE.ADMIN), async (req, r
   await accountsRef.doc(accountId).update({
     active: false
   })
+
+  eventLog.saveEventLog(req, res, accountId, 'deactivate', accountData);
 
   res.send(`Account ${accountId} is now deactivated`)
 })
@@ -93,7 +98,7 @@ router.put('/update/:account', authUser, authRole(ROLE.ADMIN), async (req, res) 
     return res.status(400).json({ errors: "Account not found" });
   }
 
-  const { error, value } = validateAccount(req.body);
+  const { error, value } = validateUpdateAccount(req.body);
 
   if (error) {
     const errorFull = [];
@@ -106,8 +111,6 @@ router.put('/update/:account', authUser, authRole(ROLE.ADMIN), async (req, res) 
 
 
   const updateAccount = {
-    number: req.body.number || accountData.number,
-    order: req.body.order || accountData.order,
     name: req.body.name || accountData.name,
     desc: req.body.desc || accountData.desc,
     normalSide: req.body.normalSide || accountData.normalSide,
@@ -121,9 +124,38 @@ router.put('/update/:account', authUser, authRole(ROLE.ADMIN), async (req, res) 
     statement: req.body.statement || accountData.statement
   };
 
+ /* const id = number + "" + order;
+
+  if (id != accountId) {
+    let accountSnap = await accountsRef.doc(id).get();
+    if (!accountSnap.empty) {
+      return res
+        .status(400)
+        .json({ errors: "This account already exists" });
+    }
+
+    accountSnap = await accountsRef.where("name", "==", name).get();
+    if (!accountSnap.empty) {
+      return res
+        .status(400)
+        .json({ errors: "This account already exists" });
+    }
+
+    
+    await accountsRef.doc(accountId).update(updateAccount)
+    const newAccount = accountDb.doc(id).set(updateAccount);
+    const oldAccount = accountDb.doc(accountId);
+
+    const batch = db.batch();
+    batch.set(newAccount);
+    batch.delete(oldAccount);
+    batch.commit();
+  }
+  */
   await accountsRef.doc(accountId).update(updateAccount);
 
-  res.send('Successfully updated account');
+ eventLog.saveEventLogUpdate(req, res, accountId, accountData, updateAccount);
+  res.send(`Account ${accountId} is now updated`)
 })
 
 // CREATE ACCOUNT (REQUIRES ADMIN)
@@ -195,7 +227,26 @@ router.post('/createAccount', authUser, authRole(ROLE.ADMIN), async (req, res) =
     dateTimeAdded: time,
     active: true
   });
-  res.send('Successfully added account');
+
+  await eventLog.saveEventLogCreate(req, res, id, {
+    active: true,
+    assignedUsers: assignedUsers,
+    balance: balance,
+    category: category,
+    comment: comment,
+    credit: credit,
+    dateTimeAdded: time,
+    debit: debit,
+    desc: desc,
+    id: id,
+    name: name,
+    normalSide: normalSide,
+    number: number,
+    order: order,
+    statement: statement,
+    subcategory: subcategory,
+  });
+  res.send(`${id} created successfully.`);
 })
 
 module.exports = router;

@@ -84,11 +84,11 @@ function JournalList() {
         setDate(data.map((d) => d.date))
         setDesc(data.map((d) => d.desc))
         setRowID(data.map((d) => d.transactions))
-      })
+      }, [])
       .catch();
 
     if (decoded.user.role === "manager" || decoded.user.role === "basic") setJournal(true);
-  })
+  }, [])
 
   return (
     <>
@@ -122,6 +122,7 @@ function JournalList() {
             <tbody>
               {entryID.map((id, index) => (
                 <GeneralJournalList
+                key={`${index}-${id}`}
                   date={entryDate[index]}
                   rowID={rowID[index]}
                   id={id}
@@ -164,7 +165,7 @@ function JournalListData(props) {
       <td className="user-table-body">{props.desc}</td>
       <td className="user-table-body text-center">{<Link to={`/journal/entry/${props.id}`}>{props.id}</Link>}</td>
       <td className="user-table-body">{props.date}</td>
-      <td className="user-table-body">{props.user}</td>
+      <td className="user-table-body text-center">{props.user}</td>
       <td className={"text-center user-table-body " + color}><strong>{props.status}</strong></td>
     </tr>
   )
@@ -187,9 +188,9 @@ function JournalListPending() {
       .then((res) => {
         setRowID(res.data)
         setLoading(false);
-      })
+      }, [])
 
-  })
+  }, [])
 
   return (
     <>
@@ -222,6 +223,7 @@ function JournalListPending() {
                 <>
                   {rowID.map((data) => (
                     <JournalListData
+                      key={data.id}
                       id={data.id}
                       desc={data.desc}
                       date={data.date}
