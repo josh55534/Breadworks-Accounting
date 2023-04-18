@@ -15,17 +15,17 @@ const dStyles = StyleSheet.create({
         fontSize: '26'
     },
     h2: {
-        fontSize: '20'
+        fontSize: '18'
     },
     p: {
-        fontSize: '16'
+        fontSize: '14'
     },
     table: {
         display: 'table',
         width: "auto",  
     },
     body: {
-        paddingHorizontal: 10
+        paddingHorizontal: 20
     }
 })
 

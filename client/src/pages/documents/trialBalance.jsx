@@ -1,19 +1,14 @@
 import { Page, Text, View, Document } from '@react-pdf/renderer';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet } from "@react-pdf/renderer";
 
+import axios from "axios";
+
 import { dStyles } from './document-styles/defaultStyles';
-import {tableRow, tableHead, tableName, tableVal} from "./document-styles/tbStyles.js";
+import { tableRow, tableHead, tableName, tableVal } from "./document-styles/tbStyles.js";
 
-
-function TR(props) {
-  (
-    <View style={tableRow}>
-      {props.children}
-    </View>
-  )
-};
+const token = localStorage.getItem("token");
 
 function TD(props) {
   return (
@@ -24,27 +19,58 @@ function TD(props) {
 };
 
 function TrialBalance() {
-  const [date, setDate] = useState("today");
+  const [date, setDate] = useState("2023-4-19");
+  const [rowID, setRowID] = useState([]);
+  const [isLoading, setLoading] = useState(true)
 
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  useEffect((req, res) => {
+    if (rowID.length === 0) {
+      axios
+        .get(`http://localhost:5000/documents/trialBalance/${date}`, config)
+        .then((res) => {
+          const { data } = res;
+          setRowID(data);
+          setLoading(false)
+          console.log(rowID)
+        });
+    }
+  });
 
   return (
-    <Document>
-      <Page size="A4" style={dStyles.page}>
-        <View style={dStyles.header}>
-          <Text style={dStyles.h1}>Trial Balance Sheet</Text>
-          <Text style={dStyles.h2}>Generated on {date}</Text>
-        </View>
-        <View style={dStyles.body}>
-          <View style={dStyles.table}>
-            <View style={tableHead}>
-              <TD styling={tableName}>Account Name</TD>
-              <TD styling={tableVal}>Debit</TD>
-              <TD styling={tableVal}>Credit</TD>
+  <>
+    {!isLoading && (
+      <Document>
+        <Page size="A4" style={dStyles.page}>
+          <View style={dStyles.header}>
+            <Text style={dStyles.h1}>Trial Balance Sheet</Text>
+            <Text style={dStyles.h2}>Generated on {date}</Text>
+          </View>
+          <View style={dStyles.body}>
+            <View style={dStyles.table}>
+              <View style={tableHead}>
+                <TD styling={tableName}>Account Name</TD>
+                <TD styling={tableVal}>Debit</TD>
+                <TD styling={tableVal}>Credit</TD>
+              </View>
+              {rowID.map((d, index) => (
+                <View style={(index === rowID.length - 1) ? tableHead : tableRow}>
+                  <TD styling={tableName}>{d.name}</TD>
+                  <TD styling={tableVal}>{d.credit}</TD>
+                  <TD styling={tableVal}>{d.debit}</TD>
+                </View>
+              ))}
             </View>
           </View>
-        </View>
-      </Page>
-    </Document>
+        </Page>
+      </Document>
+    )}
+  </>
   )
 }
 
