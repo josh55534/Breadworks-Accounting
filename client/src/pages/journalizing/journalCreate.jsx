@@ -58,34 +58,20 @@ function CreateJournal() {
   }, [])
 
   const handleSubmit = () => {
-    const transactions = rowID.map(row => {
-      const accountName = accountList[accountListID.indexOf(row.accountID)];
-      return {
-        accountID: row.accountID,
-        accountName: accountName,
-        creditAmount: row.creditAmount,
-        debitAmount: row.debitAmount,
-        debitAfter: "N/A",
-        creditAfter: "N/A"
-      };
-    });
+    rowID.map((d, index) => data.append(`transactions[${index}]`, JSON.stringify(rowID[index])))
+    data.append('desc', desc);
+    data.append('date', date);
+    data.append('userName', userName);
+    data.append('file', file);
     axios
-      .post("http://localhost:5000/journal/new-entry", 
-      {
-      transactions: transactions.map((transaction) => JSON.stringify(transaction)),
-      desc: desc,
-      date: date,
-      userName: userName,
-      file: file,
-      })
-      .then((res) => {
-        window.location.href = "/journal/entries";
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err.response.data.errors);
-      });
-    
+    .post("http://localhost:5000/journal/new-entry", data)
+    .then((res) => {
+      window.location.href = "/journal/entries"
+      console.log(res)
+    })
+    .catch((err) => {
+      console.log(err.response.data.errors)
+    })
   }
   
   
