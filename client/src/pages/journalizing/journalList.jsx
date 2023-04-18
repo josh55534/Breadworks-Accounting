@@ -165,7 +165,7 @@ function JournalListData(props) {
       <td className="user-table-body">{props.desc}</td>
       <td className="user-table-body text-center">{<Link to={`/journal/entry/${props.id}`}>{props.id}</Link>}</td>
       <td className="user-table-body">{props.date}</td>
-      <td className="user-table-body">{props.user}</td>
+      <td className="user-table-body text-center">{props.user}</td>
       <td className={"text-center user-table-body " + color}><strong>{props.status}</strong></td>
     </tr>
   )

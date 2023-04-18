@@ -121,7 +121,9 @@ function ChartOfAccounts() {
                     <th className="user-table-header text-center">Category</th>
                     <th className="user-table-header text-center">Statement</th>
                     <th className="user-table-header text-center">Status</th>
-                    <th className="user-table-header">Activate/Deactivate</th>
+                    {isAdmin && (
+                      <th className="user-table-header">Activate/Deactivate</th>
+                    )}
                   </tr>
                 </thead>
                 <tbody>
@@ -133,7 +135,7 @@ function ChartOfAccounts() {
                         window.location.href = `/account/${id}`;
                       }}
                     >
-                      <td className="user-table-body">{id}</td>
+                      <td className="user-table-body py-2">{id}</td>
                       <td className="user-table-body">{accountNames[index]}</td>
                       <td className="user-table-body">{accountDescs[index]}</td>
                       <td className="user-table-body text-center">
@@ -149,18 +151,17 @@ function ChartOfAccounts() {
                           <>deactivated</>
                         )}
                       </td>
-                      {accountStatus[index] === false && (
-                        <td>
-                          <button className="btn-primary btn-color-blue" onClick={() => activateAccount(id)}>
-                            Activate
-                          </button>
-                        </td>
-                      )}
-                      {accountStatus[index] === true && (
-                        <td>
-                          <button className="btn-primary btn-color-red" onClick={() => deactivateAccount(id)}>
-                            Deactivate
-                          </button>
+                      {isAdmin && (
+                        <td className="user-table-body w-1">
+                          {accountStatus[index] ? (
+                            <button className="btn-primary btn-color-red" onClick={() => deactivateAccount(id)}>
+                              Deactivate
+                            </button>
+                          ) : (
+                            <button className="btn-primary btn-color-blue" onClick={() => activateAccount(id)}>
+                              Activate
+                            </button>
+                          )}
                         </td>
                       )}
                     </tr>

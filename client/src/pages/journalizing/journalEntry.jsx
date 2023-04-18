@@ -71,7 +71,7 @@ function JournalEntry() {
 
     if (journalStatus === "pending") setToBeVerified(true);
     if (decoded.user.role === "manager") setManager(true);
-  }, [])
+  })
 
   const handleReject = () => {
     axios
