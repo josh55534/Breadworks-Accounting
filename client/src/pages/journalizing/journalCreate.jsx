@@ -64,6 +64,7 @@ function CreateJournal() {
     data.append('userName', userName);
     data.append('file', file);
     axios
+
     .post("http://localhost:5000/journal/new-entry", data)
     .then((res) => {
       window.location.href = "/journal/entries"
@@ -72,6 +73,7 @@ function CreateJournal() {
     .catch((err) => {
       console.log(err.response.data.errors)
     })
+
   }
   
   

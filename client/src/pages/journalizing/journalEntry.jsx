@@ -67,11 +67,13 @@ function JournalEntry() {
         setDesc(data.desc);
         setDate(data.date);
         setStatus(data.status);
-      })
-
-    if (journalStatus === "pending") setToBeVerified(true);
+        if (data.status === "pending") setToBeVerified(true); // Move this inside the then block
+      });
+  
     if (decoded.user.role === "manager") setManager(true);
-  })
+
+  }, []);
+
 
   const handleReject = () => {
     axios

@@ -16,24 +16,31 @@ function HeadNavbar() {
       .then((text) => setData(text));
   }, []);
 
-  return (
-    <div>
-      <div className="flex flex-row justify-center gap-10">
-        {token && (
-          <>
-            <Link to="/chartofaccounts">
-              <button className="btn-navbar">
-                Chart of Accounts
-              </button>
-            </Link>
-            <Link to="/journal">
-              <button className="btn-navbar">
-                Journal
-              </button>
-            </Link>
-          </>
-        )}
-        {decoded && decoded.user.role === "admin" && (
+
+	return (
+		<div>
+			<div className="flex flex-row justify-center gap-10">
+				{token && (
+					<>
+						<Link to="/chartofaccounts">
+							<button className="btn-navbar">
+								Chart of Accounts
+							</button>
+						</Link>
+						<Link to="/journal">
+							<button className="btn-navbar">
+								Journal
+							</button>
+						</Link>
+            <Link to="/eventlog">
+							<button className="btn-navbar">
+								Event Log
+							</button>
+						</Link>
+					</>
+				)}
+				{decoded && decoded.user.role === "admin" && (
+
 
           <Link to='/admindashboard'>
             <button className="btn-navbar"
