@@ -17,7 +17,7 @@ import { JournalHome } from "./pages/journalizing/journalHome";
 
 import { DocumentHome } from "./pages/documents/documentHome";
 
-import { EventLog } from "./pages/eventLog";
+import { EventLog } from "./pages/eventDashboard";
 
 const token = localStorage.getItem("token");
 
