@@ -77,7 +77,7 @@ function CreateJournal() {
       date: date,
       userName: userName,
       file: file,
-      })
+      }, config)
       .then((res) => {
         window.location.href = "/journal/entries";
         console.log(res);

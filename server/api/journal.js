@@ -33,7 +33,7 @@ const accountsRef = db.collection('accounts');
 const documentBucket = getStorage().bucket();
 
 // CREATE JOURNAL ENTRIES
-router.post('/new-entry', async (req, res) => {
+router.post('/new-entry', authUser, async (req, res) => {
   var {
     transactions,
     desc,
@@ -73,17 +73,24 @@ router.post('/new-entry', async (req, res) => {
   const counter = await journalRef.count().get();
   const journalID = (counter.data().count + 1);
 
-  await journalRef.doc(""+journalID).set({
-    id: journalID,
-    transactions,
-    desc,
-    date,
-    userName,
-    status: "pending"
-  });
+  try {
+    await journalRef.doc(""+journalID).set({
+      id: journalID,
+      transactions,
+      desc,
+      date,
+      userName,
+      status: "pending"
+    });
 
-  res.send('Successfully added journal')
-})
+    await eventLog.saveEventLogCreateJournal(req, journalID.toString());
+   res.json('Successfully added journal');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal server error');
+  }
+});
+
 
 
 // GET ALL JOURNAL ENTRIES
@@ -204,7 +211,7 @@ router.put('/entry/approve/:entryID', authUser, authRole(ROLE.MANAGER), async (r
   }
 
   entry.status = "approved"
-
+  eventLog.saveEventLogJournal(req, res, entryID, 'approved');
   batch.update(entryRef, entry);
 
   batch.commit().then(() => {
@@ -228,6 +235,7 @@ router.put('/entry/reject/:entryID', authUser, authRole(ROLE.MANAGER), async (re
   entry.status = "rejected";
 
   await entryRef.set(entry);
+  eventLog.saveEventLogJournal(req, res, entryID, 'rejected');
   res.send("Updated succesfully")
 })
 

@@ -31,6 +31,11 @@ function HeadNavbar() {
 								Journal
 							</button>
 						</Link>
+            <Link to="/eventlog">
+							<button className="btn-navbar">
+								Event Log
+							</button>
+						</Link>
 					</>
 				)}
 				{decoded && decoded.user.role === "admin" && (

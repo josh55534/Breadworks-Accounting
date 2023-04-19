@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const admin = require('firebase-admin');
 const db = admin.firestore();
@@ -85,7 +85,9 @@ async function saveEventLogCreate(req, res, accountId, accountData) {
 }
 
 async function saveEventLogUpdate(req, res, accountId, oldAccount, newAccount) {
+  console.log("token:", req.header("Authorization"));
   const decoded = jwt_decode(req.header("Authorization"));
+  
 
   const logCountRef = db.collection('event logs').doc('accounts').collection(accountId).doc('logCount');
   const logCountSnapshot = await logCountRef.get();
@@ -109,7 +111,54 @@ async function saveEventLogUpdate(req, res, accountId, oldAccount, newAccount) {
   await logCountRef.set({ count: logCount });
 }
 
+async function saveEventLogCreateJournal(req, entryId) {
+
+  const decoded = jwt_decode(req.header("Authorization"));
+
+    const logCountRef = db.collection('event logs').doc('journals').collection(entryId).doc('logCount');
+    const logCountSnapshot = await logCountRef.get();
+    let logCount = 1;
+    if (logCountSnapshot.exists) {
+      logCount = logCountSnapshot.data().count + 1;
+    }
+
+    const eventLogRef = db.collection('event logs').doc('journals').collection(entryId).doc(logCount.toString());
+
+    const eventLogData = {
+      journalId: entryId,
+      changeType: 'journal created',
+      userId: decoded.user.id,
+      timestamp: admin.firestore.FieldValue.serverTimestamp(),
+    };
+
+    await eventLogRef.set(eventLogData);
+    await logCountRef.set({ count: logCount });
+
+}
 
 
+async function saveEventLogJournal(req, res, entryId, changeType) {
+  const decoded = jwt_decode(req.header("Authorization"));
 
-module.exports = { saveEventLog, saveEventLogCreate, saveEventLogUpdate };
+  const logCountRef = db.collection('event logs').doc('journals').collection(entryId).doc('logCount');
+  const logCountSnapshot = await logCountRef.get();
+  let logCount = 1;
+  if (logCountSnapshot.exists) {
+    logCount = logCountSnapshot.data().count + 1;
+  }
+
+  const eventLogRef = db.collection('event logs').doc('journals').collection(entryId).doc(logCount.toString());
+
+  const eventLogData = {
+    journalId: entryId,
+    changeType: changeType,
+    userId: decoded.user.id,
+    timestamp: admin.firestore.FieldValue.serverTimestamp(),
+  };
+
+  await eventLogRef.set(eventLogData);
+  await logCountRef.set({ count: logCount });
+}
+
+
+module.exports = { saveEventLog, saveEventLogCreate, saveEventLogUpdate, saveEventLogCreateJournal, saveEventLogJournal };
