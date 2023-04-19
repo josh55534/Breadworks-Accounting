@@ -72,6 +72,7 @@ router.get('/trialBalance/:date', authUser, authRole(ROLE.MANAGER), async (req, 
 
   accountsData.push(totalBalance);
 
+  console.log(accountsData);
   res.json(accountsData);
 })
 

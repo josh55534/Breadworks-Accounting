@@ -3,11 +3,13 @@ import React from "react";
 import { TrialBalance } from "./trialBalance";
 
 function DocumentHome() {
+
+    const document = (<TrialBalance />);
     return (
         <div className="window-primary">
-            <PDFDownloadLink document={<TrialBalance/>} fileName="trialBalance.pdf" className="btn-primary">Download</PDFDownloadLink>
+            <PDFDownloadLink document={document} fileName="trialBalance.pdf" className="btn-primary">Download</PDFDownloadLink>
             <PDFViewer className="pdf-window" height={700}>
-                <TrialBalance />
+                {document}
             </PDFViewer>
         </div>
     )
