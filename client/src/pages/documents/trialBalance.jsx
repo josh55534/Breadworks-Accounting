@@ -19,7 +19,7 @@ function TD(props) {
 };
 
 function TrialBalance() {
-  const [date, setDate] = useState("2023-4-19");
+  const [date, setDate] = useState("2023-4-17");
   const [rowID, setRowID] = useState([]);
   const [isLoading, setLoading] = useState(true)
 
@@ -49,7 +49,7 @@ function TrialBalance() {
             <Page size="A4" style={dStyles.page}>
               <View style={dStyles.header}>
                 <Text style={dStyles.h1}>Trial Balance Sheet</Text>
-                <Text style={dStyles.h2}>Generated on {date}</Text>
+                <Text style={dStyles.h2}>As on {date}</Text>
               </View>
               <View style={dStyles.body}>
                 <View style={dStyles.table}>

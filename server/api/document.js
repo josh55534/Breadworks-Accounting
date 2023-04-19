@@ -8,10 +8,11 @@ const db = admin.firestore();
 
 const accountLog = db.collection("event logs").doc("accounts");
 
+const DAY_OFFSET = 86400000;
+
 router.get('/trialBalance/:date', authUser, authRole(ROLE.MANAGER), async (req, res) => {
-  const docDate = Date.parse(req.params.date);
+  const docDate = Date.parse(req.params.date) + 86400000;
   const test = accountLog.collection("1-001").doc("1");
-  const date = await test.get();
 
   const collectionList = [];
   await accountLog.listCollections()
@@ -44,7 +45,7 @@ router.get('/trialBalance/:date', authUser, authRole(ROLE.MANAGER), async (req, 
 
     for (var x = 1; x <= logCount; x++) {
       const event = (await collectionRef.doc(""+x).get()).data();
-      if((event.timestamp._seconds*1000) <= docDate) {
+      if((event.timestamp._seconds*1000) < docDate) {
         if(event.changeType === "accountCreated" || event.changeType === "activate") {
           accountData.name = event.name;
           accountData.credit = event.credit;
