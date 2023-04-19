@@ -108,7 +108,7 @@ router.post('/new-entry', upload.single('file'), async (req, res) => {
     res.status(500).send('Internal server error');
   }
 
-
+})
 
 
 // GET ALL JOURNAL ENTRIES
