@@ -28,7 +28,6 @@ router.post("/", async (req, res) => {
   let usernameDb = await usersRef.doc(username).get();
   let user = await usernameDb.data();
 
-  console.log();
   if (typeof user === 'undefined') {
     return res.status(400).json({ errors: "Invalid Username" });
   }

@@ -276,8 +276,6 @@ function EmailForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log(email);
-
     axios
       .post(
         "http://localhost:5000/adminDashboard/email",

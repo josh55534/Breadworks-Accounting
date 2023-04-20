@@ -89,7 +89,6 @@ router.post('/new-entry', upload.single('file'), authUser, authAccountant(ROLE.M
     })
       .then(async (res) => {
         const files = fs.readdirSync('uploads/')
-        console.log(files.length === 0);
         if (files.length !== 0) {
           await documentBucket.upload(`uploads/${files[0]}`, {
             destination: `journalDocuments/${journalID}/${files[0]}`, public: true, metadata: {
@@ -175,17 +174,13 @@ router.put('/entry/approve/:entryID', authUser, authRole(ROLE.MANAGER), async (r
 
   for (var x = 0; x < transactions.length; x++) {
     try {
-      console.log(transactions[x]);
       accountRef = accountsRef.doc(transactions[x].accountID);
       accountDb = await accountRef.get();
       accountData = accountDb.data();
       var oldBalance = accountData.balance
-      console.log(accountData);
 
       transactions[x].creditAfter = accountData.credit + transactions[x].creditAmount;
       transactions[x].debitAfter = accountData.debit + transactions[x].debitAmount;
-
-      console.log(accountData);
 
       if (accountData.normalSide === "L" || accountData.normalSide === "l") {
         accountData.balance += transactions[x].debitAmount;
@@ -224,7 +219,7 @@ router.put('/entry/approve/:entryID', authUser, authRole(ROLE.MANAGER), async (r
       };
 
       batch.update(accountRef, newAccount);
-      await eventLog.saveEventLogUpdate(req, res, transactions[x].accountID, updateAccount, newAccount);
+      await eventLog.saveEventLogUpdate(req, res, transactions[x].accountID, updateAccount, newAccount, entry.date);
 
     }
     catch (e) {

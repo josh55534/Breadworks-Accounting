@@ -45,7 +45,8 @@ router.get('/trialBalance/:date', authUser, authRole(ROLE.MANAGER), async (req, 
 
     for (var x = 1; x <= logCount; x++) {
       const event = (await collectionRef.doc("" + x).get()).data();
-      if ((event.timestamp._seconds * 1000) < docDate) {
+      const date = (!!event.date) ? Date.parse(event.date) : event.timestamp._seconds;
+      if ((date * 1000) < docDate) {
         if (event.changeType === "accountCreated" || event.changeType === "activate") {
           accountData.name = id + " " + event.name;
           accountData.credit = event.credit;
@@ -170,8 +171,6 @@ router.get('/balanceSheet/:date', authUser, authRole(ROLE.MANAGER), async (req, 
   accountsData.push(liabilityAccounts);
   accountsData.push(equityAccounts);
   accountsData.push(totalEL)
-
-  console.log(accountsData)
 
   res.json(accountsData);
 })

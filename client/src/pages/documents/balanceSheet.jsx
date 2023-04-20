@@ -36,7 +36,6 @@ function BalanceSheet() {
           const { data } = res;
           setRowID(data);
           setLoading(false)
-          console.log(rowID)
         });
     }
   });

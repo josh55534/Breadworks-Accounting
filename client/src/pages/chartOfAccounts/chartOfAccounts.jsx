@@ -262,7 +262,6 @@ function AdminAddAccount() {
     }
 
     setSelected(temp);
-    console.log(selectedUsers);
   };
 
   return (

@@ -84,8 +84,7 @@ async function saveEventLogCreate(req, res, accountId, accountData) {
   await logCountRef.set({ count: logCount });
 }
 
-async function saveEventLogUpdate(req, res, accountId, oldAccount, newAccount) {
-  console.log("token:", req.header("Authorization"));
+async function saveEventLogUpdate(req, res, accountId, oldAccount, newAccount, journalDate) {
   const decoded = jwt_decode(req.header("Authorization"));
   
 
@@ -98,6 +97,8 @@ async function saveEventLogUpdate(req, res, accountId, oldAccount, newAccount) {
 
   const eventLogRef = db.collection('event logs').doc('accounts').collection(accountId).doc(logCount.toString());
 
+  var dateJournal = (!!journalDate) ? journalDate : "";
+
   const eventLogData = {
     accountId: accountId,
     changeType: 'account updated',
@@ -105,6 +106,7 @@ async function saveEventLogUpdate(req, res, accountId, oldAccount, newAccount) {
     oldAccount: oldAccount,
     newAccount: newAccount,
     timestamp: admin.firestore.FieldValue.serverTimestamp(),
+    journalDate: dateJournal
   };
 
   await eventLogRef.set(eventLogData);
