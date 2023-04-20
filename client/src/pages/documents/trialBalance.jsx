@@ -1,7 +1,6 @@
 import { Page, Text, View, Document } from '@react-pdf/renderer';
 
 import { useEffect, useState } from 'react';
-import { StyleSheet } from "@react-pdf/renderer";
 
 import axios from "axios";
 
@@ -19,7 +18,7 @@ function TD(props) {
 };
 
 function TrialBalance() {
-  const [date, setDate] = useState("2023-4-17");
+  const [date, setDate] = useState("2023-4-21");
   const [rowID, setRowID] = useState([]);
   const [isLoading, setLoading] = useState(true)
 

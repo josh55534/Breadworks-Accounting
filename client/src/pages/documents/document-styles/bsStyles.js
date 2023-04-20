@@ -12,11 +12,25 @@ export const tableHead = {
 }
 
 export const tableName = {
-	width: '60%',
+	width: '70%',
 	textAlign: 'left'
 }
 
 export const tableVal = {
-	width: '20%',
+	width: '30%',
 	textAlign: 'center'
+}
+
+export const rowAlign = {
+	margin: 'auto',
+	flexDirection: "row",
+}
+
+export const tableAlign = {
+	width: '50%',
+	padding: 5
+}
+
+export const body = {
+	paddingHorizontal: 15
 }

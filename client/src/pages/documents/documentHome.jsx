@@ -1,8 +1,9 @@
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import React from "react";
 import { TrialBalance } from "./trialBalance";
+import { BalanceSheet } from "./balanceSheet";
 
-function DocumentHome() {
+function DocumentWindow() {
 
     const document = (<TrialBalance />);
     return (
@@ -15,4 +16,4 @@ function DocumentHome() {
     )
 }
 
-export { DocumentHome }
+export { DocumentWindow }

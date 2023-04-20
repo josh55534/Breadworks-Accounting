@@ -15,7 +15,7 @@ import { CreateJournal } from "./pages/journalizing/journalCreate";
 import { AccountLedger } from "./pages/chartOfAccounts/accountLedger";
 import { JournalHome } from "./pages/journalizing/journalHome";
 
-import { DocumentHome } from "./pages/documents/documentHome";
+import { DocumentWindow } from "./pages/documents/documentHome";
 
 import { EventLog } from "./pages/eventDashboard";
 
@@ -60,10 +60,9 @@ function App() {
         <Route path="/journal/entries/pending" element={<JournalListPending />} />
 
 
-        <Route path="/documents/" element={<DocumentHome />}/>
+        <Route path="/documents/" element={<DocumentWindow />}/>
 
         <Route path="/eventlog" element={<EventLog />} />
-
       </Routes>
     </>
   );

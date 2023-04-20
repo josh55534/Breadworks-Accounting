@@ -15,7 +15,7 @@ const accountSchema = Joi.object({
   credit: Joi.number().precision(2),
   debit: Joi.number().precision(2),
   assignedUsers: Joi.array().items(Joi.string().min(3).alphanum()),
-  comment: Joi.string().min(3).max(300),
+  comment: Joi.string().min(3).max(300).allow(null, ''),
   statement: Joi.string().length(2).required()
 })
 
@@ -31,7 +31,7 @@ const updateAccountSchema = Joi.object({
   credit: Joi.number().precision(2),
   debit: Joi.number().precision(2),
   assignedUsers: Joi.array().items(Joi.string().min(3).alphanum()),
-  comment: Joi.string().min(3).max(300),
+  comment: Joi.string().min(3).max(300).allow(null, ''),
   statement: Joi.string().length(2).required()
 })
 

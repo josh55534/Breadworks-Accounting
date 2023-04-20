@@ -11,18 +11,22 @@ function GeneralJournalList(props) {
   else if (props.status === "pending") statusColor = "text-yellow-500"
   else if (props.status === "rejected") statusColor = "text-red-500"
 
+  var prDisplayed = false;
+
   return (
     <>
       {props.rowID.map((d, index) => (
         <>
           {d.creditAmount === 0 && (
             <tr key={d.id}>
-              <td className={index == 0 ? "user-table-body border-gray-500" : "user-table-body"}>{index == 0 && props.date}</td>
-              <td className={index == 0 ? "user-table-body border-gray-500" : "user-table-body"}>{d.accountName}</td>
-              <td className={index == 0 ? "user-table-body border-gray-500 text-center" : "user-table-body text-center"}>{index == 0 && <Link to={`/journal/entry/${props.id}`}>{props.id}</Link>}</td>
-              <td className={index == 0 ? "user-table-body border-gray-500 text-center" : "user-table-body text-center"}>{d.debitAmount.toLocaleString('en', {useGrouping:true, minimumFractionDigits: 2})}</td>
-              <td className={index == 0 ? "user-table-body border-gray-500" : "user-table-body"}></td>
-              <td className={index == 0 ? "user-table-body border-gray-500 text-center "+statusColor: "user-table-body text-center"}>{index == 0 &&<strong>{props.status}</strong>}</td>
+              {console.log(props.rowID)}
+              <td className={!prDisplayed ? "user-table-body border-gray-500" : "user-table-body"}>{!prDisplayed && props.date}</td>
+              <td className={!prDisplayed ? "user-table-body border-gray-500" : "user-table-body"}>{d.accountName}</td>
+              <td className={!prDisplayed ? "user-table-body border-gray-500 text-center" : "user-table-body text-center"}>{!prDisplayed && (<Link to={`/journal/entry/${props.id}`}>{props.id}</Link>)}</td>
+              <td className={!prDisplayed ? "user-table-body border-gray-500 text-center" : "user-table-body text-center"}>{d.debitAmount.toLocaleString('en', {useGrouping:true, minimumFractionDigits: 2})}</td>
+              <td className={!prDisplayed ? "user-table-body border-gray-500" : "user-table-body"}></td>
+              <td className={!prDisplayed ? "user-table-body border-gray-500 text-center "+statusColor: "user-table-body text-center"}>{!prDisplayed &&<strong>{props.status}</strong>}</td>
+              {prDisplayed = true}
             </tr>
           )}
         </>
@@ -122,7 +126,7 @@ function JournalList() {
             <tbody>
               {entryID.map((id, index) => (
                 <GeneralJournalList
-                key={`${index}-${id}`}
+                  key={`${index}-${id}`}
                   date={entryDate[index]}
                   rowID={rowID[index]}
                   id={id}

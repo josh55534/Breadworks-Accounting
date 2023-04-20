@@ -65,7 +65,7 @@ function CreateJournal() {
     data.append('file', file);
     axios
 
-    .post("http://localhost:5000/journal/new-entry", data)
+    .post("http://localhost:5000/journal/new-entry", data, config)
     .then((res) => {
       window.location.href = "/journal/entries"
       console.log(res)

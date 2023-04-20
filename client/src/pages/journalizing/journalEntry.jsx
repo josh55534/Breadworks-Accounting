@@ -5,16 +5,19 @@ import jwt_decode from "jwt-decode";
 const token = localStorage.getItem("token");
 
 function GeneralJournalList(props) {
+  var dateDisplayed = false;
+
   return (
     <>
       {props.rowID.map((d, index) => (
         <>
           {d.creditAmount === 0 && (
             <tr key={index}>
-              <td className="user-table-body">{index == 0 && props.date}</td>
+              <td className="user-table-body">{!dateDisplayed && props.date}</td>
               <td className="user-table-body">{d.accountName}</td>
               <td className="user-table-body text-center">{d.debitAmount.toLocaleString('en', {useGrouping:true, minimumFractionDigits: 2})}</td>
               <td className="user-table-body"></td>
+              {dateDisplayed = true}
             </tr>
           )}
         </>
@@ -23,7 +26,7 @@ function GeneralJournalList(props) {
         <>
           {d.debitAmount === 0 && (
             <tr>
-              <td className="user-table-body">{index == 0 && props.date}</td>
+              <td className="user-table-body"></td>
               <td className="user-table-body pl-10">{d.accountName}</td>
               <td className="user-table-body text-center"></td>
               <td className="user-table-body text-center">{d.creditAmount.toLocaleString('en', {useGrouping:true, minimumFractionDigits: 2})}</td>
