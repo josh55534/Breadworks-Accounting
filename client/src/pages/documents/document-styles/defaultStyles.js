@@ -8,8 +8,8 @@ const dStyles = StyleSheet.create({
     },
     header: {
         textAlign: 'center',
-        marginTop: '40',
-        marginBottom: '40',
+        marginTop: '35',
+        marginBottom: '30',
     },
     h1: {
         fontSize: '26'

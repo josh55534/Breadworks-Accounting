@@ -177,18 +177,18 @@ router.put('/entry/approve/:entryID', authUser, authRole(ROLE.MANAGER), async (r
       accountRef = accountsRef.doc(transactions[x].accountID);
       accountDb = await accountRef.get();
       accountData = accountDb.data();
-      var oldBalance = accountData.balance
+      var newBalance = accountData.balance
 
       transactions[x].creditAfter = accountData.credit + transactions[x].creditAmount;
       transactions[x].debitAfter = accountData.debit + transactions[x].debitAmount;
 
       if (accountData.normalSide === "L" || accountData.normalSide === "l") {
-        accountData.balance += transactions[x].debitAmount;
-        accountData.balance -= transactions[x].creditAmount;
+        newBalance += transactions[x].debitAmount;
+        newBalance -= transactions[x].creditAmount;
       }
       else if (accountData.normalSide === "R" || accountData.normalSide === "r") {
-        accountData.balance += transactions[x].creditAmount;
-        accountData.balance -= transactions[x].debitAmount;
+        newBalance += transactions[x].creditAmount;
+        newBalance -= transactions[x].debitAmount;
       }
       const updateAccount = {
         name: accountData.name,
@@ -196,7 +196,7 @@ router.put('/entry/approve/:entryID', authUser, authRole(ROLE.MANAGER), async (r
         normalSide: accountData.normalSide,
         category: accountData.category,
         subcategory: accountData.subcategory,
-        balance: oldBalance,
+        balance: accountData.balance,
         credit: accountData.credit,
         debit: accountData.debit,
         assignedUsers: accountData.assignedUsers,
@@ -210,7 +210,7 @@ router.put('/entry/approve/:entryID', authUser, authRole(ROLE.MANAGER), async (r
         normalSide: accountData.normalSide,
         category: accountData.category,
         subcategory: accountData.subcategory,
-        balance: accountData.balance,
+        balance: newBalance,
         credit: transactions[x].creditAfter,
         debit: transactions[x].debitAfter,
         assignedUsers: accountData.assignedUsers,

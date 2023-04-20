@@ -5,7 +5,7 @@ import { BalanceSheet } from "./balanceSheet";
 
 function DocumentWindow() {
 
-    const document = (<TrialBalance />);
+    const document = (<BalanceSheet />);
     return (
         <div className="window-primary">
             <PDFDownloadLink document={document} fileName="trialBalance.pdf" className="btn-primary">Download</PDFDownloadLink>

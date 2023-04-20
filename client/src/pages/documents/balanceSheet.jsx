@@ -98,6 +98,13 @@ function BalanceSheet() {
                         </View>
                       ))}
                     </View>
+
+                    <View style={dStyles.table}>
+                      <View style={tableHead}>
+                        <TD styling={tableName}>{rowID[3].name}</TD>
+                        <TD styling={tableVal}>{rowID[3].balance}</TD>
+                      </View>
+                    </View>
                   </View>
                 </View>
               </View>
