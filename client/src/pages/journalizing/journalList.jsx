@@ -19,7 +19,6 @@ function GeneralJournalList(props) {
         <>
           {d.creditAmount === 0 && (
             <tr key={d.id}>
-              {console.log(props.rowID)}
               <td className={!prDisplayed ? "user-table-body border-gray-500" : "user-table-body"}>{!prDisplayed && props.date}</td>
               <td className={!prDisplayed ? "user-table-body border-gray-500" : "user-table-body"}>{d.accountName}</td>
               <td className={!prDisplayed ? "user-table-body border-gray-500 text-center" : "user-table-body text-center"}>{!prDisplayed && (<Link to={`/journal/entry/${props.id}`}>{props.id}</Link>)}</td>

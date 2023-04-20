@@ -211,8 +211,8 @@ router.put('/entry/approve/:entryID', authUser, authRole(ROLE.MANAGER), async (r
         category: accountData.category,
         subcategory: accountData.subcategory,
         balance: accountData.balance,
-        credit: accountData.credit + transactions[x].creditAmount,
-        debit: accountData.debit + transactions[x].debitAmount,
+        credit: transactions[x].creditAfter,
+        debit: transactions[x].debitAfter,
         assignedUsers: accountData.assignedUsers,
         comment: accountData.comment,
         statement: accountData.statement

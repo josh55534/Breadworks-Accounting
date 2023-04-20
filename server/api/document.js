@@ -45,16 +45,16 @@ router.get('/trialBalance/:date', authUser, authRole(ROLE.MANAGER), async (req, 
 
     for (var x = 1; x <= logCount; x++) {
       const event = (await collectionRef.doc("" + x).get()).data();
-      const date = (!!event.date) ? Date.parse(event.date) : event.timestamp._seconds;
-      if ((date * 1000) < docDate) {
+      const date = (!!event.journalDate) ? Date.parse(event.journalDate) : (event.timestamp._seconds * 1000);
+      if (date < docDate) {
         if (event.changeType === "accountCreated" || event.changeType === "activate") {
-          accountData.name = id + " " + event.name;
+          accountData.name = event.name;
           accountData.credit = event.credit;
           accountData.debit = event.debit;
           isDate = true;
         }
         else if (event.changeType === "account updated") {
-          accountData.name = id + " " + event.newAccount.name;
+          accountData.name = event.newAccount.name;
           accountData.credit = event.newAccount.credit;
           accountData.debit = event.newAccount.debit;
           isDate = true;
@@ -79,7 +79,6 @@ router.get('/trialBalance/:date', authUser, authRole(ROLE.MANAGER), async (req, 
 
 router.get('/balanceSheet/:date', authUser, authRole(ROLE.MANAGER), async (req, res) => {
   const docDate = Date.parse(req.params.date) + 86400000;
-  const test = accountLog.collection("1-001").doc("1");
 
   const collectionList = [];
   await accountLog.listCollections()
@@ -126,7 +125,9 @@ router.get('/balanceSheet/:date', authUser, authRole(ROLE.MANAGER), async (req, 
 
     for (var x = 1; x <= logCount; x++) {
       const event = (await collectionRef.doc("" + x).get()).data();
-      if ((event.timestamp._seconds * 1000) < docDate) {
+      const date = (!!event.journalDate) ? Date.parse(event.journalDate) : (event.timestamp._seconds * 1000);
+
+      if (date < docDate) {
         if (event.changeType === "accountCreated" || event.changeType === "activate") {
           accountData.name = id + " " + event.name;
           accountData.balance = event.balance;
