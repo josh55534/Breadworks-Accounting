@@ -20,7 +20,11 @@ function DocumentHome() {
 
   const handleGenerate = () => {
     if (documentName ===  "none" || date === "") {
-      //show errors
+      if(documentName === "none") document.getElementById("class-select").className += " txt-primary-error"
+      else  document.getElementById("class-select").className = "txt-primary"
+
+      if(date === "") document.getElementById("date-select").className += " txt-primary-error"
+      else document.getElementById("date-select").className = "txt-primary"
     }
     else {
       console.log(documentName)
@@ -35,6 +39,7 @@ function DocumentHome() {
         <div>
           <label>Document Type</label>
           <select 
+            id="class-select"
             className="txt-primary"
             value={documentName}
             onChange={(props) => setDocumentName(props.target.value)}>
@@ -46,6 +51,7 @@ function DocumentHome() {
         <div className="py-2">
           <label>Date</label>
           <input 
+            id="date-select"
             type="date"
             className="txt-primary"
             value={date}
