@@ -106,6 +106,10 @@ router.get('/balanceSheet/:date', authUser, authRole(ROLE.MANAGER), async (req, 
     name: "Total Liabilities",
     balance: 0,
   };
+  var retainedEarnings = {
+    name: "Net Income",
+    balance: 0
+  }
   var totalEL = {
     name: "Total Liabilities + Equity",
     balance: 0,
@@ -161,11 +165,25 @@ router.get('/balanceSheet/:date', authUser, authRole(ROLE.MANAGER), async (req, 
         totalLiability.balance += accountData.balance;
         totalEL.balance += accountData.balance;
       }
+
+      if (accountData.category == "revenue") {
+        retainedEarnings.balance += accountData.balance;
+        totalEquity.balance += accountData.balance;
+        totalEL.balance += accountData.balance;
+      }
+      else if (accountData.category == "expenses") {
+        retainedEarnings.balance -= accountData.balance;
+        totalEquity.balance -= accountData.balance;
+        totalEL.balance -= accountData.balance;
+      }
     };
   }
 
   assetAccounts.push(totalAssets);
+  
   liabilityAccounts.push(totalLiability);
+
+  equityAccounts.push(retainedEarnings);
   equityAccounts.push(totalEquity);
 
   accountsData.push(assetAccounts);
