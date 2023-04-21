@@ -88,7 +88,7 @@ function JournalAccounts() {
                           key={index}
                           onClick={() => { window.location.href = `/journal/account/${id}` }}
                         >
-                          <td className="user-table-body">{id}</td>
+                          <td className="user-table-body py-2">{id}</td>
                           <td className="user-table-body">{accountNames[index]}</td>
                           <td className="user-table-body">{accountDescs[index]}</td>
                           <td className="user-table-body text-center">{accountCategories[index]}</td>

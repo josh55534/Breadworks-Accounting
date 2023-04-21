@@ -9,7 +9,7 @@ const token = localStorage.getItem("token");
 
 function CreateJournal() {
   const defaultRow = {
-    accountID:"none",
+    accountID: "none",
     accountName: "",
     creditAmount: 0.0,
     debitAmount: 0.0,
@@ -20,12 +20,20 @@ function CreateJournal() {
   const [accountList, setAccountList] = useState([])
   const [accountListID, setAccountListId] = useState([])
 
-  const data = new FormData();
   const [rowID, setRowID] = useState([defaultRow])
   const [desc, setDesc] = useState("");
   const [date, setDate] = useState("");
   const [file, setFile] = useState("");
   const [userName, setUsername] = useState(" ")
+
+  const [error, setError] = useState([]);
+  const [errorMsg, setErrMsg] = useState("");
+
+  const data = new FormData();
+  data.append('desc', desc);
+  data.append('date', date);
+  data.append('userName', userName);
+  data.append('file', file);
 
 
 
@@ -42,6 +50,7 @@ function CreateJournal() {
   if (decoded.user.role !== "manager" && decoded.user.role !== "basic") {
     window.location.href = "http://localhost:3000/journal"
   }
+
   useEffect(() => {
     setUsername(decoded.user.id);
     axios
@@ -53,31 +62,33 @@ function CreateJournal() {
         setAccountListId(filtered.map((d) => d.id));
       })
       .catch((err) => {
-        console.error(err);
+        console.log(err);
       });
 
-  }, [])
+  })
 
   const handleSubmit = () => {
-    rowID.map((d, index) => data.append(`transactions[${index}]`, JSON.stringify(rowID[index])))
-    data.append('desc', desc);
-    data.append('date', date);
-    data.append('userName', userName);
-    data.append('file', file);
+    data.set('desc', desc);
+    data.set('date', date);
+    data.set('userName', userName);
+    data.set('file', file);
+
+    rowID.map((d, index) => data.set(`transactions[${index}]`, JSON.stringify(rowID[index])))
     axios
 
-    .post(`${backendPath}/journal/new-entry`, data, config)
-    .then((res) => {
-      window.location.href = "/journal/entries"
-      console.log(res)
-    })
-    .catch((err) => {
-      console.log(err.response.data.errors)
-    })
-
+      .post(`${backendPath}/journal/new-entry`, data, config)
+      .then((res) => {
+        window.location.href = "/journal/entries"
+        console.log(res)
+      })
+      .catch((err) => {
+        const errorData = err.response.data.errors;
+        if (errorData === "Credit must equal debit" || errorData === "Must have at least 2 accounts") setErrMsg(errorData);
+        else setError(errorData);
+      })
   }
-  
-  
+
+
 
   const changeAccount = (props) => {
     var account = [...rowID]
@@ -144,7 +155,7 @@ function CreateJournal() {
                 <tr key={index}>
                   <td className="user-table-body">
                     <select
-                      className="txt-primary ml-0"
+                      className={error.includes(`transactions[${index}].accountName`) ? "txt-primary txt-primary-error ml-0" : "txt-primary ml-0"}
                       type="text"
                       id={index}
                       value={rowID[index].accountID}
@@ -190,7 +201,7 @@ function CreateJournal() {
             Date
           </label>
           <input
-            className="txt-primary"
+            className={error.includes("date") ? "txt-primary txt-primary-error" : "txt-primary"}
             id="subject"
             type="date"
             value={date}
@@ -221,6 +232,11 @@ function CreateJournal() {
           />
         </div>
       </div>
+      {errorMsg != "" && (
+        <div className="text-red-500">
+          <label>{errorMsg}</label>
+        </div>
+      )}
       <div className="flex justify-between">
         <Link to="/journal/entries" className="btn-primary btn-color-red">
           Go Back

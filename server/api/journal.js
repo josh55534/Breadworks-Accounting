@@ -54,7 +54,7 @@ router.post('/new-entry', upload.single('file'), authUser, authAccountant(ROLE.M
   if (error) {
     const errorFull = [];
     for (x = 0; x < error.details.length; x++) {
-      errorFull.push(error.details[x].message);
+      errorFull.push(error.details[x].context.label);
     }
     return res.status(400).json({ errors: errorFull });
   }
@@ -72,6 +72,9 @@ router.post('/new-entry', upload.single('file'), authUser, authAccountant(ROLE.M
 
   if (totalCredit !== totalDebit) {
     return res.status(400).json({ errors: "Credit must equal debit" })
+  }
+  if (transactions.length < 2) {
+    return res.status(400).json({ errors: "Must have at least 2 accounts"})
   }
 
   const counter = await journalRef.count().get();

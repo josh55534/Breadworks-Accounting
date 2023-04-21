@@ -27,6 +27,18 @@ function LoggedIn() {
 						transactions in account ledgers.
 					</p>
 				</div>
+				<div className="mt-2">
+					<label>Event Log</label>
+					<p className="ml-4">
+						View and create event logs
+					</p>
+				</div>
+				<div className="mt-2">
+					<label>Documents</label>
+					<p className="ml-4">
+						Generate documents
+					</p>
+				</div>
 			</div>
 		</div>
 	)
