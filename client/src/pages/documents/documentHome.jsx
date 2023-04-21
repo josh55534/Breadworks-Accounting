@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { TrialBalance } from "./trialBalance";
 import { BalanceSheet } from "./balanceSheet";
+import { ProfitAndLoss } from "./profitAndLoss";
 
 const token = localStorage.getItem("token");
 
@@ -27,7 +28,6 @@ function DocumentHome() {
       else document.getElementById("date-select").className = "txt-primary"
     }
     else {
-      console.log(documentName)
       setStart(true)
     }
   }
@@ -46,6 +46,7 @@ function DocumentHome() {
             <option value="none" disabled hidden>Select an Option</option>
             <option value="balanceSheet">Balance Sheet</option>
             <option value="trialBalance">Trial Balance</option>
+            <option value="profitAndLoss">Profit and Loss Statement</option>
           </select>
         </div>
         <div className="py-2">
@@ -82,7 +83,6 @@ function DocumentWindow(props) {
           const { data } = res;
           setData(data);
           setLoading(false);
-          console.log(resData)
         });
     }
   }, [date])
@@ -91,6 +91,7 @@ function DocumentWindow(props) {
     var document;
     if(documentName == "balanceSheet") document = (<BalanceSheet date={date} data={resData} />)
     else if (documentName == "trialBalance") document = (<TrialBalance date={date} data={resData} />)
+    else if (documentName == "profitAndLoss") document = (<ProfitAndLoss date={date} data={resData}/>)
 
     return (
       <div className="window-primary">
