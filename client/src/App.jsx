@@ -15,7 +15,7 @@ import { CreateJournal } from "./pages/journalizing/journalCreate";
 import { AccountLedger } from "./pages/chartOfAccounts/accountLedger";
 import { JournalHome } from "./pages/journalizing/journalHome";
 
-import { DocumentWindow } from "./pages/documents/documentHome";
+import { DocumentHome } from "./pages/documents/documentHome";
 
 import { EventLog } from "./pages/eventDashboard";
 
@@ -27,7 +27,7 @@ function App() {
     if(!token && !(window.location.pathname.startsWith("/register") || window.location.pathname.startsWith("/login") || window.location.pathname==="/")) {
       window.location.href="/";
     }
-  })
+  }, [token])
   
   return (
     <>
@@ -60,7 +60,7 @@ function App() {
         <Route path="/journal/entries/pending" element={<JournalListPending />} />
 
 
-        <Route path="/documents/" element={<DocumentWindow />}/>
+        <Route path="/documents/" element={<DocumentHome />}/>
 
         <Route path="/eventlog" element={<EventLog />} />
       </Routes>

@@ -6,16 +6,10 @@ import LogoPic from "./assets/Breadworks.fw.png";
 import { backendPath } from "../config";
 
 function HeadNavbar() {
-  const [data, setData] = useState(null);
   const token = localStorage.getItem("token");
   if (token) {
     var decoded = jwt_decode(token);
   }
-  useEffect(() => {
-    fetch(backendPath)
-      .then((response) => response.text())
-      .then((text) => setData(text));
-  }, []);
 
 
 	return (

@@ -173,6 +173,8 @@ router.get('/balanceSheet/:date', authUser, authRole(ROLE.MANAGER), async (req, 
   accountsData.push(equityAccounts);
   accountsData.push(totalEL)
 
+  console.log(accountsData);
+
   res.json(accountsData);
 })
 
