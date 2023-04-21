@@ -3,6 +3,8 @@ import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { JournalHome, JournalNavbar } from "./journalHome";
+import { backendPath } from "../../../config";
+
 const token = localStorage.getItem("token");
 
 function GeneralJournalList(props) {
@@ -79,7 +81,7 @@ function JournalList() {
     }
 
     axios
-      .get("http://localhost:5000/journal/entries", config)
+      .get(`${backendPath}/journal/entries`, config)
       .then((res) => {
         const { data } = res;
         setID(data.map((d) => d.id));
@@ -187,7 +189,7 @@ function JournalListPending() {
 
   useEffect(() => {
     axios
-      .get('http://localhost:5000/journal/entries/pending', config)
+      .get(`${backendPath}/journal/entries/pending`, config)
       .then((res) => {
         setRowID(res.data)
         setLoading(false);

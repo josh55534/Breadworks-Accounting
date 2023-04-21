@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, Navigate, useNavigate } from "react-router-dom";
+import { backendPath } from "../../config";
 
 function Register() {
   const [error, setError] = useState([]);
@@ -21,7 +22,7 @@ function Register() {
     event.preventDefault();
 
     axios
-      .post("http://localhost:5000/register", {
+      .post(`${backendPath}/register`, {
         Fname: Fname,
         Lname: Lname,
         email: email,

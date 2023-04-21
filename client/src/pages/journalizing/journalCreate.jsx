@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
+import { backendPath } from "../../../config";
 
 const token = localStorage.getItem("token");
 
@@ -44,7 +45,7 @@ function CreateJournal() {
   useEffect(() => {
     setUsername(decoded.user.id);
     axios
-      .get("http://localhost:5000/chartOfAccounts", config)
+      .get(`${backendPath}/chartOfAccounts`, config)
       .then((res) => {
         const { data } = res
         const filtered = data.filter((account) => account.active)
@@ -65,7 +66,7 @@ function CreateJournal() {
     data.append('file', file);
     axios
 
-    .post("http://localhost:5000/journal/new-entry", data, config)
+    .post(`${backendPath}/journal/new-entry`, data, config)
     .then((res) => {
       window.location.href = "/journal/entries"
       console.log(res)

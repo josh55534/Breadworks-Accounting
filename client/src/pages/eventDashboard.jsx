@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { backendPath } from "../../config";
 
 function EventLog() {
   const [accounts, setAccounts] = useState([]);
@@ -11,7 +12,7 @@ function EventLog() {
   useEffect(() => {
     // Fetch accounts and journals data
     axios
-      .get("http://localhost:5000/eventlog/accounts")
+      .get(`${backendPath}/eventlog/accounts`)
       .then((response) => {
         setAccounts(response.data);
       })
@@ -20,7 +21,7 @@ function EventLog() {
       });
 
     axios
-      .get("http://localhost:5000/eventlog/journals")
+      .get(`${backendPath}/eventlog/journals`)
       .then((response) => {
         setJournals(response.data);
       })
@@ -32,7 +33,7 @@ function EventLog() {
   function handleAccountClick(accountId) {
     // Fetch logs for selected account
     axios
-      .get(`http://localhost:5000/eventlog/accounts/${accountId}`)
+      .get(`${backendPath}/eventlog/accounts/${accountId}`)
       .then((response) => {
         setLogs(response.data);
       })
@@ -47,7 +48,7 @@ function EventLog() {
   function handleJournalClick(journalId) {
     // Fetch logs for selected journal
     axios
-      .get(`http://localhost:5000/eventlog/journals/${journalId}`)
+      .get(`${backendPath}/eventlog/journals/${journalId}`)
       .then((response) => {
         setLogs(response.data);
       })

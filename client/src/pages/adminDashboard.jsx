@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
+import { backendPath } from "../../config";
 const token = localStorage.getItem("token");
 
 function AdminNavbar() {
@@ -46,7 +47,7 @@ function AdminHeader() {
   };
 
   useEffect(() => {
-    fetch("http://localhost:5000/adminDashboard", config)
+    fetch(`${backendPath}/adminDashboard`, config)
       .then((response) => response.text())
       .then((text) => setData(text));
   }, [config]);
@@ -114,7 +115,7 @@ function AdminMain() {
 
   const handleVerify = (email) => {
     axios
-      .put(`http://localhost:5000/adminDashboard/verify/${email}`, null, config)
+      .put(`${backendPath}/adminDashboard/verify/${email}`, null, config)
       .then((res) => console.log(res.data))
       .catch((err) => console.error(err));
   };
@@ -126,7 +127,7 @@ function AdminMain() {
 
     axios
       .put(
-        `http://localhost:5000/adminDashboard/${activateDeactivate}/${email}`,
+        `${backendPath}/adminDashboard/${activateDeactivate}/${email}`,
         null,
         config
       )
@@ -136,7 +137,7 @@ function AdminMain() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/adminDashboard/users", config)
+      .get(`${backendPath}/adminDashboard/users`, config)
       .then((res) => {
         const { data } = res;
         setUsers(data.map((d) => d.id));
@@ -278,7 +279,7 @@ function EmailForm() {
 
     axios
       .post(
-        "http://localhost:5000/adminDashboard/email",
+        `${backendPath}/adminDashboard/email`,
         {
           email,
           subject,
@@ -308,7 +309,7 @@ function EmailForm() {
   //Gets the json values of all emails in firebase
   useEffect(() => {
     axios
-      .get("http://localhost:5000/adminDashboard/emailsAvailable", config)
+      .get(`${backendPath}/adminDashboard/emailsAvailable`, config)
       .then((res) => {
         setEmails(res.data.emails);
         setLoading(false);
@@ -411,7 +412,7 @@ function UpdateUserForm() {
     if (!isDataFetched) {
       const fetchData = async () => {
         try {
-          const response = await axios.get(`http://localhost:5000/admindashboard/userByEmail/${email}`, config);
+          const response = await axios.get(`${backendPath}/admindashboard/userByEmail/${email}`, config);
           const data = await response.data;
           setFname(data.Fname);
           setLname(data.Lname);
@@ -437,7 +438,7 @@ function UpdateUserForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    await axios.put(`http://localhost:5000/adminDashboard/update/${email}`, {
+    await axios.put(`${backendPath}/adminDashboard/update/${email}`, {
       Fname,
       Lname,
       email: newEmail,
@@ -617,7 +618,7 @@ function RegisterAdmin() {
     event.preventDefault();
 
     axios
-      .post("http://localhost:5000/adminDashboard/register", {
+      .post(`${backendPath}/adminDashboard/register`, {
         Fname: Fname,
         Lname: Lname,
         email: email,

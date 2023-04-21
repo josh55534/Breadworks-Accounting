@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
+import { backendPath } from "../../../config";
 const token = localStorage.getItem("token");
 
 function ChartOfAccounts() {
@@ -28,7 +29,7 @@ function ChartOfAccounts() {
     }
 
     axios
-      .get(`http://localhost:5000/chartOfAccounts${searchParam}`, config)
+      .get(`${backendPath}/chartOfAccounts${searchParam}`, config)
       .then((res) => {
         const { data } = res;
         setIds(data.map((d) => d.id));
@@ -61,7 +62,7 @@ function ChartOfAccounts() {
   const activateAccount = (accountId) => {
     axios
       .put(
-        `http://localhost:5000/chartOfAccounts/activate/${accountId}`,
+        `${backendPath}/chartOfAccounts/activate/${accountId}`,
         {},
         config
       )
@@ -76,7 +77,7 @@ function ChartOfAccounts() {
   const deactivateAccount = (accountId) => {
     axios
       .put(
-        `http://localhost:5000/chartOfAccounts/deactivate/${accountId}`,
+        `${backendPath}/chartOfAccounts/deactivate/${accountId}`,
         {},
         config
       )
@@ -201,7 +202,7 @@ function AdminAddAccount() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/adminDashboard/users", config)
+      .get(`${backendPath}/adminDashboard/users`, config)
       .then((res) => {
         const { data } = res;
         setUsers(data.map((d) => d.id));
@@ -216,7 +217,7 @@ function AdminAddAccount() {
   const handleAddAcct = () => {
     axios
       .post(
-        "http://localhost:5000/chartOfAccounts/createAccount",
+        `${backendPath}/chartOfAccounts/createAccount`,
         {
           number: number,
           order: order,

@@ -7,6 +7,8 @@ import axios from "axios";
 import { dStyles } from './document-styles/defaultStyles';
 import { tableRow, tableHead, tableName, tableVal, tableAlign, rowAlign, body } from "./document-styles/bsStyles.js";
 
+import { backendPath } from '../../../config';
+
 const token = localStorage.getItem("token");
 
 function TD(props) {
@@ -31,7 +33,7 @@ function BalanceSheet() {
   useEffect((req, res) => {
     if (rowID.length === 0) {
       axios
-        .get(`http://localhost:5000/documents/balanceSheet/${date}`, config)
+        .get(`${backendPath}/documents/balanceSheet/${date}`, config)
         .then((res) => {
           const { data } = res;
           setRowID(data);

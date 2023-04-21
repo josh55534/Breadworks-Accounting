@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { JournalHome, JournalNavbar } from "./journalHome";
+import { backendPath } from "../../../config";
 const token = localStorage.getItem("token");
 
 function JournalAccounts() {
@@ -28,7 +29,7 @@ function JournalAccounts() {
     };
   
     axios
-      .get("http://localhost:5000/chartOfAccounts", config)
+      .get(`${backendPath}/chartOfAccounts`, config)
       .then((res) => {
         const { data } = res;
         setIds(data.map((d) => d.id));

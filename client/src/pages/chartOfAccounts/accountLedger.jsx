@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { backendPath } from "../../../config";
+
 const token = localStorage.getItem("token");
 
 function JournalListData(props) {
@@ -39,7 +41,7 @@ function AccountLedger() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/journal/accountLedger/${accountId}`, config)
+      .get(`${backendPath}/journal/accountLedger/${accountId}`, config)
       .then((res) => {
         const data = res.data;
         setRowID(data.journalData)

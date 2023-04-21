@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
+import { backendPath } from "../../config";
+
 const token = localStorage.getItem("token");
 
 function Login() {
@@ -14,7 +16,7 @@ function Login() {
     event.preventDefault();
     setError(null);
     axios
-      .post("http://localhost:5000/login", {
+      .post(`${backendPath}/login`, {
         username: username,
         password: password,
       })
@@ -108,7 +110,7 @@ function ForgotPass() {
     event.preventDefault();
 
     axios
-      .post("http://localhost:5000/login/forgotpassword", {
+      .post(`${backendPath}/login/forgotpassword`, {
         email: email,
       })
       .then((res) => {
@@ -178,7 +180,7 @@ function ResetPass() {
     event.preventDefault();
 
     await axios
-      .put(`http://localhost:5000/login/resetpassword`, {
+      .put(`${backendPath}/login/resetpassword`, {
         email: email,
         password: password,
       })

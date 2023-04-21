@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import accountIcon from "./assets/accountIcon.png";
 import LogoPic from "./assets/Breadworks.fw.png";
+import { backendPath } from "../config";
 
 function HeadNavbar() {
   const [data, setData] = useState(null);
@@ -11,7 +12,7 @@ function HeadNavbar() {
     var decoded = jwt_decode(token);
   }
   useEffect(() => {
-    fetch("http://localhost:5000/")
+    fetch(backendPath)
       .then((response) => response.text())
       .then((text) => setData(text));
   }, []);

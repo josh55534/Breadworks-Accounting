@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
+import { backendPath } from "../../../config";
+
 const token = localStorage.getItem("token");
 
 function GeneralJournalList(props) {
@@ -63,7 +65,7 @@ function JournalEntry() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/journal/entry/${journalEntryID}`, config)
+      .get(`${backendPath}/journal/entry/${journalEntryID}`, config)
       .then((res) => {
         const { data } = res;
         setRowID(data.transactions);
@@ -80,7 +82,7 @@ function JournalEntry() {
 
   const handleReject = () => {
     axios
-      .put(`http://localhost:5000/journal/entry/reject/${journalEntryID}`, null, config)
+      .put(`${backendPath}/journal/entry/reject/${journalEntryID}`, null, config)
       .then((res) => {
         console.log(res)
         window.location.reload();
@@ -92,7 +94,7 @@ function JournalEntry() {
 
   const handleApprove = () => {
     axios
-      .put(`http://localhost:5000/journal/entry/approve/${journalEntryID}`, null, config)
+      .put(`${backendPath}/journal/entry/approve/${journalEntryID}`, null, config)
       .then((res) => {
         console.log(res)
         window.location.reload();

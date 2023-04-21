@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { backendPath } from "../../../config";
 const token = localStorage.getItem("token");
 
 function Account() {
@@ -28,7 +29,7 @@ function Account() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/chartOfAccounts/account/${accountId}`, config)
+      .get(`${backendPath}/chartOfAccounts/account/${accountId}`, config)
       .then((res) => {
         const { data } = res;
         setName(data.name);
@@ -56,7 +57,7 @@ function Account() {
   const updateAccount = () => {
     axios
       .put(
-        `http://localhost:5000/chartOfAccounts/update/${accountId}`,
+        `${backendPath}/chartOfAccounts/update/${accountId}`,
         {
           name: name,
           desc: desc,
