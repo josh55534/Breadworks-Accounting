@@ -89,8 +89,8 @@ function DocumentWindow(props) {
 
   if (!isLoading) {
     var document;
-    if(documentName == "balanceSheet") document = (<BalanceSheet date={"2023-4-21"} data={resData} />)
-    else if (documentName == "trialBalance") document = (<TrialBalance date={"2023-4-21"} data={resData} />)
+    if(documentName == "balanceSheet") document = (<BalanceSheet date={date} data={resData} />)
+    else if (documentName == "trialBalance") document = (<TrialBalance date={date} data={resData} />)
 
     return (
       <div className="window-primary">
