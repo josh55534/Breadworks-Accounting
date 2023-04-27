@@ -48,8 +48,16 @@ function HeadNavbar() {
 							Admin Dashboard
 						</button>
 					</Link>
+)}
+{decoded && decoded.user.role === "manager" && (
+  <Link to=''>
+    <button className="btn-navbar"
+    >
+      Documents
+    </button>
+  </Link>
+)}
 
-				)}
 				{decoded && decoded.user.verify === "unverified" && (
 					<div className="mx-auto bg-red-600 text-slate-100 w-80 mt-4">
 						You will recieve an email at {decoded.user.email} after an Admin verifies your account

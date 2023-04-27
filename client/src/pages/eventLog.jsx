@@ -59,7 +59,7 @@ function EventLog() {
     setSelectedAccount("");
   }
   return (
-    <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-10">
+    <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-10 ml-28 mr-28">
       <h2 className="text-center">Accounts and Journals</h2>
       <div className="flex">
         <div className="w-1/2 pr-2">
