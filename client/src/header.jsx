@@ -36,35 +36,32 @@ function HeadNavbar() {
 				)}
 				{decoded && decoded.user.role === "admin" && (
 
+					<Link to='/admindashboard'>
+						<button className="btn-navbar"
+							onClick={() => {
+							}}
+						>
+							Admin Dashboard
+						</button>
+					</Link>
+)}
+{decoded && decoded.user.role === "manager" && (
+  <Link to=''>
+    <button className="btn-navbar"
+    >
+      Documents
+    </button>
+  </Link>
+)}
 
-          <Link to='/admindashboard'>
-            <button className="btn-navbar"
-              onClick={() => {
-              }}
-            >
-              Admin Dashboard
-            </button>
-          </Link>
-
-        )}
-        {decoded && decoded.user.role === "manager" && (
-          <Link to='/documents'>
-            <button className="btn-navbar"
-              onClick={() => {
-              }}
-            >
-              Documents
-            </button>
-          </Link>
-        )}
-        {decoded && decoded.user.verify === "unverified" && (
-          <div className="mx-auto bg-red-600 text-slate-100 w-80 mt-4">
-            You will recieve an email at {decoded.user.email} after an Admin verifies your account
-          </div>
-        )}
-      </div>
-    </div>
-  );
+				{decoded && decoded.user.verify === "unverified" && (
+					<div className="mx-auto bg-red-600 text-slate-100 w-80 mt-4">
+						You will recieve an email at {decoded.user.email} after an Admin verifies your account
+					</div>
+				)}
+			</div>
+		</div>
+	);
 }
 
 function Logo(props) {

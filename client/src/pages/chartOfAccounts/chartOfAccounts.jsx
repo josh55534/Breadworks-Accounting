@@ -52,7 +52,7 @@ function ChartOfAccounts() {
       .catch((err) => {
         console.error(err);
       });
-  }, [search]);
+  }, []);
 
   const changeSearch = (event) => {
     if (event.target.value !== "") setSearch({ search: event.target.value });
@@ -212,7 +212,7 @@ function AdminAddAccount() {
         console.error(err);
         setLoading(false);
       });
-  });
+  }, []);
 
   const handleAddAcct = () => {
     axios
