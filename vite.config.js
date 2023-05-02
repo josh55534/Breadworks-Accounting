@@ -16,14 +16,11 @@ export default defineConfig({
   ],
 
   build: {
-    outDir,
+    outDir: "build",
     emptyOutDir: true,
     rollupOptions: {
       input: {
         main: resolve(root, "index.html"),
-        login: resolve(root, "login", "index.html"),
-		adminDashboard: resolve(root, "adminDashboard", "index.html"),
-		register: resolve(root, "register", "index.html"),
       },
     },
   },
