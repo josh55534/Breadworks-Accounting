@@ -7,7 +7,7 @@ require('dotenv').config();
 process.env.SUPPRESS_NO_CONFIG_WARNING = 'y';
 
 const admin = require('firebase-admin');
-const serviceAccount = require('./config/serviceAccount.json');
+const serviceAccount = require('../config/serviceAccount.json');
 
 admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount),
@@ -23,6 +23,7 @@ app.use('/journal', require('./journal'))
 app.use('/documents', require("./document"))
 
 app.use('/eventlog', require('./eventlogroute'));
+app.use('/ratio', require('./ratios'));
 
 
 app.get('/', (req, res) =>{
@@ -34,4 +35,3 @@ const port = process.env.PORT || 5000;
 app.listen(port, ()=> {
 	console.log(`Listening on port ${port}`)
 });
-
