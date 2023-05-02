@@ -23,6 +23,7 @@ app.use('/journal', require('./journal'))
 app.use('/documents', require("./document"))
 
 app.use('/eventlog', require('./eventlogroute'));
+app.use('/ratio', require('./ratios'));
 
 
 app.get('/', (req, res) =>{
@@ -34,4 +35,3 @@ const port = process.env.PORT || 5000;
 app.listen(port, ()=> {
 	console.log(`Listening on port ${port}`)
 });
-
