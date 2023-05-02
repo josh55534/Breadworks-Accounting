@@ -7,9 +7,9 @@
   "proxy": "http://localhost:5000",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build --base=/breadworks-accounting/",
     "preview": "vite preview",
-    "deploy": "npm run build && gh-pages -d build"
+    "deploy": "gh-pages -d build"
   },
   "dependencies": {
     "@react-pdf/renderer": "^3.1.9",

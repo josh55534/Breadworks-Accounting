@@ -32,7 +32,7 @@ function App() {
   return (
     <>
       <Header />
-      <Routes>
+      <Routes basename="/breadworks-accounting">
         <Route path="/" element={<Home />}/>
 
         <Route path="/register" element={<Register />} />
