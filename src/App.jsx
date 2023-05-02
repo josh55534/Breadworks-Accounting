@@ -33,38 +33,36 @@ function App() {
     <>
       <Header />
       <Routes>
-        <Route path="/breadworks-accounting">
-          <Route path="" element={<Home />} />
+        <Route path="" element={<Home />} />
 
-          <Route path="register" element={<Register />} />
+        <Route path="register" element={<Register />} />
 
-          <Route path="login" element={<Login />} />
-          <Route path="login/forgotpassword" element={<ForgotPass />} />
-          <Route path="login/resetpassword" element={<ResetPass />} />
+        <Route path="login" element={<Login />} />
+        <Route path="login/forgotpassword" element={<ForgotPass />} />
+        <Route path="login/resetpassword" element={<ResetPass />} />
 
-          <Route path="admindashboard" element={<AdminDash />} />
-          <Route path="admindashboard/email" element={<EmailForm />} />
-          <Route path="admindashboard/view" element={<AdminMain />} />
-          <Route path="admindashboard/update/:email" element={<UpdateUserForm />} />
-          <Route path="admindashboard/register" element={<RegisterAdmin />} />
+        <Route path="admindashboard" element={<AdminDash />} />
+        <Route path="admindashboard/email" element={<EmailForm />} />
+        <Route path="admindashboard/view" element={<AdminMain />} />
+        <Route path="admindashboard/update/:email" element={<UpdateUserForm />} />
+        <Route path="admindashboard/register" element={<RegisterAdmin />} />
 
-          <Route path="chartofaccounts" element={<ChartOfAccounts />} />
-          <Route path="account/:accountId" element={<Account />} />
-          <Route path="chartofaccounts/addAccount/" element={<AdminAddAccount />} />
+        <Route path="chartofaccounts" element={<ChartOfAccounts />} />
+        <Route path="account/:accountId" element={<Account />} />
+        <Route path="chartofaccounts/addAccount/" element={<AdminAddAccount />} />
 
-          <Route path="journal" element={<JournalHome />} />
-          <Route path="journal/account/" element={<JournalAccounts />} />
-          <Route path="journal/account/:accountId" element={<AccountLedger />} />
-          <Route path="journal/entry/:journalEntryID" element={<JournalEntry />} />
-          <Route path="journal/entries" element={<JournalList />} />
-          <Route path="journal/entries/new-entry" element={<CreateJournal />} />
-          <Route path="journal/entries/pending" element={<JournalListPending />} />
+        <Route path="journal" element={<JournalHome />} />
+        <Route path="journal/account/" element={<JournalAccounts />} />
+        <Route path="journal/account/:accountId" element={<AccountLedger />} />
+        <Route path="journal/entry/:journalEntryID" element={<JournalEntry />} />
+        <Route path="journal/entries" element={<JournalList />} />
+        <Route path="journal/entries/new-entry" element={<CreateJournal />} />
+        <Route path="journal/entries/pending" element={<JournalListPending />} />
 
 
-          <Route path="documents" element={<DocumentHome />} />
+        <Route path="documents" element={<DocumentHome />} />
 
-          <Route path="eventlog" element={<EventLog />} />
-        </Route>
+        <Route path="eventlog" element={<EventLog />} />
       </Routes>
     </>
   );
