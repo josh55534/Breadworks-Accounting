@@ -7,7 +7,7 @@ require('dotenv').config();
 process.env.SUPPRESS_NO_CONFIG_WARNING = 'y';
 
 const admin = require('firebase-admin');
-const serviceAccount = require('../config/serviceAccount.json');
+const serviceAccount = require('./config/serviceAccount.json');
 
 admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount),
