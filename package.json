@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://josh55534.github.io",
+  "homepage": "https://josh55534.github.io/breadworks-accounting",
   "proxy": "http://localhost:5000",
   "scripts": {
     "dev": "vite",
